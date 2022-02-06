@@ -1,0 +1,9 @@
+{
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"extensions": [
+		"dbaeumer.vscode-eslint"
+	],
+	"remoteUser": "node"
+}
