@@ -1,13 +1,13 @@
-import type { NextPage } from 'next'
+import type { NextPage, NextPageContext } from 'next'
 import { useState } from 'react'
 import Head from 'next/head'
 import { Box } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 
-import style from '../styles/Login.module.css'
-import LoginBox from '../components/LoginBox'
+import style from '../../styles/Login.module.css'
+import LoginBox from '../../components/LoginBox'
 
-const ExampleLogin: NextPage = () => {
+const ExamplePasswordLogin: NextPage = () => {
     const [ email, setEmail ] = useState("")
     const [ password, setPassword ] = useState("")
     return (
@@ -42,4 +42,12 @@ const ExampleLogin: NextPage = () => {
     )
 }
 
-export default ExampleLogin
+export function getStaticProps(_context: NextPageContext) {
+    return {
+        // 404 not found if in production
+        notFound: process.env.NODE_ENV === 'production',
+        props: {},
+    }
+}
+
+export default ExamplePasswordLogin
