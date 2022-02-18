@@ -11,4 +11,3 @@ const NewUser: NextPage = () => {
 }
 
 export default NewUser
-

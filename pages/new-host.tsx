@@ -11,4 +11,3 @@ const NewHost: NextPage = () => {
 }
 
 export default NewHost
-

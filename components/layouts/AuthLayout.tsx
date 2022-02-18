@@ -1,9 +1,13 @@
 import Header from "../../components/navbarComponents/Desktop"
 
-export default function AuthLayout({ }) {
+interface AuthLayoutProps {
+    children?: React.ReactNode;
+}
+
+export default function AuthLayout({ children }: AuthLayoutProps) {
     return (
         <>
-            <Header />
+            <main>{ children || <></> }</main>
         </>
     )
 }
