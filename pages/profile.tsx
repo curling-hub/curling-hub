@@ -6,7 +6,7 @@ const Profile: NextPage = () => {
     return (
         <>
             <Head>
-                <title>Profile | curlo</title>
+                <title>Profile | Curlo</title>
             </Head>
             <div style={{
                 background: "linear-gradient(#735FED, #FFFFFF)",
