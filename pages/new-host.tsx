@@ -1,11 +1,20 @@
 import type { NextPage } from 'next'
-import UserLayout from '../components/layouts/UserLayout'
+import Head from 'next/head'
+import AuthLayout from '../components/layouts/AuthLayout'
 
 const NewHost: NextPage = () => {
     return (
         <>
-            <UserLayout>
-            </UserLayout>
+            <Head>
+                <title>Signup Host | Curlo</title>
+            </Head>
+            <div style={{
+                background: "linear-gradient(#735FED, #FFFFFF)",
+                height: "100vh",
+                width: '100%'
+            }}>
+                <AuthLayout />
+            </div>
         </>
     )
 }

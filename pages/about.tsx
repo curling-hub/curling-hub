@@ -1,22 +1,22 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import AuthLayout from '../components/layouts/AuthLayout'
+import StandardLayout from '../components/layouts/StandardLayout'
 
-const Signup: NextPage = () => {
+const About: NextPage = () => {
     return (
         <>
             <Head>
-                <title>Signup | Curlo</title>
+                <title>About | Curlo</title>
             </Head>
             <div style={{
                 background: "linear-gradient(#735FED, #FFFFFF)",
                 height: "100vh",
                 width: '100%'
             }}>
-                <AuthLayout />
+                <StandardLayout />
             </div>
         </>
     )
 }
 
-export default Signup
+export default About

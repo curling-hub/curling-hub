@@ -3,8 +3,8 @@ import Link from 'next/link'
 import MobileDrawer, { NavItem } from './MobileDrawer'
 
 interface NavbarProps {
-    navItems: NavItem[];
-    navAnchor: NavItem;
+    navItems?: NavItem[];
+    navAnchor?: NavItem;
 }
 
 
@@ -26,32 +26,40 @@ export default function Navbar({ navItems, navAnchor }: NavbarProps) {
                 </Link>
 
                 {/* Nav Items */}
-                <HStack display={{ base: "none", md: "flex" }} as="nav" spacing="1">
+                {navItems && <HStack display={{ base: "none", md: "flex" }} as="nav" spacing="1">
                     {navItems.map((item: NavItem, i: number) => (
                         <Link key={i} href={item.link}>
                             <Button
                                 variant="nav"
-                                color="#000000"
+                                color="primary.black"
                                 style={{ fontSize: 18, fontWeight: '500' }}
-                                _hover={{ bg: "primary.green" }}
+                                _hover={{ bg: "primary.white" }}
                             >
                                 {item.label}
                             </Button>
                         </Link>
                     ))}
-                </HStack>
+                </HStack>}
                 <Spacer />
                 {/* invoke action items */}
                 <Flex>
-                    <Box>
-                        <Button aria-label={navAnchor.label} variant="outline" color="#000000">
-                            {navAnchor.label}
-                        </Button>
-                    </Box>
+                    {navAnchor && <Box>
+                        <Link href={navAnchor.link}>
+                            <Button
+                                aria-label={navAnchor.label}
+                                variant="outline"
+                                color="primary.black"
+                                bg="primary.white"
+                                _hover={{ bg: 'primary.gray' }}
+                            >
+                                {navAnchor.label}
+                            </Button>
+                        </Link>
+                    </Box>}
                     {/* Mobile only */}
-                    <Box ml="2" display={{ md: "none" }}>
+                    {navItems && <Box ml="2" display={{ md: "none" }}>
                         <MobileDrawer data={navItems} />
-                    </Box>
+                    </Box>}
                 </Flex>
             </Flex>
         </chakra.header>
