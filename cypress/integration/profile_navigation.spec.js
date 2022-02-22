@@ -1,6 +1,6 @@
 
 describe('Profile Page Navigation', () => {
-    const port = process.env["PORT"] || '3000'
+    const port = Cypress.env("PORT") || '3000'
     const baseUrl = `http://localhost:${port}`
     it('should navigate to the create team page', () => {
         cy.visit(`${baseUrl}/profile`)
