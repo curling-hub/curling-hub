@@ -15,7 +15,7 @@ const Login: NextPage = () => {
                 width: '100%'
             }}>
                 <AuthLayout>
-                    <LoginBox email="email" password="password"/>
+                    <LoginBox/>
                 </AuthLayout>
             </div>
         </>
