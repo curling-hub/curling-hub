@@ -29,18 +29,10 @@ import {
 import AuthLayout from '../components/layouts/AuthLayout'
 
 
-enum MainField {
-    SIGNUP,
-    PRIVACY_POLICY,
-    TERMS_OF_SERVICE,
-}
-
-
 const Signup: NextPage = () => {
     const [ email, setEmail ] = useState("")
     const [ isHost, setIsHost ] = useState(false)
     const [ mounted, setMounted ] = useState(false)
-    const [ mainField, setMainField ] = useState<MainField>(MainField.SIGNUP)
     const hostAccountDisclosure = useDisclosure()
     const {
         isOpen: privacyPolicyIsOpen = false,
@@ -70,9 +62,9 @@ const Signup: NextPage = () => {
                 bgGradient="linear-gradient(#735FED, #FFFFFF) repeat"
             >
                 <AuthLayout>
-                    <Container maxW="2xl">
+                    <Container maxW="2xl" centerContent>
                         {/* Outer box */}
-                        <Box minW="sm" w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
+                        <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
                             <Flex flexDirection="row" h="100%">
                                 {/* Left */}
                                 <Box
@@ -84,7 +76,7 @@ const Signup: NextPage = () => {
                                 >
                                 </Box>
                                 {/* Sign up container (should only run on client side, e.g mounted) */}
-                                <Box minW="sm" w="100%" h="100%" m={2} p={10} borderRadius="32">
+                                <Box minW="sm" w="100%" h="100%" m={{ base: 0, md: 2 }} p={10} borderRadius="32">
                                     {mounted && (
                                         <>
                                             <PrivacyPolicyPopover
@@ -307,7 +299,7 @@ function TermsOfServicePopover(props: TermsOfServicePopoverProps) {
 function TermsOfService() {
     // TODO: Placeholder
     return (
-        <Box overflowY="scroll" maxH="240" textColor="black" fontSize="12">
+        <Box overflowY="auto" maxH="240" textColor="black" fontSize="12">
             <Text>
                 Terms of service placeholder
             </Text>
@@ -349,7 +341,7 @@ function PrivacyPolicyPopover(props: PrivacyPolicyPopoverProps) {
 function PrivacyPolicy() {
     // TODO: Placeholder
     return (
-        <Box overflowY="scroll" maxH="240" textColor="black" fontSize="12">
+        <Box overflowY="auto" maxH="240" textColor="black" fontSize="12">
             <Text>
                 We value your privacy and strive to protect your personal information.
                 Please read this Policy to understand what types of information we collect from you, 
