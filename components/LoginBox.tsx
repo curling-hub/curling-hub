@@ -51,13 +51,15 @@ export default function LoginBox(props: LoginBoxProps) {
                     </Text>
                     <InputGroup display="flex" flexDirection="column">
                         <Input
+                            variant="outline"
+                            colorScheme="white"
                             borderColor={'#C4C4C4'}
-                            variant='white'
                             mt={2}
                             isRequired={true}
                             fontSize="sm"
                             type="email"
                             placeholder="email address"
+                            _placeholder={{color: 'black'}}
                             errorBorderColor="red.500"
                             onChange={(e) => { onEmailChange?.(e.target.value) }}
                         />
