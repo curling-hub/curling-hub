@@ -147,7 +147,7 @@ interface SignupFieldsProps {
     onEmailChange: (email: string) => void;
     isHost: boolean;
     onIsHostChange: () => void;
-    hostAccountDisclosure?: ReturnType<typeof useDisclosure>;
+    hostAccountDisclosure: ReturnType<typeof useDisclosure>;
     onOpenPrivacyPolicy: () => void;
     onOpenTermsOfService: () => void;
 }
@@ -162,8 +162,7 @@ function SignupFields(props: SignupFieldsProps) {
         onOpenTermsOfService,
         hostAccountDisclosure,
     } = props
-    const haDisclosure = hostAccountDisclosure || useDisclosure()
-    const { onOpen: onPopoverOpen, onClose: onPopoverClose, isOpen: isPopoverOpen } = haDisclosure
+    const { onOpen: onPopoverOpen, onClose: onPopoverClose, isOpen: isPopoverOpen } = hostAccountDisclosure
     const helperTextFontSize = "12"
     return (
         <VStack alignItems="start" spacing="4">
@@ -364,14 +363,14 @@ function PrivacyPolicy() {
                 We collect several types of information from and about you, including:
             </Text>
             <Text>
-                1. Your email address and password. We treat this information as "Personally 
-                Identifiable Information" or "PII". We never store passwords in plain text format, 
-                only secure password hashes.
+                1. Your email address and password. We treat this information as &quote;Personally 
+                Identifiable Information&quote; or &quote;PII&quote;. We never store passwords in 
+                plain text format, only secure password hashes.
             </Text>
             <Text>
                 2. Non-personally identifiable information, such as demographic information about you,
                 information about your computer system or device, your preferences, your online activity,
-                and your location information ("Non-Personally Identifiable Information" a "Non-PII").
+                and your location information (&quote;Non-Personally Identifiable Information&quote; a &quote;Non-PII&quote;).
                 Non-PII, by itself, does not identify you, but it can be combined with other information 
                 in a way that allows you to be identified. If this happens, we will treat the combined 
                 information as PII.
