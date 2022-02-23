@@ -5,73 +5,71 @@ import { Input } from "@chakra-ui/react"
 import { InputGroup } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { getCsrfToken } from "next-auth/react"
+import { FcGoogle } from 'react-icons/fc'
 
 interface CustomBoxProps extends BoxProps {}
 
 interface LoginBoxProps extends CustomBoxProps {
-    email: string;
-    password: string;
     onEmailChange?: (_: string) => void;
     onPasswordChange?: (_: string) => void;
 }
 
 export default function LoginBox(props: LoginBoxProps) {
-    const { email, password, onEmailChange, onPasswordChange } = props
+    const { onEmailChange, onPasswordChange } = props
 
     return (
         <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            width={{ base: "100%", sm: "sm", md: 400 }}
-            boxShadow={1}
-            borderRadius={5}
-            py={4}
-            px={{ base: 4, md: 8 }}
+            width='40%'
+            height='50%'
+            borderRadius='25px'
+            backgroundColor={'white'}
         >
-            <Text fontSize="4xl">
-                Login
-            </Text>
-            <InputGroup display="flex" flexDirection="column">
-                <Input
-                    mt={2}
-                    isRequired={true}
-                    fontSize="sm"
-                    type="email"
-                    value={email}
-                    placeholder="Email"
-                    errorBorderColor="red.500"
-                    onChange={(e) => { onEmailChange?.(e.target.value) }}
-                />
-                <Input
-                    mt={2}
-                    isRequired={true}
-                    fontSize="sm"
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    errorBorderColor="red.500"
-                    onChange={(e) => { onPasswordChange?.(e.target.value) }}
-                />
-            </InputGroup>
-            <Button
-                mt={2}
-                width="100%"
-                colorScheme="green"
-                variant="solid"
-                onClick={() => { console.log(email) }}
+            <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="left"
+                justifyContent='center'
+                width='70%'
+                height='100%'
+                boxShadow={1}
+                borderRadius='25px'
+                backgroundColor={'#7fd6a4'}
+                py={4}
+                px={{ base: 4, md: 8 }}
             >
-                Sign in
-            </Button>
-            <Divider orientation="horizontal" mt={2} width="100%" />
-            <Button
-                mt={2}
-                width="100%"
-                variant="outline"
-                onClick={() => { console.log("Sign up") }}
-            >
-                Sign up
-            </Button>
+                <Text fontSize="4xl">
+                    Log In
+                </Text>
+                <InputGroup display="flex" flexDirection="column">
+                    <Input
+                        mt={2}
+                        isRequired={true}
+                        fontSize="sm"
+                        type="email"
+                        placeholder="Email address"
+                        errorBorderColor="red.500"
+                        onChange={(e) => { onEmailChange?.(e.target.value) }}
+                    />
+                </InputGroup>
+                <Button
+                    mt={2}
+                    width="100%"
+                    color='#C4C4C4'
+                    variant="solid"
+                    onClick={() => { console.log("log in") }}
+                >
+                    Login with email
+                </Button>
+                <Button
+                    mt={2}
+                    width="100%"
+                    color='#C4C4C4'
+                    rightIcon={<FcGoogle/>}
+                    onClick={() => { console.log("Sign up") }}
+                >
+                    Login with Google
+                </Button>
+            </Box>
         </Box>
     )
 }
