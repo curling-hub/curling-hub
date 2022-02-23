@@ -10,6 +10,16 @@ const theme = extendTheme({
             'purple': '#735FED',
         },
     },
+    components: {
+        Button: {
+            variants: {
+                'white': {
+                    bg: 'white',
+                    textColor: 'black'
+                }
+            }
+        }
+    }
 })
 
 export default theme
