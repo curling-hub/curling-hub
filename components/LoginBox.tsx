@@ -25,50 +25,87 @@ export default function LoginBox(props: LoginBoxProps) {
             backgroundColor={'white'}
         >
             <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="left"
-                justifyContent='center'
-                width='70%'
-                height='100%'
-                boxShadow={1}
-                borderRadius='25px'
-                backgroundColor={'#7fd6a4'}
-                py={4}
-                px={{ base: 4, md: 8 }}
+                 width='70%'
+                 height='100%'
+                 backgroundColor={'#7fd6a4'}
+                 borderRadius='25px'
+                 display="flex"
+                 flexDirection="column"
+                 alignItems="center"
+                 justifyContent='center'
             >
-                <Text fontSize="4xl">
-                    Log In
-                </Text>
-                <InputGroup display="flex" flexDirection="column">
-                    <Input
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="left"
+                    justifyContent='center'
+                    width='60%'
+                    height='100%'
+                    boxShadow={1}
+                    rowGap='5%'
+                    py={4}
+                    px={{ base: 4, md: 8 }}
+                >
+                    <Text fontSize="4xl">
+                        Log In
+                    </Text>
+                    <InputGroup display="flex" flexDirection="column">
+                        <Input
+                            mt={2}
+                            isRequired={true}
+                            fontSize="sm"
+                            type="email"
+                            placeholder="Email address"
+                            errorBorderColor="red.500"
+                            color={"#000000"}
+                            onChange={(e) => { onEmailChange?.(e.target.value) }}
+                        />
+                    </InputGroup>
+                    <Button
                         mt={2}
-                        isRequired={true}
-                        fontSize="sm"
-                        type="email"
-                        placeholder="Email address"
-                        errorBorderColor="red.500"
-                        onChange={(e) => { onEmailChange?.(e.target.value) }}
-                    />
-                </InputGroup>
-                <Button
-                    mt={2}
-                    width="100%"
-                    color='#C4C4C4'
-                    variant="solid"
-                    onClick={() => { console.log("log in") }}
-                >
-                    Login with email
-                </Button>
-                <Button
-                    mt={2}
-                    width="100%"
-                    color='#C4C4C4'
-                    rightIcon={<FcGoogle/>}
-                    onClick={() => { console.log("Sign up") }}
-                >
-                    Login with Google
-                </Button>
+                        width="100%"
+                        color='#C4C4C4'
+                        textColor={"#000000"}
+                        variant="solid"
+                        onClick={() => { console.log("log in") }}
+                    >
+                        Login with email
+                    </Button>
+                    <Button
+                        mt={2}
+                        width="100%"
+                        color='#C4C4C4'
+                        textColor={"#000000"}
+                        rightIcon={<FcGoogle/>}
+                        onClick={() => { console.log("Sign up") }}
+                    >
+                        Login with Google
+                    </Button>
+                    <Text>
+                        Don't have an account? 
+                        <Button
+                            variant='link'
+                            color='black'
+                        >
+                            Sign Up
+                        </Button>
+                    </Text>
+                    <Text>
+                        <Button
+                            variant='link'
+                            color='black'
+                        >
+                            Terms of service
+                        </Button>
+                        and
+                        <Button
+                            variant='link'
+                            color='black'
+                        >
+                            Privacy Policy
+                        </Button>
+                    </Text>
+                </Box>
             </Box>
         </Box>
     )
