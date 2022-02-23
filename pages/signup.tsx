@@ -3,6 +3,7 @@ import Head from 'next/head'
 import NextLink from 'next/link'
 import { getSession, signIn } from 'next-auth/react'
 import { useEffect, useState } from 'react'
+import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import {
     Box,
     Button,
@@ -24,6 +25,14 @@ import {
     PopoverHeader,
     VStack,
     useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+    Center,
 } from '@chakra-ui/react'
 
 import AuthLayout from '../components/layouts/AuthLayout'
@@ -37,10 +46,10 @@ enum MainField {
 
 
 const Signup: NextPage = () => {
-    const [ email, setEmail ] = useState("")
-    const [ isHost, setIsHost ] = useState(false)
-    const [ mounted, setMounted ] = useState(false)
-    const [ mainField, setMainField ] = useState<MainField>(MainField.SIGNUP)
+    const [email, setEmail] = useState("")
+    const [isHost, setIsHost] = useState(false)
+    const [mounted, setMounted] = useState(false)
+    const [mainField, setMainField] = useState<MainField>(MainField.SIGNUP)
     const hostAccountDisclosure = useDisclosure()
     const {
         isOpen: privacyPolicyIsOpen = false,
@@ -87,17 +96,21 @@ const Signup: NextPage = () => {
                                 <Box minW="sm" w="100%" h="100%" m={2} p={10} borderRadius="32">
                                     {mounted && (
                                         <>
-                                            <PrivacyPolicyPopover
+                                            {/* <PrivacyPolicyPopover
                                                 isOpen={privacyPolicyIsOpen}
                                                 onOpen={privacyPolicyOnOpen}
                                                 onClose={privacyPolicyOnClose}
                                                 h={popoverHeight}
-                                            />
-                                            <TermsOfServicePopover
+                                            /> */}
+                                            {/* <TermsOfServicePopover
                                                 isOpen={termsOfServiceIsOpen}
                                                 onOpen={termsOfServiceOnOpen}
                                                 onClose={termsOfServiceOnClose}
                                                 h={popoverHeight}
+                                            /> */}
+                                            <TermsOfServiceModal
+                                                isOpen={termsOfServiceIsOpen}
+                                                onClose={termsOfServiceOnClose}
                                             />
                                             <HostAccountPopover
                                                 isOpen={hostAccountDisclosure.isOpen}
@@ -251,7 +264,7 @@ interface HostAccountPopoverProps {
 }
 
 function HostAccountPopover(props: HostAccountPopoverProps) {
-    const { h, isOpen=false, onOpen=(()=>{}), onClose=(()=>{}) } = props
+    const { h, isOpen = false, onOpen = (() => { }), onClose = (() => { }) } = props
     return (
         <Popover
             isOpen={isOpen}
@@ -282,7 +295,7 @@ interface TermsOfServicePopoverProps {
 }
 
 function TermsOfServicePopover(props: TermsOfServicePopoverProps) {
-    const { h, isOpen=false, onOpen=(()=>{}), onClose=(()=>{}) } = props
+    const { h, isOpen = false, onOpen = (() => { }), onClose = (() => { }) } = props
     return (
         <Popover
             isOpen={isOpen}
@@ -316,6 +329,104 @@ function TermsOfService() {
     )
 }
 
+// interface TermsOfServiceModalProps {
+//     isOpen?: boolean
+//     onClose?: () => void
+// }
+
+// function TermsOfServiceModal(props: TermsOfServiceModalProps) {
+//     const { isOpen = false, onClose = (() => { }) } = props
+//     return (
+//         <>
+//             <Modal isOpen={isOpen} onClose={onClose} scrollBehavior='inside'>
+//                 {/* <ModalOverlay /> */}
+//                 <ModalContent h="360px" w="400px" mt="105px" bg="primary.green" borderRadius="20" shadow="md">
+//                     <ModalHeader>
+//                         <Center fontSize='3xl' fontWeight='bold'>
+//                             Terms of Service
+//                         </Center>
+//                     </ModalHeader>
+//                     <ModalCloseButton />
+//                     <ModalBody pb={6} fontSize='s'>
+//                         Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes. Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes.
+//                         Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes.
+//                         Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes.
+//                         Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes.
+//                         Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes.
+//                         Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes.
+//                         Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes.
+//                         Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes.
+//                         Effective Date / Last Updated: Last Update / Effective Date: February 14, 2022
+//                         These Terms of Use (“Terms”) govern your access to and use of the curlo.org  website (the “Site”), made available to you by Curlo  (“Organization,” “we,” “us,” or “our”).
+//                         BY ACCESSING OR USING THE SITE, YOU (“YOU”) AGREE THAT YOU HAVE READ AND UNDERSTAND THESE TERMS AND OUR PRIVACY POLICY.  IF YOU DO NOT AGREE WITH THESE TERMS OR OUR PRIVACY POLICY, DO NOT ACCESS OR USE THE SITE.
+//                         We may modify these Terms at any time.  All changes will be effective immediately upon posting to the Site.  Material changes will be conspicuously posted on the Site or otherwise communicated to you.  By using the Site after changes are posted, you agree to those changes.
+
+
+//                     </ModalBody>
+
+//                     <ModalFooter>
+//                         {/* <Button colorScheme='blue' mr={3}>
+//                             Save
+//                         </Button>
+//                         <Button onClick={onClose}>Cancel</Button> */}
+//                     </ModalFooter>
+//                 </ModalContent>
+//             </Modal>
+//         </>
+//         // <>
+//         //     <Modal isOpen={isOpen} onClose={onClose}>
+//         //         <ModalOverlay />
+//         //         <ModalContent>
+//         //             <ModalHeader>HI</ModalHeader>
+//         //             <ModalCloseButton />
+//         //             <ModalBody>Wow</ModalBody>
+
+//         //             <ModalFooter>
+//         //                 <Button variant="ghost" mr={3} onClick={onClose}>
+//         //                     Cancel
+//         //                 </Button>
+//         //                 <Button
+//         //                     colorScheme="red"
+//         //                     onClick={() => {
+//         //                         alert(1);
+//         //                     }}
+//         //                 >
+//         //                     Delete
+//         //                 </Button>
+//         //             </ModalFooter>
+//         //         </ModalContent>
+//         //     </Modal>
+//         // </>
+//     )
+// }
+
 interface PrivacyPolicyPopoverProps {
     h?: number | string
     isOpen?: boolean
@@ -324,7 +435,7 @@ interface PrivacyPolicyPopoverProps {
 }
 
 function PrivacyPolicyPopover(props: PrivacyPolicyPopoverProps) {
-    const { h, isOpen=false, onOpen=(()=>{}), onClose=(()=>{}) } = props
+    const { h, isOpen = false, onOpen = (() => { }), onClose = (() => { }) } = props
     return (
         <Popover
             isOpen={isOpen}
@@ -353,42 +464,42 @@ function PrivacyPolicy() {
         <Box overflowY="scroll" maxH="240" textColor="black" fontSize="12">
             <Text>
                 We value your privacy and strive to protect your personal information.
-                Please read this Policy to understand what types of information we collect from you, 
+                Please read this Policy to understand what types of information we collect from you,
                 for what purposes and what choices you have regarding our collection of your information.
             </Text>
             <Text>
-                This policy covers the Curlo website. By accessing, using or posting information 
+                This policy covers the Curlo website. By accessing, using or posting information
                 to this Website, you agree to this Privacy Policy.
             </Text>
             <Text>
                 We collect several types of information from and about you, including:
             </Text>
             <Text>
-                1. Your email address and password. We treat this information as "Personally 
-                Identifiable Information" or "PII". We never store passwords in plain text format, 
+                1. Your email address and password. We treat this information as "Personally
+                Identifiable Information" or "PII". We never store passwords in plain text format,
                 only secure password hashes.
             </Text>
             <Text>
                 2. Non-personally identifiable information, such as demographic information about you,
                 information about your computer system or device, your preferences, your online activity,
                 and your location information ("Non-Personally Identifiable Information" a "Non-PII").
-                Non-PII, by itself, does not identify you, but it can be combined with other information 
-                in a way that allows you to be identified. If this happens, we will treat the combined 
+                Non-PII, by itself, does not identify you, but it can be combined with other information
+                in a way that allows you to be identified. If this happens, we will treat the combined
                 information as PII.
             </Text>
             <Text>
-                3. Specific to users of Curlo, we (optionally) collect personal information such as your gender, 
+                3. Specific to users of Curlo, we (optionally) collect personal information such as your gender,
                 data of birth, and other information required for computation, analysis and display of Curlo ratings.
             </Text>
             <Text>
                 We may collect information from or about you in the following ways:
             </Text>
             <Text>
-                Information Provided by You. We collect information provided by you when you create 
+                Information Provided by You. We collect information provided by you when you create
                 your profile or use Curlo services.
             </Text>
             <Text>
-                We do not sell, rent, or lease any of your personal information to third parties 
+                We do not sell, rent, or lease any of your personal information to third parties
                 without your explicit consent.
             </Text>
         </Box>
