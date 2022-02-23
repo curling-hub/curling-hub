@@ -51,13 +51,14 @@ export default function LoginBox(props: LoginBoxProps) {
                     </Text>
                     <InputGroup display="flex" flexDirection="column">
                         <Input
+                            borderColor={'#C4C4C4'}
+                            variant='white'
                             mt={2}
                             isRequired={true}
                             fontSize="sm"
                             type="email"
-                            placeholder="Email address"
+                            placeholder="email address"
                             errorBorderColor="red.500"
-                            color={"#000000"}
                             onChange={(e) => { onEmailChange?.(e.target.value) }}
                         />
                     </InputGroup>
@@ -82,7 +83,7 @@ export default function LoginBox(props: LoginBoxProps) {
                         Login with Google
                     </Button>
                     <Text>
-                        Don't have an account? 
+                        Dont have an account? 
                         <Button
                             variant='link'
                             color='black'
