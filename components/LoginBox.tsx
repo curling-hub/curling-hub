@@ -85,7 +85,7 @@ export default function LoginBox(props: LoginBoxProps) {
                         Login with Google
                     </Button>
                     <Text>
-                        Dont have an account? 
+                        {"Don't have an account? "}
                         <Button
                             variant='link'
                             color='black'
@@ -100,7 +100,7 @@ export default function LoginBox(props: LoginBoxProps) {
                         >
                             Terms of service
                         </Button>
-                        and
+                        {" and "}
                         <Button
                             variant='link'
                             color='black'
