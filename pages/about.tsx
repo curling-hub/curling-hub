@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import StandardLayout from '../components/layouts/StandardLayout'
 
+// Vincent was here
 const About: NextPage = () => {
     return (
         <>
