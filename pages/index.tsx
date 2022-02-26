@@ -4,6 +4,8 @@ import StandardLayout from '../components/layouts/StandardLayout'
 import { Box } from "@chakra-ui/react"
 import {Button} from "@chakra-ui/react"
 import {Text} from "@chakra-ui/react"
+import{Flex, Spacer} from "@chakra-ui/react"
+
 const Home: NextPage = () => {
   return (
     <>
@@ -18,9 +20,11 @@ const Home: NextPage = () => {
 
         <StandardLayout />
         {/*Card Container Box*/}
-      <Box display="inline-block" 
+      <Flex display="wrap" 
         alignItems="center"
-        marginLeft="30%">
+        marginLeft={{base:"0",md:"12.5%",lg:"25%"}}
+
+        justify ="center">
         
         
         <Box display="inline-block" 
@@ -29,8 +33,7 @@ const Home: NextPage = () => {
              padding="1rem"
              borderRadius="35px"
              marginTop={"7%"} 
-             textAlign="center"
-             marginRight="35vh"> 
+             textAlign="center">
           <Text fontSize="2.5rem"
             marginTop="5px">
             <b>Get Started</b> 
@@ -43,7 +46,7 @@ const Home: NextPage = () => {
           <span>
           <Button background="#7FD6A4" 
             borderRadius="35px"
-            marginTop="35vh"
+            marginTop={{base:"0",md:"17.5vh",lg:"35vh"}}
             padding="25px"
             fontSize="19px">
             <b>Sign Up</b>
@@ -53,7 +56,7 @@ const Home: NextPage = () => {
           <Button background="#7FD6A4" 
             borderRadius="35px"
             marginLeft="15px"
-            marginTop="35vh"
+            marginTop={{base:"0",md:"17.5vh",lg:"35vh"}}
             padding="25px"
             fontSize="19px">
               <b>More Info</b>
@@ -61,14 +64,18 @@ const Home: NextPage = () => {
           </span>    
         </Box> {/*Card1}*/}
 
+        {/*Card 2 */}
         <Box display="inline-block" 
              background= "#FFFFFF" 
              alignItems="center" 
-             padding="0.7rem 0.9rem 0.7rem 0.9rem"
+             padding="0.9rem 0.9rem 0.9rem 0.9rem"
              borderRadius="35px"
              marginTop={"7%"} 
-             textAlign="center"
-             marginRight="35vh"> 
+   //          marginLeft="25%"
+             marginLeft={{base:"0%",md:"12%",lg:"25%"}}
+          //   marginRight={{base:"0",md:"5%",lg:"10%"}}
+             textAlign="center">
+
           <Text fontSize="2.5rem"
             marginTop="5px">
             <b>Ratings</b> 
@@ -84,7 +91,7 @@ const Home: NextPage = () => {
           <Button background="#7FD6A4" 
             borderRadius="35px"
             marginLeft="15px"
-            marginTop="35vh"
+            marginTop={{base:"0",md:"17.5vh",lg:"35vh"}}
             padding="25px 99px"
             fontSize="19px">
               <b>Ratings</b>
@@ -92,7 +99,7 @@ const Home: NextPage = () => {
           </span>    
         </Box> {/*Card2}*/}
 
-      </Box> {/*Card Container*/}
+      </Flex> {/*Card Container*/}
        </div>
       
     </>
