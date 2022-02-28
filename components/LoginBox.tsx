@@ -33,6 +33,7 @@ export default function LoginBox(props: LoginBoxProps) {
                  flexDirection="column"
                  alignItems="center"
                  justifyContent='center'
+                 overflow='auto'
             >
                 <Box
                     display="flex"
@@ -71,6 +72,9 @@ export default function LoginBox(props: LoginBoxProps) {
                         textColor={"#000000"}
                         variant="solid"
                         onClick={() => { console.log("log in") }}
+                        overflow='clip'
+                        display='block'
+                        textOverflow='ellipsis'
                     >
                         Login with email
                     </Button>
@@ -81,7 +85,9 @@ export default function LoginBox(props: LoginBoxProps) {
                         textColor={"#000000"}
                         rightIcon={<FcGoogle/>}
                         onClick={() => { console.log("Sign up") }}
-                    >
+                        overflow='clip'
+                        display='block'
+                        textOverflow='ellipsis'              >
                         Login with Google
                     </Button>
                     <Text>
