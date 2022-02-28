@@ -1,4 +1,4 @@
-import { Box, Heading, Text } from '@chakra-ui/react'
+import { Box, Image, Heading, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import StandardLayout from '../components/layouts/StandardLayout'
@@ -15,9 +15,10 @@ const About: NextPage = () => {
                 width: '100%'
             }}>
                 <StandardLayout />
-                <Box width="90%" background="white" borderRadius="20" mx="auto" py="5%">
-                    <Box width="90%" background="#7FD6A4" borderRadius="20" mx="auto" py="2%">
-                        <Box width="60%" mx="auto" >
+                <Box w="90%" bg="#FFFFFF" borderRadius="20" mx="auto" py="5%">
+                    <Box w="90%" bg="#7FD6A4" borderRadius="20" mx="auto" py="2%">
+                        <Image src="/curloLogo1.svg" alt="Curlo logo" w="100px" h="100px" mx="10px" float="left" />
+                        <Box w="60%" mx="auto" >
                             <Heading fontWeight="bold" textAlign="center">
                                 Who we are
                             </Heading>
