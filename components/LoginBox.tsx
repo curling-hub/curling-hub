@@ -12,6 +12,8 @@ import { setValues } from "framer-motion/types/render/utils/setters"
 export default function LoginBox() {
     const [email, setEmail] = useState('')
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)
+    const loginRegular = () => {console.log(email)}
+    const loginGoogle = () => {console.log(email + " with google")}
 
     return (
         <Box
@@ -67,7 +69,7 @@ export default function LoginBox() {
                         color='#C4C4C4'
                         textColor={"#000000"}
                         variant="solid"
-                        onClick={() => { console.log("log in") }}
+                        onClick={loginRegular}
                         overflow='clip'
                         display='block'
                         textOverflow='ellipsis'
@@ -80,7 +82,7 @@ export default function LoginBox() {
                         color='#C4C4C4'
                         textColor={"#000000"}
                         rightIcon={<FcGoogle/>}
-                        onClick={() => { console.log("Sign up") }}
+                        onClick={loginGoogle}
                         overflow='clip'
                         display='block'
                         textOverflow='ellipsis'              >
