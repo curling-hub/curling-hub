@@ -6,16 +6,12 @@ import { InputGroup } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { getCsrfToken } from "next-auth/react"
 import { FcGoogle } from 'react-icons/fc'
+import {useState, ChangeEvent} from 'react'
+import { setValues } from "framer-motion/types/render/utils/setters"
 
-interface CustomBoxProps extends BoxProps {}
-
-interface LoginBoxProps extends CustomBoxProps {
-    onEmailChange?: (_: string) => void;
-    onPasswordChange?: (_: string) => void;
-}
-
-export default function LoginBox(props: LoginBoxProps) {
-    const { onEmailChange, onPasswordChange } = props
+export default function LoginBox() {
+    const [email, setEmail] = useState('')
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)
 
     return (
         <Box
@@ -62,7 +58,7 @@ export default function LoginBox(props: LoginBoxProps) {
                             placeholder="email address"
                             _placeholder={{color: 'black'}}
                             errorBorderColor="red.500"
-                            onChange={(e) => { onEmailChange?.(e.target.value) }}
+                            onChange={handleChange}
                         />
                     </InputGroup>
                     <Button
