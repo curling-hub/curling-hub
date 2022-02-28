@@ -17,8 +17,8 @@ export default function LoginBox() {
 
     return (
         <Box
-            width='40%'
-            height='50%'
+            width='50%'
+            height='60%'
             borderRadius='25px'
             backgroundColor={'white'}
         >
@@ -38,7 +38,7 @@ export default function LoginBox() {
                     flexDirection="column"
                     alignItems="left"
                     justifyContent='center'
-                    width='60%'
+                    minWidth='60%'
                     height='100%'
                     boxShadow={1}
                     rowGap='5%'
@@ -66,9 +66,9 @@ export default function LoginBox() {
                     <Button
                         mt={2}
                         width="100%"
+                        height="9%"
                         color='#C4C4C4'
                         textColor={"#000000"}
-                        variant="solid"
                         onClick={loginRegular}
                         overflow='clip'
                         display='block'
@@ -79,6 +79,7 @@ export default function LoginBox() {
                     <Button
                         mt={2}
                         width="100%"
+                        height="9%"
                         color='#C4C4C4'
                         textColor={"#000000"}
                         rightIcon={<FcGoogle/>}
