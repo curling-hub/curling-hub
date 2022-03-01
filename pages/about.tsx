@@ -57,6 +57,39 @@ const About: NextPage = () => {
                             </Text>
                         </Box>
                     </Box>
+                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex" flexFlow="column">
+                        <Box w="60%" mx="auto">
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                Categories
+                            </Heading>
+                        </Box>
+                        <Box display="flex" flexFlow="row wrap">
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                Open
+                            </Heading>
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                Mixed
+                            </Heading>
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                Women
+                            </Heading>
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                Men
+                            </Heading>
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                U18
+                            </Heading>
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                U5
+                            </Heading>
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                Junior
+                            </Heading>
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                Senior
+                            </Heading>
+                        </Box>
+                    </Box>
                 </Box>
             </div>
         </>
