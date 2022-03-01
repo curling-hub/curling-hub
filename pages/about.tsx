@@ -23,11 +23,37 @@ const About: NextPage = () => {
                                 Who we are
                             </Heading>
                             <Text fontSize="medium" textAlign="center" m="2.5%">
-                                Curlo is a not for profit website that seeks to provide tools for curlers to get connected and
-                                compete. Curlo uses a state of the art rating algorithm to rate teams across the world. This
-                                enables curlers from around the world to compete with oneanother. All the money made from
-                                membership fees is put back into the website and the extra is given out to the hosting
-                                locations around the world.
+                                Curlo is a not for profit website that seeks to provide tools for curlers to get
+                                connected and compete. Curlo uses a state of the art rating algorithm to rate teams
+                                across the world. This enables curlers from around the world to compete with oneanother.
+                                All the money made from membership fees is put back into the website and the extra is
+                                given out to the hosting locations around the world.
+                            </Text>
+                        </Box>
+                    </Box>
+                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex">
+                        <Box w="60%" mx="auto">
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                Membership
+                            </Heading>
+                            <Text fontSize="medium" textAlign="center" m="2.5%">
+                                In order to signup and join Curlo, you must pay an annual fee. This is a flat rate fee
+                                that allows you to join as many teams as you desire. This fee will be charged yearly in
+                                July. If you own a curling company and want to signup as a host, there is no fee. 
+                            </Text>
+                        </Box>
+                    </Box>
+                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex">
+                        <Box w="60%" mx="auto">
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                Rating System
+                            </Heading>
+                            <Text fontSize="medium" textAlign="center" m="2.5%">
+                                Curlo uses a professional rating system called Glicko. Designed by Mark Glickman,
+                                Glicko uses game scores to rate the strength of players and teams. It uses a simple
+                                formula to give a score to a team or individual. This rating system is used in popular
+                                games such as chess, pokeman, and more. Glicko is used by Curlo to rate teams. This
+                                allows us to compare teams in order to present a worldwide leaderboard.
                             </Text>
                         </Box>
                     </Box>
