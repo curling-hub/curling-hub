@@ -1,2 +1,9 @@
 {
+    "testFiles": "**/*.spec.{js,jsx,ts,tsx}",
+    "component": {
+        "componentFolder": "components",
+        "testFiles": "**/*.spec.{js,jsx,ts,tsx}",
+        "viewportHeight": 500,
+        "viewportWidth": 700
+    }
 }
