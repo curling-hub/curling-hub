@@ -15,14 +15,14 @@ const About: NextPage = () => {
                 width: '100%'
             }}>
                 <StandardLayout />
-                <Box w="90%" bg="#FFFFFF" borderRadius="20" mx="auto" py="5%">
-                    <Box w="90%" bg="#7FD6A4" borderRadius="20" mx="auto" py="2%" display="flex" >
-                        <Image src="/curloLogo1.svg" alt="Curlo logo" w="100px" h="100px" mx="20px" my="auto" />
-                        <Box w="60%" mx="auto" >
-                            <Heading fontWeight="bold" textAlign="center">
+                <Box w="90%" bg="#FFFFFF" borderRadius="20px" mx="auto" py="1px">
+                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex">
+                        <Image src="/curloLogo1.svg" alt="Curlo logo" w="100px" h="100px" mx="2.5%" my="auto" />
+                        <Box w="60%" mx="auto">
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Who we are
                             </Heading>
-                            <Text fontSize="medium" textAlign="center">
+                            <Text fontSize="medium" textAlign="center" m="2.5%">
                                 Curlo is a not for profit website that seeks to provide tools for curlers to get connected and
                                 compete. Curlo uses a state of the art rating algorithm to rate teams across the world. This
                                 enables curlers from around the world to compete with oneanother. All the money made from
