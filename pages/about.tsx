@@ -17,7 +17,7 @@ const About: NextPage = () => {
                 <StandardLayout />
                 <Box w="90%" bg="#FFFFFF" borderRadius="20px" mx="auto" py="1px">
                     <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex">
-                        <Image src="/curloLogo1.svg" alt="Curlo logo" w="100px" h="100px" mx="2.5%" my="auto" />
+                        <Image src="/curloLogo2.svg" alt="Curlo logo" w="100px" h="100px" mx="2.5%" my="auto" />
                         <Box w="60%" mx="auto">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Who we are
