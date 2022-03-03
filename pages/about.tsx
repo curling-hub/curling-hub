@@ -1,4 +1,4 @@
-import { Box, Grid, Image, Heading, Text } from '@chakra-ui/react'
+import { Box, Grid, Image, Heading, Text, Flex } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import StandardLayout from '../components/layouts/StandardLayout'
@@ -57,13 +57,13 @@ const About: NextPage = () => {
                             </Text>
                         </Box>
                     </Grid>
-                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex" flexFlow="column">
+                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" py="1px">
                         <Box w="60%" mx="auto">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Categories
                             </Heading>
                         </Box>
-                        <Box display="flex" flexFlow="row wrap">
+                        <Flex flexFlow="row wrap">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Open
                             </Heading>
@@ -88,7 +88,7 @@ const About: NextPage = () => {
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Senior
                             </Heading>
-                        </Box>
+                        </Flex>
                     </Box>
                 </Box>
             </div>
