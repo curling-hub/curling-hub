@@ -4,73 +4,117 @@ import { Divider } from "@chakra-ui/react"
 import { Input } from "@chakra-ui/react"
 import { InputGroup } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
+import { getCsrfToken } from "next-auth/react"
+import { FcGoogle } from 'react-icons/fc'
+import {useState, ChangeEvent} from 'react'
+import { setValues } from "framer-motion/types/render/utils/setters"
 
-interface CustomBoxProps extends BoxProps {}
-
-interface LoginBoxProps extends CustomBoxProps {
-    email: string;
-    password: string;
-    onEmailChange?: (_: string) => void;
-    onPasswordChange?: (_: string) => void;
-}
-
-export default function LoginBox(props: LoginBoxProps) {
-    const { email, password, onEmailChange, onPasswordChange } = props
+export default function LoginBox() {
+    const [email, setEmail] = useState('')
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)
+    const loginRegular = () => {console.log(email)}
+    const loginGoogle = () => {console.log(email + " with google")}
 
     return (
         <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            width={{ base: "100%", sm: "sm", md: 400 }}
-            boxShadow={1}
-            borderRadius={5}
-            py={4}
-            px={{ base: 4, md: 8 }}
+            width='50%'
+            height='60%'
+            borderRadius='25px'
+            backgroundColor={'white'}
         >
-            <Text fontSize="4xl">
-                Login
-            </Text>
-            <InputGroup display="flex" flexDirection="column">
-                <Input
-                    mt={2}
-                    isRequired={true}
-                    fontSize="sm"
-                    type="email"
-                    value={email}
-                    placeholder="Email"
-                    errorBorderColor="red.500"
-                    onChange={(e) => { onEmailChange?.(e.target.value) }}
-                />
-                <Input
-                    mt={2}
-                    isRequired={true}
-                    fontSize="sm"
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    errorBorderColor="red.500"
-                    onChange={(e) => { onPasswordChange?.(e.target.value) }}
-                />
-            </InputGroup>
-            <Button
-                mt={2}
-                width="100%"
-                colorScheme="green"
-                variant="solid"
-                onClick={() => { console.log(email) }}
+            <Box
+                 width='70%'
+                 height='100%'
+                 backgroundColor={'#7fd6a4'}
+                 borderRadius='25px'
+                 display="flex"
+                 flexDirection="column"
+                 alignItems="center"
+                 justifyContent='center'
+                 overflow='auto'
             >
-                Sign in
-            </Button>
-            <Divider orientation="horizontal" mt={2} width="100%" />
-            <Button
-                mt={2}
-                width="100%"
-                variant="outline"
-                onClick={() => { console.log("Sign up") }}
-            >
-                Sign up
-            </Button>
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="left"
+                    justifyContent='center'
+                    minWidth='60%'
+                    height='100%'
+                    boxShadow={1}
+                    rowGap='5%'
+                    py={4}
+                    px={{ base: 4, md: 8 }}
+                >
+                    <Text fontSize="4xl">
+                        Log In
+                    </Text>
+                    <InputGroup display="flex" flexDirection="column">
+                        <Input
+                            variant="outline"
+                            colorScheme="white"
+                            borderColor={'#C4C4C4'}
+                            mt={2}
+                            isRequired={true}
+                            fontSize="sm"
+                            type="email"
+                            placeholder="email address"
+                            _placeholder={{color: 'black'}}
+                            errorBorderColor="red.500"
+                            onChange={handleChange}
+                        />
+                    </InputGroup>
+                    <Button
+                        mt={2}
+                        width="100%"
+                        height="9%"
+                        color='#C4C4C4'
+                        textColor={"#000000"}
+                        onClick={loginRegular}
+                        overflow='clip'
+                        display='block'
+                        textOverflow='ellipsis'
+                    >
+                        Login with email
+                    </Button>
+                    <Button
+                        mt={2}
+                        width="100%"
+                        height="9%"
+                        color='#C4C4C4'
+                        textColor={"#000000"}
+                        rightIcon={<FcGoogle/>}
+                        onClick={loginGoogle}
+                        overflow='clip'
+                        display='block'
+                        textOverflow='ellipsis'              >
+                        Login with Google
+                    </Button>
+                    <Text>
+                        {"Don't have an account? "}
+                        <Button
+                            variant='link'
+                            color='black'
+                        >
+                            Sign Up
+                        </Button>
+                    </Text>
+                    <Text>
+                        <Button
+                            variant='link'
+                            color='black'
+                        >
+                            Terms of service
+                        </Button>
+                        {" and "}
+                        <Button
+                            variant='link'
+                            color='black'
+                        >
+                            Privacy Policy
+                        </Button>
+                    </Text>
+                </Box>
+            </Box>
         </Box>
     )
 }
