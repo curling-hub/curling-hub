@@ -1,4 +1,4 @@
-import type { NextPage, NextPageContext } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import { useSession, getSession, signIn, signOut } from 'next-auth/react'
 import { Button } from '@chakra-ui/react'
 import Head from 'next/head'
@@ -36,7 +36,7 @@ const ExampleUserInfo: NextPage = () => {
 }
 
 // Prerender the `session` object on the server side
-export async function getServerSideProps(context: NextPageContext) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         // 404 not found if in production
         notFound: process.env.NODE_ENV === 'production',
