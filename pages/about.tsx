@@ -63,7 +63,7 @@ const About: NextPage = () => {
                                 Categories
                             </Heading>
                         </Box>
-                        <Flex flexFlow="row wrap">
+                        <Flex flexFlow="row wrap" justifyContent="center">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Open
                             </Heading>
