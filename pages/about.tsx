@@ -16,7 +16,7 @@ const About: NextPage = () => {
             }}>
                 <StandardLayout />
                 <Box w="90%" bg="#FFFFFF" borderRadius="20px" mx="auto" py="1px">
-                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" templateColumns="repeat(5, 1fr)" >
+                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
                         <Image src="/curloLogo2.svg" alt="Curlo logo" w="100px" h="100px" m="auto" />
                         <Box gridColumn="2 / 5">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
@@ -31,7 +31,7 @@ const About: NextPage = () => {
                             </Text>
                         </Box>
                     </Grid>
-                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" templateColumns="repeat(5, 1fr)" >
+                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
                         <Box gridColumn="2 / 5">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Membership
@@ -43,7 +43,7 @@ const About: NextPage = () => {
                             </Text>
                         </Box>
                     </Grid>
-                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" templateColumns="repeat(5, 1fr)" >
+                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
                         <Box gridColumn="2 / 5">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Rating System
