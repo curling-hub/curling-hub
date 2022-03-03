@@ -57,9 +57,10 @@ const NewUser: NextPage = () => {
                             </HorizontalSpacing>
                             <ButtonGroup>
                                 <HorizontalSpacing>
-                                    <ToggleButton buttonText='Male' />
+                                    {/* <ToggleButton buttonText='Male' />
                                     <ToggleButton buttonText='Female' />
-                                    <ToggleButton buttonText='N/A' />
+                                    <ToggleButton buttonText='N/A' /> */}
+                                    <ToggleButton />
                                 </HorizontalSpacing>
                             </ButtonGroup>
                             <Center>
