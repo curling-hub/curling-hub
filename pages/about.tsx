@@ -32,6 +32,14 @@ const About: NextPage = () => {
                         </Box>
                     </Grid>
                     <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
+                        <Box my="auto">
+                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                                $50
+                            </Heading>
+                            <Text fontSize="medium" textAlign="center" m="2.5%">
+                                Per Year
+                            </Text>
+                        </Box>
                         <Box gridColumn="2 / 5">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Membership
