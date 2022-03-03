@@ -64,28 +64,28 @@ const About: NextPage = () => {
                             </Heading>
                         </Box>
                         <Flex flexFlow="row wrap" justifyContent="center">
-                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                            <Heading fontWeight="bold" m="2.5%">
                                 Open
                             </Heading>
-                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                            <Heading fontWeight="bold" m="2.5%">
                                 Mixed
                             </Heading>
-                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                            <Heading fontWeight="bold" m="2.5%">
                                 Women
                             </Heading>
-                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                            <Heading fontWeight="bold" m="2.5%">
                                 Men
                             </Heading>
-                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                            <Heading fontWeight="bold" m="2.5%">
                                 U18
                             </Heading>
-                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                            <Heading fontWeight="bold" m="2.5%">
                                 U5
                             </Heading>
-                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                            <Heading fontWeight="bold" m="2.5%">
                                 Junior
                             </Heading>
-                            <Heading fontWeight="bold" textAlign="center" m="2.5%">
+                            <Heading fontWeight="bold" m="2.5%">
                                 Senior
                             </Heading>
                         </Flex>
