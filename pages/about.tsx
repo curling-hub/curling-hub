@@ -1,4 +1,4 @@
-import { Box, Image, Heading, Text } from '@chakra-ui/react'
+import { Box, Grid, Image, Heading, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import StandardLayout from '../components/layouts/StandardLayout'
@@ -16,9 +16,9 @@ const About: NextPage = () => {
             }}>
                 <StandardLayout />
                 <Box w="90%" bg="#FFFFFF" borderRadius="20px" mx="auto" py="1px">
-                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex">
-                        <Image src="/curloLogo2.svg" alt="Curlo logo" w="100px" h="100px" mx="2.5%" my="auto" />
-                        <Box w="60%" mx="auto">
+                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" templateColumns="repeat(5, 1fr)" >
+                        <Image src="/curloLogo2.svg" alt="Curlo logo" w="100px" h="100px" m="auto" />
+                        <Box gridColumn="2 / 5">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Who we are
                             </Heading>
@@ -30,9 +30,9 @@ const About: NextPage = () => {
                                 given out to the hosting locations around the world.
                             </Text>
                         </Box>
-                    </Box>
-                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex">
-                        <Box w="60%" mx="auto">
+                    </Grid>
+                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" templateColumns="repeat(5, 1fr)" >
+                        <Box gridColumn="2 / 5">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Membership
                             </Heading>
@@ -42,9 +42,9 @@ const About: NextPage = () => {
                                 July. If you own a curling company and want to signup as a host, there is no fee. 
                             </Text>
                         </Box>
-                    </Box>
-                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex">
-                        <Box w="60%" mx="auto">
+                    </Grid>
+                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" templateColumns="repeat(5, 1fr)" >
+                        <Box gridColumn="2 / 5">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Rating System
                             </Heading>
@@ -56,7 +56,7 @@ const About: NextPage = () => {
                                 allows us to compare teams in order to present a worldwide leaderboard.
                             </Text>
                         </Box>
-                    </Box>
+                    </Grid>
                     <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" display="flex" flexFlow="column">
                         <Box w="60%" mx="auto">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
