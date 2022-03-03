@@ -28,7 +28,7 @@ import {
 } from '@chakra-ui/react'
 
 
-const newHost: NextPage = () => {
+const NewHost: NextPage = () => {
     const [organization, setOrg] = useState("")
     const [website, setWebsite] = useState("")
     const [phone, setPhone] = useState("")
@@ -339,4 +339,4 @@ function SignupFields(props: NewHostFieldsProps) {
     )
 }
 
-export default newHost 
+export default NewHost 
