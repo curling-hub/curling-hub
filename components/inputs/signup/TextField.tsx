@@ -18,6 +18,7 @@ export default function TextField({ fieldPlaceholder, width }: TextFieldProps) {
                 fontWeight="bold"
                 textColor={theme.colors.primary.black}
                 background={theme.colors.primary.white}
+                focusBorderColor={theme.colors.primary.green}
                 boxShadow={"inset 0px 0px 4px " + theme.colors.primary.gray}
                 borderRadius="35px"
             />

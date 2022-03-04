@@ -5,7 +5,8 @@ interface SignupLayoutProps {
     children?: React.ReactNode;
 }
 
-export default function SignupLayout({ children }: SignupLayoutProps) {
+export default function SignupLayout(props: SignupLayoutProps) {
+
     return (
         <>
             <Box
@@ -14,19 +15,24 @@ export default function SignupLayout({ children }: SignupLayoutProps) {
                 left="0"
                 right="0"
                 margin="auto"
-                width="967px"
+                maxWidth="967px"
+                width={"90%"}
                 height="612px"
                 borderRadius="35px"
                 background={theme.colors.primary.white}
             >
                 <Box
+
                     position="absolute"
                     left="0"
-                    width="402px"
+                    maxWidth="402px"
+                    width="41.5%"
+
                     height="612px"
                     borderRadius="35px"
                     background={'linear-gradient(169.16deg, ' + theme.colors.primary.white + ' 8.04%,' + theme.colors.primary.green + ' 95.82%)'}
                 >
+
                     <Image
                         src="/curlo_Logo.svg"
                         w="243px"
@@ -40,13 +46,16 @@ export default function SignupLayout({ children }: SignupLayoutProps) {
                         }}
                     />
                 </Box>
-                <Center style={{
-                    position: "absolute",
-                    width: "565px", // 967 - (left div width)
-                    height: "612px",
-                    right: "0"
-                }}>
-                    {children || <></>}
+                <Center
+                    width={["58.4%", "58.4%", "58.4%", "58.4%", "58.4%"]}
+                    maxWidth={["565px", "565px", "565px", "565px"]}
+                    style={{
+                        position: "absolute",
+                        maxWidth: "565px", // 967 - (left div width)
+                        height: "612px",
+                        right: "0"
+                    }}>
+                    {props.children || <></>}
                 </Center>
             </Box>
         </>

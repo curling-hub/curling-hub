@@ -3,27 +3,55 @@ import {
     HStack,
     Box,
     ButtonGroup,
-    Center
+    Center,
+    useDisclosure
 } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import AuthLayout from '../components/layouts/AuthLayout'
+import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
+import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
+import InfoModal from '../components/modals/signup/infoModal'
 import SignupLayout from '../components/layouts/signup/SignupLayout'
 import VerticalSpacing from '../components/layouts/signup/VerticalSpacing'
 import HorizontalSpacing from '../components/layouts/signup/HorizontalSpacing'
 import TextField from '../components/inputs/signup/TextField'
-import ToggleButton from '../components/inputs/signup/ToggleButton'
+import ToggleButtonGroup from '../components/inputs/signup/ToggleButtonGroup'
 import ClubDropDown from '../components/inputs/signup/ClubDropdown'
 import CheckBoxButton from '../components/inputs/signup/CheckBoxButton'
-import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
-import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
+import TermsAndPolicy from '../components/pageText/signup/TermsAndPolicy'
 import CreateAccountButton from '../components/inputs/signup/CreateAccountButton'
 import theme from '../themes/colors'
-
-
+import InfoButton from '../components/inputs/signup/InfoButton'
 
 const NewUser: NextPage = () => {
-    // where we store the state
+
+    const {
+        isOpen: termsOfServiceIsOpen = false,
+        onOpen: termsOfServiceOnOpen,
+        onClose: termsOfServiceOnClose,
+    } = useDisclosure()
+    const {
+        isOpen: privacyPolicyIsOpen = false,
+        onOpen: privacyPolicyOnOpen,
+        onClose: privacyPolicyOnClose,
+    } = useDisclosure()
+    const {
+        isOpen: infoIsOpen = false,
+        onOpen: infoOnOpen,
+        onClose: infoOnClose,
+    } = useDisclosure()
+
+    const onTermsOfServiceOpen = () => {
+        termsOfServiceOnOpen()
+    }
+    const onPrivacyPolicyOpen = () => {
+        privacyPolicyOnOpen()
+    }
+    const onInfoOpen = () => {
+        infoOnOpen()
+    }
+
     return (
         <>
             <Head>
@@ -35,6 +63,20 @@ const NewUser: NextPage = () => {
                 width: '100%'
             }}>
                 <AuthLayout>
+                    <Center>
+                        <TermsOfServiceModal
+                            isOpen={termsOfServiceIsOpen}
+                            onClose={termsOfServiceOnClose}
+                        />
+                        <PrivacyPolicyModal
+                            isOpen={privacyPolicyIsOpen}
+                            onClose={privacyPolicyOnClose}
+                        />
+                        <InfoModal
+                            isOpen={infoIsOpen}
+                            onClose={infoOnClose}
+                        />
+                    </Center>
                     <SignupLayout>
                         <VerticalSpacing>
                             <HorizontalSpacing>
@@ -57,23 +99,13 @@ const NewUser: NextPage = () => {
                             </HorizontalSpacing>
                             <ButtonGroup>
                                 <HorizontalSpacing>
-                                    {/* <ToggleButton buttonText='Male' />
-                                    <ToggleButton buttonText='Female' />
-                                    <ToggleButton buttonText='N/A' /> */}
-                                    <ToggleButton />
+                                    <ToggleButtonGroup />
                                 </HorizontalSpacing>
                             </ButtonGroup>
                             <Center>
                                 <VStack height="82px">
                                     <ClubDropDown dropDownText='Club' />
-                                    <Box
-                                        width="195px"
-                                        fontWeight="bold"
-                                        fontSize="12px"
-                                        textAlign="center"
-                                    >
-                                        Why do we need this information?
-                                    </Box>
+                                    <InfoButton onOpen={onInfoOpen} />
                                 </VStack>
                             </Center>
                             <VStack spacing="25px">
@@ -82,13 +114,10 @@ const NewUser: NextPage = () => {
                                     height="24px"
                                 >
                                     <CheckBoxButton />
-                                    <Box
-                                        width="340px"
-                                        height="24px"
-                                        fontSize="15px"
-                                    >
-                                        I agree to the <span style={{ fontWeight: "bold" }}>Terms of Service</span> and <span style={{ fontWeight: "bold" }}>Privacy Policy</span>
-                                    </Box>
+                                    <TermsAndPolicy
+                                        termsOnOpen={onTermsOfServiceOpen}
+                                        policyOnOpen={onPrivacyPolicyOpen}
+                                    />
                                 </HStack>
                                 <CreateAccountButton />
                             </VStack>

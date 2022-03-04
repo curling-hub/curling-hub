@@ -26,6 +26,9 @@ export default function TextField({ }: CreateAccountButtonProps) {
                 _active={{
                     transform: "scale(0.99)"
                 }}
+                _focus={{
+                    border: "none"
+                }}
             >
                 Create Account
             </Button>
