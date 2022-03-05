@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  CloseButton,
   Checkbox,
   Container,
   Divider,
@@ -18,9 +17,11 @@ import {
   Text,
   Popover,
   PopoverAnchor,
+  PopoverArrow,
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
+  PopoverHeader,
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -29,18 +30,23 @@ import AuthLayout from "../components/layouts/AuthLayout";
 import TermsOfServiceModal from "../components/modals/TermsOfServiceModal";
 import PrivacyPolicyModal from "../components/modals/PrivacyPolicyModal";
 
-enum MainField {
-  SIGNUP,
-  PRIVACY_POLICY,
-  TERMS_OF_SERVICE,
-}
-
 const Signup: NextPage = () => {
   const [email, setEmail] = useState("");
   const [isHost, setIsHost] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [mainField, setMainField] = useState<MainField>(MainField.SIGNUP);
+  const hostAccountDisclosure = useDisclosure();
+  const {
+    isOpen: privacyPolicyIsOpen = false,
+    onOpen: privacyPolicyOnOpen,
+    onClose: privacyPolicyOnClose,
+  } = useDisclosure();
+  const {
+    isOpen: termsOfServiceIsOpen = false,
+    onOpen: termsOfServiceOnOpen,
+    onClose: termsOfServiceOnClose,
+  } = useDisclosure();
   const signupContainerHeight = "380";
+  const popoverHeight = "300";
 
   useEffect(() => {
     setMounted(true);
@@ -52,16 +58,19 @@ const Signup: NextPage = () => {
         <title>Signup | Curlo</title>
       </Head>
       <Box
+        position="absolute"
         w="100%"
         h="100vh"
-        minW="sm"
+        minW="md"
         bgGradient="linear-gradient(#735FED, #FFFFFF) repeat"
       >
         <AuthLayout>
-          <Container maxW="2xl">
+          <Container maxW="2xl" centerContent>
             {/* Outer box */}
             <Box
-              minW="xs"
+              minW="sm"
+              maxW={{ base: "sm", md: "none" }}
+              w="100%"
               h={signupContainerHeight}
               my="4"
               borderRadius="20"
@@ -71,41 +80,51 @@ const Signup: NextPage = () => {
               <Flex flexDirection="row" h="100%">
                 {/* Left */}
                 <Box
-                  display={{ base: "none", sm: "block" }}
+                  display={{ base: "none", md: "block" }}
                   borderRadius="20"
                   bg="primary.green"
                   h="100%"
-                  w="75%"
+                  w="100%"
                 ></Box>
                 {/* Sign up container (should only run on client side, e.g mounted) */}
-                <Box w="100%" h="100%" p="10" borderRadius="32">
-                  {mounted &&
-                    (mainField === MainField.PRIVACY_POLICY ? (
-                      <PrivacyPolicy
-                        onClose={() => {
-                          setMainField(MainField.SIGNUP);
-                        }}
+                <Box
+                  minW="sm"
+                  w="100%"
+                  h="100%"
+                  m={{ base: 0, md: 2 }}
+                  p={10}
+                  borderRadius="32"
+                >
+                  {mounted && (
+                    <>
+                      <PrivacyPolicyModal
+                        isOpen={privacyPolicyIsOpen}
+                        onClose={privacyPolicyOnClose}
                       />
-                    ) : mainField === MainField.TERMS_OF_SERVICE ? (
-                      <TermsOfService
-                        onClose={() => {
-                          setMainField(MainField.SIGNUP);
-                        }}
+                      <TermsOfServiceModal
+                        isOpen={termsOfServiceIsOpen}
+                        onClose={termsOfServiceOnClose}
                       />
-                    ) : (
+                      <HostAccountPopover
+                        isOpen={hostAccountDisclosure.isOpen}
+                        onOpen={hostAccountDisclosure.onOpen}
+                        onClose={hostAccountDisclosure.onClose}
+                      />
                       <SignupFields
                         email={email}
                         onEmailChange={setEmail}
                         isHost={isHost}
+                        hostAccountDisclosure={hostAccountDisclosure}
                         onIsHostChange={() => setIsHost(!isHost)}
                         onOpenPrivacyPolicy={() => {
-                          setMainField(MainField.PRIVACY_POLICY);
+                          privacyPolicyOnOpen();
                         }}
                         onOpenTermsOfService={() => {
-                          setMainField(MainField.TERMS_OF_SERVICE);
+                          termsOfServiceOnOpen();
                         }}
                       />
-                    ))}
+                    </>
+                  )}
                 </Box>
               </Flex>
             </Box>
@@ -138,6 +157,7 @@ interface SignupFieldsProps {
   onEmailChange: (email: string) => void;
   isHost: boolean;
   onIsHostChange: () => void;
+  hostAccountDisclosure: ReturnType<typeof useDisclosure>;
   onOpenPrivacyPolicy: () => void;
   onOpenTermsOfService: () => void;
 }
@@ -150,12 +170,13 @@ function SignupFields(props: SignupFieldsProps) {
     onIsHostChange,
     onOpenPrivacyPolicy,
     onOpenTermsOfService,
+    hostAccountDisclosure,
   } = props;
   const {
     onOpen: onPopoverOpen,
     onClose: onPopoverClose,
     isOpen: isPopoverOpen,
-  } = useDisclosure();
+  } = hostAccountDisclosure;
   const helperTextFontSize = "12";
   return (
     <VStack alignItems="start" spacing="4">
@@ -197,44 +218,23 @@ function SignupFields(props: SignupFieldsProps) {
       </Button>
       <VStack w="100%" spacing="1">
         <HStack align="center">
-          <Popover
-            isOpen={isPopoverOpen}
-            onOpen={onPopoverOpen}
-            onClose={onPopoverClose}
-            placement="top"
-          >
-            <PopoverAnchor>
-              <Text fontSize={helperTextFontSize}>Host account?</Text>
-            </PopoverAnchor>
-            <Checkbox
-              aria-label="Host account"
-              size="sm"
-              borderRadius="50%"
-              colorScheme="teal"
-              checked={isHost}
-              css={`
-                > span:first-of-type {
-                  box-shadow: unset;
-                }
-              `}
-              onChange={() => {
-                if (!isHost) onPopoverOpen();
-                onIsHostChange();
-              }}
-            />
-            <PopoverContent
-              p={4}
-              maxW="sm"
-              borderRadius={20}
-              border="none"
-              bg="primary.green"
-            >
-              <PopoverCloseButton my={1} />
-              <PopoverBody>
-                <HostAccountHint />
-              </PopoverBody>
-            </PopoverContent>
-          </Popover>
+          <Text fontSize={helperTextFontSize}>Host account?</Text>
+          <Checkbox
+            aria-label="Host account"
+            size="sm"
+            borderRadius="50%"
+            colorScheme="teal"
+            checked={isHost}
+            css={`
+              > span:first-of-type {
+                box-shadow: unset;
+              }
+            `}
+            onChange={() => {
+              if (!isHost) onPopoverOpen();
+              onIsHostChange();
+            }}
+          />
         </HStack>
         <Text fontSize={helperTextFontSize}>
           Already have an account?{" "}
@@ -264,31 +264,34 @@ function SignupFields(props: SignupFieldsProps) {
   );
 }
 
-interface TermsOfServiceProps {
+interface HostAccountPopoverProps {
+  h?: number | string;
+  isOpen?: boolean;
+  onOpen?: () => void;
   onClose?: () => void;
 }
 
-function TermsOfService(props: TermsOfServiceProps) {
-  // TODO: Placeholder
-  const { onClose } = props;
+function HostAccountPopover(props: HostAccountPopoverProps) {
+  const { h, isOpen = false, onOpen = () => {}, onClose = () => {} } = props;
   return (
-    <Box h="100%" w="100%" bg="primary.pruple">
-      <CloseButton size="sm" onClick={onClose || (() => {})} />
-    </Box>
-  );
-}
-
-interface PrivacyPolicyProps {
-  onClose?: () => void;
-}
-
-function PrivacyPolicy(props: PrivacyPolicyProps) {
-  // TODO: Placeholder
-  const { onClose } = props;
-  return (
-    <Box h="100%" w="100%" bg="primary.pruple">
-      <CloseButton size="sm" onClick={onClose || (() => {})} />
-    </Box>
+    <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+      <PopoverAnchor>
+        <Text> </Text>
+      </PopoverAnchor>
+      <PopoverContent
+        w="sm"
+        borderRadius={16}
+        border="none"
+        h={h}
+        bg="primary.green"
+      >
+        <PopoverHeader>Host Account</PopoverHeader>
+        <PopoverCloseButton my={1} />
+        <PopoverBody>
+          <HostAccountHint />
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
   );
 }
 
