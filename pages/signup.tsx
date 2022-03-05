@@ -3,7 +3,10 @@ import Head from 'next/head'
 import NextLink from 'next/link'
 import { getSession, signIn } from 'next-auth/react'
 import { useEffect, useState } from 'react'
+<<<<<<< HEAD
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
+=======
+>>>>>>> dev
 import {
     Box,
     Button,
@@ -25,6 +28,7 @@ import {
     PopoverHeader,
     VStack,
     useDisclosure,
+<<<<<<< HEAD
     Modal,
     ModalOverlay,
     ModalContent,
@@ -33,9 +37,14 @@ import {
     ModalBody,
     ModalFooter,
     Center,
+=======
+>>>>>>> dev
 } from '@chakra-ui/react'
 
 import AuthLayout from '../components/layouts/AuthLayout'
+import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
+import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
+
 
 
 enum MainField {
@@ -46,10 +55,16 @@ enum MainField {
 
 
 const Signup: NextPage = () => {
+<<<<<<< HEAD
     const [email, setEmail] = useState("")
     const [isHost, setIsHost] = useState(false)
     const [mounted, setMounted] = useState(false)
     const [mainField, setMainField] = useState<MainField>(MainField.SIGNUP)
+=======
+    const [ email, setEmail ] = useState("")
+    const [ isHost, setIsHost ] = useState(false)
+    const [ mounted, setMounted ] = useState(false)
+>>>>>>> dev
     const hostAccountDisclosure = useDisclosure()
     const {
         isOpen: privacyPolicyIsOpen = false,
@@ -79,9 +94,15 @@ const Signup: NextPage = () => {
                 bgGradient="linear-gradient(#735FED, #FFFFFF) repeat"
             >
                 <AuthLayout>
+<<<<<<< HEAD
                     <Container maxW="2xl">
                         {/* Outer box */}
                         <Box minW="sm" w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
+=======
+                    <Container maxW="2xl" centerContent>
+                        {/* Outer box */}
+                        <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
+>>>>>>> dev
                             <Flex flexDirection="row" h="100%">
                                 {/* Left */}
                                 <Box
@@ -93,6 +114,7 @@ const Signup: NextPage = () => {
                                 >
                                 </Box>
                                 {/* Sign up container (should only run on client side, e.g mounted) */}
+<<<<<<< HEAD
                                 <Box minW="sm" w="100%" h="100%" m={2} p={10} borderRadius="32">
                                     {mounted && (
                                         <>
@@ -108,6 +130,15 @@ const Signup: NextPage = () => {
                                                 onClose={termsOfServiceOnClose}
                                                 h={popoverHeight}
                                             /> */}
+=======
+                                <Box minW="sm" w="100%" h="100%" m={{ base: 0, md: 2 }} p={10} borderRadius="32">
+                                    {mounted && (
+                                        <>
+                                            <PrivacyPolicyModal
+                                                isOpen={privacyPolicyIsOpen}
+                                                onClose={privacyPolicyOnClose}
+                                            />
+>>>>>>> dev
                                             <TermsOfServiceModal
                                                 isOpen={termsOfServiceIsOpen}
                                                 onClose={termsOfServiceOnClose}
@@ -160,7 +191,11 @@ interface SignupFieldsProps {
     onEmailChange: (email: string) => void;
     isHost: boolean;
     onIsHostChange: () => void;
+<<<<<<< HEAD
     hostAccountDisclosure?: ReturnType<typeof useDisclosure>;
+=======
+    hostAccountDisclosure: ReturnType<typeof useDisclosure>;
+>>>>>>> dev
     onOpenPrivacyPolicy: () => void;
     onOpenTermsOfService: () => void;
 }
@@ -175,8 +210,12 @@ function SignupFields(props: SignupFieldsProps) {
         onOpenTermsOfService,
         hostAccountDisclosure,
     } = props
+<<<<<<< HEAD
     const haDisclosure = hostAccountDisclosure || useDisclosure()
     const { onOpen: onPopoverOpen, onClose: onPopoverClose, isOpen: isPopoverOpen } = haDisclosure
+=======
+    const { onOpen: onPopoverOpen, onClose: onPopoverClose, isOpen: isPopoverOpen } = hostAccountDisclosure
+>>>>>>> dev
     const helperTextFontSize = "12"
     return (
         <VStack alignItems="start" spacing="4">
@@ -264,7 +303,11 @@ interface HostAccountPopoverProps {
 }
 
 function HostAccountPopover(props: HostAccountPopoverProps) {
+<<<<<<< HEAD
     const { h, isOpen = false, onOpen = (() => { }), onClose = (() => { }) } = props
+=======
+    const { h, isOpen=false, onOpen=(()=>{}), onClose=(()=>{}) } = props
+>>>>>>> dev
     return (
         <Popover
             isOpen={isOpen}
@@ -287,6 +330,7 @@ function HostAccountPopover(props: HostAccountPopoverProps) {
     )
 }
 
+<<<<<<< HEAD
 interface TermsOfServicePopoverProps {
     h?: number | string
     isOpen?: boolean
@@ -506,6 +550,8 @@ function PrivacyPolicy() {
     )
 }
 
+=======
+>>>>>>> dev
 function HostAccountHint() {
     return (
         <Text textColor="black" textAlign="center">

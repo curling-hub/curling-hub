@@ -1,5 +1,26 @@
 import { extendTheme } from "@chakra-ui/react"
 
+const Input: Record<string, any> = {
+    variants: {
+      outline: () => ({
+        field: {
+          borderColor: `#c4c4c4`,
+          color: '#000000',
+          bg: `white.100`,
+          _hover: {
+            bg: `white.100`
+          },
+          _focus: {
+            bg: "white",
+          }
+        },
+        addon: {
+          bg: `white.100`
+        }
+      })
+    }
+};
+
 const theme = extendTheme({
     colors: {
         primary: {
@@ -10,6 +31,9 @@ const theme = extendTheme({
             'purple': '#735FED',
         },
     },
+    components: {
+            Input
+    }
 })
 
 export default theme
