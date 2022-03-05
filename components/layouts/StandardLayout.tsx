@@ -1,5 +1,5 @@
-import Header from "../navbarComponents/Navbar"
-import { NavItem } from '../navbarComponents/MobileDrawer'
+import Header from "../navbar/Navbar"
+import { NavItem } from '../navbar/MobileDrawer'
 
 interface StandardLayoutProps {
     children?: React.ReactNode;

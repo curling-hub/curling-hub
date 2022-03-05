@@ -1,5 +1,5 @@
-import Header from "../../components/navbarComponents/Navbar"
-import { NavItem } from '../../components/navbarComponents/MobileDrawer'
+import Header from "../navbar/Navbar"
+import { NavItem } from '../navbar/MobileDrawer'
 
 interface LayoutProps {
     children?: React.ReactNode;
