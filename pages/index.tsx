@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import Head from "next/head";
 import StandardLayout from "../components/layouts/StandardLayout";
 import {
@@ -11,7 +10,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 
-const Home: NextPage = () => {
+const Home = () => {
   return (
     <>
       <Head>
