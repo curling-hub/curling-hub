@@ -1,11 +1,11 @@
-import type { NextPage } from 'next'
+
 import Head from 'next/head'
 import StandardLayout from '../components/layouts/StandardLayout'
 import {Box, Button, Text, Flex, Spacer, Center, Link} from "@chakra-ui/react"
 
 
 
-const Home: NextPage = () => {
+const Home = () => {
   return (
     <>
       
@@ -135,3 +135,5 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+
