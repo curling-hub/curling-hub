@@ -39,6 +39,8 @@ const Home = () => {
              marginTop={"7%"} 
              textAlign="center"
              boxShadow="lg"
+             width='320px'
+             height='525px'
         //     marginBottom={{md:'50px' }}>
           >
           <Text fontSize="2.5rem"
@@ -48,7 +50,7 @@ const Home = () => {
           </Text>
 
           <Text fontSize = "1.4rem"
-            marginX='30px'>
+            marginX='20px'>
             Want to join a local <br></br>
             curling club? Join <br></br>today!
           </Text>
@@ -57,11 +59,11 @@ const Home = () => {
            <Link href="/signup">
           <Button background="primary.green" 
             borderRadius="35px"
- //           marginTop={{base:"0",md:"17.5vh",lg:"35vh"}}
-            padding="25px 37px"
+            padding="25px 30px"
             fontSize="19px"
             boxShadow="md"
-            marginTop="37.7vh">
+            marginTop="24vh"
+            marginRight="10px">
             Sign Up
           </Button>
           </Link>
@@ -69,12 +71,10 @@ const Home = () => {
           <Link href='/about'>
           <Button background="primary.green" 
             borderRadius="35px"
-            marginLeft="15px"
-//            marginTop={{base:"0",md:"17.5vh",lg:"35vh"}}
-            marginTop="37.7vh"
-            padding="25px 37px"
+            padding="25px 30px"
             fontSize="19px"
-            boxShadow="md">
+            boxShadow="md"
+            marginTop="24vh">
               More Info
             </Button>
           </Link>
@@ -94,6 +94,8 @@ const Home = () => {
              borderRadius="35px"
              marginTop={"7%"} 
              boxShadow="lg"
+             width='320px'
+             height='525px'
 //             marginLeft={{base:"0%",md:"0%",lg:"25%"}}
 
              textAlign="center">
@@ -103,8 +105,8 @@ const Home = () => {
             fontWeight="bold">
             Ratings
           </Text>
-          <Text fontSize = "1.4rem"
-          marginX="30px">
+          <Text fontSize = "1.3rem"
+          marginX="20px">
             Want to see the top teams <br></br>
             in the world? Check out <br></br>
             the ratings below.
@@ -115,9 +117,9 @@ const Home = () => {
             <Link href="/ratings">
           <Button background="#7FD6A4" 
             borderRadius="full"
-            marginLeft="15px"
+
 //            marginTop={{base:"0",md:"17.5vh",lg:"35vh"}}
-            marginTop="35vh"
+            marginTop="22vh"
             padding="25px 99px"
             fontSize="19px">
               <b>Ratings</b>
