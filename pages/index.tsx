@@ -1,16 +1,10 @@
+import type { NextPage } from "next";
 import Head from "next/head";
+import { REG_BUTTON_FONT_SIZE, CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from "../components/layouts/StandardLayout";
-import {
-  Box,
-  Button,
-  Text,
-  Flex,
-  Spacer,
-  Center,
-  Link,
-} from "@chakra-ui/react";
+import { Box, Button, Text, Flex, Spacer, Link } from "@chakra-ui/react";
 
-const Home = () => {
+const Home: NextPage = () => {
   return (
     <>
       <Head>
@@ -20,114 +14,100 @@ const Home = () => {
         position="absolute"
         w="100%"
         h="100vh"
-        minW="md"
         bgGradient="linear-gradient(primary.purple, primary.white)"
       >
         <StandardLayout />
         {/*Card Container Box*/}
-        <Flex
-          alignItems="center"
-          //marginLeft={{base:"0",md:"12.5%",lg:"25%"}}
-          //        justify ="center"
-          direction={{ base: "column", md: "row" }}
-        >
+        <Flex alignItems="center" direction={{ base: "column", md: "row" }}>
           <Spacer />
-          <Center>
-            <Box
-              display="inline-block"
-              background="primary.white"
-              alignItems="center"
-              padding="1rem"
-              borderRadius="35px"
-              marginTop={"7%"}
-              textAlign="center"
-              boxShadow="lg"
-              width="320px"
-              height="525px"
-              //     marginBottom={{md:'50px' }}>
-            >
-              <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
-                Get Started
-              </Text>
+          <Box
+            background="primary.white"
+            alignItems="center"
+            padding="1rem"
+            borderRadius={CONST_BORDER_RADIUS}
+            marginTop="2%"
+            marginBottom="50px"
+            textAlign="center"
+            boxShadow="lg"
+            width="320px"
+            height="550px"
+          >
+            <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+              Get Started
+            </Text>
 
-              <Text fontSize="1.4rem" marginX="20px">
-                Want to join a local <br></br>
-                curling club? Join <br></br>today!
-              </Text>
+            <Text fontSize="1.3rem" marginX="20px">
+              Want to join a local
+              <br />
+              curling club?
+              <br />
+              Join today!
+            </Text>
 
+            <Box marginTop="308px">
               <Link href="/signup">
                 <Button
                   background="primary.green"
-                  borderRadius="35px"
+                  borderRadius="full"
                   padding="25px 30px"
-                  fontSize="19px"
+                  fontSize={REG_BUTTON_FONT_SIZE}
                   boxShadow="md"
-                  marginTop="24vh"
                   marginRight="10px"
                 >
                   Sign Up
                 </Button>
               </Link>
-
               <Link href="/about">
                 <Button
                   background="primary.green"
-                  borderRadius="35px"
+                  borderRadius="full"
                   padding="25px 30px"
-                  fontSize="19px"
+                  fontSize={REG_BUTTON_FONT_SIZE}
                   boxShadow="md"
-                  marginTop="24vh"
                 >
                   More Info
                 </Button>
               </Link>
-            </Box>{" "}
-            {/*Card1}*/}
-          </Center>
+            </Box>
+          </Box>{" "}
+          {/*Card1}*/}
           <Spacer />
-          <Center>
-            {/*Card 2 */}
-            <Box
-              display="inline-block"
-              background="primary.white"
-              alignItems="center"
-              padding="0.9rem 0.9rem 0.9rem 0.9rem"
-              borderRadius="35px"
-              marginTop={"7%"}
-              boxShadow="lg"
-              width="320px"
-              height="525px"
-              //             marginLeft={{base:"0%",md:"0%",lg:"25%"}}
-
-              textAlign="center"
-            >
-              <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
-                Ratings
-              </Text>
-              <Text fontSize="1.3rem" marginX="20px">
-                Want to see the top teams <br></br>
-                in the world? Check out <br></br>
-                the ratings below.
-              </Text>
-              <br></br>
-
-              <span>
-                <Link href="/ratings">
-                  <Button
-                    background="#7FD6A4"
-                    borderRadius="full"
-                    //            marginTop={{base:"0",md:"17.5vh",lg:"35vh"}}
-                    marginTop="22vh"
-                    padding="25px 99px"
-                    fontSize="19px"
-                  >
-                    <b>Ratings</b>
-                  </Button>
-                </Link>
-              </span>
-            </Box>{" "}
-            {/*Card2}*/}
-          </Center>
+          {/*Card 2 */}
+          <Box
+            background="primary.white"
+            alignItems="center"
+            padding="0.9rem 0.9rem 0.9rem 0.9rem"
+            borderRadius={CONST_BORDER_RADIUS}
+            marginTop="2%"
+            marginBottom="50px"
+            boxShadow="lg"
+            width="320px"
+            height="550px"
+            textAlign="center"
+          >
+            <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+              Ratings
+            </Text>
+            <Text fontSize="1.3rem" marginX="20px">
+              Want to see the top teams <br></br>
+              in the world? Check out <br></br>
+              the ratings below.
+            </Text>
+            <Box marginTop="308px">
+              <Link href="/ratings">
+                <Button
+                  background="primary.green"
+                  borderRadius="full"
+                  boxShadow="md"
+                  padding="25px 108px"
+                  fontSize={REG_BUTTON_FONT_SIZE}
+                >
+                  Ratings
+                </Button>
+              </Link>
+            </Box>
+          </Box>{" "}
+          {/*Card2}*/}
           <Spacer />
         </Flex>{" "}
         {/*Card Container*/}
