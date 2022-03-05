@@ -1,6 +1,6 @@
-import Header from "../navbarComponents/Navbar"
+import Header from "../navbar/Navbar"
 import { Box, BoxProps } from "@chakra-ui/react"
-import { NavItem } from '../../components/navbarComponents/MobileDrawer'
+import { NavItem } from '../navbar/MobileDrawer'
 
 interface AuthLayoutProps {
     children?: React.ReactNode;
@@ -17,7 +17,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
-                    {children || <></>}
+                {children || <></>}
             </main>
         </>
     )
