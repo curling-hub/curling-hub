@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { DefaultSession, DefaultUser, Session } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import SequelizeAdaptor, { models } from "@next-auth/sequelize-adapter"
 import { DataTypes, Sequelize } from "sequelize"
@@ -22,6 +22,20 @@ const sequelize = new Sequelize(mysql_database, mysql_user, mysql_password, {
     logging: process.env.NODE_ENV === 'development',
 })
 
+
+declare module "next-auth" {
+    /**
+     * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+     */
+    // https://next-auth.js.org/getting-started/typescript
+    interface Session {
+        user: {
+            account_type?: string
+        } & DefaultSession["user"] & DefaultUser
+    }
+}
+
+
 export default NextAuth({
     pages: {
         // **Uncomment these after the corresponding pages are ready to go
@@ -38,23 +52,27 @@ export default NextAuth({
         }),
     ],
     callbacks: {
-        async redirect({ url, baseUrl }) {
-            return baseUrl
-        },
+        //async redirect({ url, baseUrl }) {
+        //    return baseUrl
+        //},
         async session({ session, user, token }) {
             return {
                 ...session,
                 user: {
                     ...session.user,
-                    // need `user.id` to get custom user specific info in `getServerSideProps`
-                    id: user.id,
+                    ...user,
                 },
             }
         },
     },
     adapter: SequelizeAdaptor(sequelize, {
         models: {
-            Account: sequelize.define("account", {
+            User: sequelize.define("users", {
+                ...models.User,
+                // account_type is one of: ['member', 'club', 'admin']
+                account_type: DataTypes.STRING(256),
+            }),
+            Account: sequelize.define("accounts", {
                 ...models.Account,
                 // overwrite default `id_token` data type because VARCHAR(255) is too short
                 id_token: DataTypes.STRING(8192),
