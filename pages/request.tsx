@@ -102,12 +102,13 @@ const Request: NextPage = () => {
                                 textAlign='center'
 
                                 width='50%'
-                                height='43%'
+                                height='46%'
                                 marginTop='8%'
                                 borderRadius='35px'
                                 fontSize='1.09vw'
                                >
-                                <ModalHeader>Account Verification</ModalHeader>
+                                <ModalHeader
+                                fontSize='2vw'>Account Verification</ModalHeader>
                                 <ModalCloseButton/>
                                 <ModalBody>
                                     At Curlo, club accounts matter. We Verify <br></br>
