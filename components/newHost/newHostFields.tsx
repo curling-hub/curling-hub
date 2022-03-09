@@ -1,5 +1,4 @@
 import NextLink from 'next/link'
-import { signIn } from 'next-auth/react'
 import StateDropdown from './StateDropdown'
 import {
     Button,
@@ -40,6 +39,7 @@ interface NewHostFieldsProps {
     onIsAgreedPPChange: () => void;
     onOpenPrivacyPolicy: () => void;
     onOpenTermsOfService: () => void;
+    signUp: () => void;
 }
 
 export default function NewHostFields(props: NewHostFieldsProps) {
@@ -68,6 +68,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
         onIsAgreedPPChange,
         onOpenPrivacyPolicy,
         onOpenTermsOfService,
+        signUp
     } = props
 
     const helperTextFontSize = "12"
@@ -164,7 +165,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                 _hover={{ bg: "green.400" }}
                 _active={{ bg: "green.600" }}
                 _focus={{ boxShadow: "lg" }}
-                onClick={() => signIn("Organization", { organization })}//TODO this needs to be changed
+                onClick={signUp}
             >
                 Request Account
             </Button>
