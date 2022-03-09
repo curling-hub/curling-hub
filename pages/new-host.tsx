@@ -1,3 +1,4 @@
+import { object, string, number, date, InferType } from 'yup';
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { getSession } from 'next-auth/react'
@@ -31,7 +32,7 @@ const NewHost: NextPage = () => {
     } = useDisclosure()
     const signupContainerHeight = "630"
     const popoverHeight = "450"
-
+    
     useEffect(() => { setMounted(true) }, [])
 
     return (
