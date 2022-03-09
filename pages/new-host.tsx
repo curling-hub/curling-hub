@@ -46,7 +46,7 @@ const NewHost: NextPage = () => {
         const phoneRE = /^\D[0-9]{3}[\W]*[0-9]{3}[\W]*[0-9]{4}/;
         
         let hostSignupSchema = object({
-            organization: string().required(),
+            organization: string().required(), // TODO: ??
             website: string().url().nullable(),
             phone: string().matches(phoneRE, 'invalid phone number'),
             address: string().required(), // TODO: ??
