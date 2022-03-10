@@ -1,4 +1,3 @@
-import { object, string, number, date, InferType } from 'yup';
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { getSession } from 'next-auth/react'
