@@ -1,4 +1,3 @@
-import { object, string, number, date, InferType } from 'yup';
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { getSession } from 'next-auth/react'
@@ -42,43 +41,6 @@ const NewHost: NextPage = () => {
     const signupContainerHeight = "530"
     const popoverHeight = "450"
 
-    const validateAndSignUp = async () => {
-        const phoneRE = /^\D[0-9]{3}[\W]*[0-9]{3}[\W]*[0-9]{4}/;
-        
-        let hostSignupSchema = object({
-            organization: string().required(), // TODO: ??
-            website: string().url().nullable(),
-            phone: string().matches(phoneRE, 'invalid phone number'),
-            address: string().required(), // TODO: ??
-            address2: string().required(), // TODO: ??
-            city: string().required(), // TODO: ??
-            state: string().required(), //TODO: ??
-            zip: string().required(), // TODO: ??
-            country: string().required() // TODO: ??
-        })
-
-        try {
-            const form = await hostSignupSchema.validate(
-                {
-                    organization: organization,
-                    website: website,
-                    phone: phone,
-                    address: address1,
-                    address2: address2,
-                    city: city,
-                    state: state,
-                    zip: zipcode,
-                    country: country
-                }
-            )
-            console.log(form)
-        } catch(err) {
-            console.log(err)
-        }
-
-        // Now do auth stuff
-    }
-    
     useEffect(() => { setMounted(true) }, [])
 
     return (
@@ -144,7 +106,6 @@ const NewHost: NextPage = () => {
                                                 onIsAgreedPPChange={() => setIsAgreedPP(!isAgreedPP)}
                                                 onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
                                                 onOpenTermsOfService={() => { termsOfServiceOnOpen() }}
-                                                signUp={validateAndSignUp}
                                             />
                                         </>
                                     )}
