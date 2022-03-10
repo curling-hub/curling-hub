@@ -23,6 +23,7 @@ import TermsAndPolicy from '../components/pageText/signup/TermsAndPolicy'
 import CreateAccountButton from '../components/inputs/signup/CreateAccountButton'
 import theme from '../themes/colors'
 import InfoButton from '../components/inputs/signup/InfoButton'
+import { useEffect, useState } from 'react'
 
 const NewUser: NextPage = () => {
 
@@ -51,6 +52,8 @@ const NewUser: NextPage = () => {
     const onInfoOpen = () => {
         infoOnOpen()
     }
+    const [ mounted, setMounted ] = useState(false)
+    useEffect(() => { setMounted(true) }, [])
 
     return (
         <>
@@ -78,6 +81,7 @@ const NewUser: NextPage = () => {
                         />
                     </Center>
                     <SignupLayout>
+                        {mounted ?
                         <VerticalSpacing>
                             <HorizontalSpacing>
                                 <TextField fieldPlaceholder='First Name' width='185px' />
@@ -122,6 +126,7 @@ const NewUser: NextPage = () => {
                                 <CreateAccountButton />
                             </VStack>
                         </VerticalSpacing>
+                        : <></>}
                     </SignupLayout>
                 </AuthLayout>
             </div>
