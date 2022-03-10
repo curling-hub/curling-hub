@@ -129,6 +129,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
     // already signed in, redirect
     return {
+        // TODO: Where do we redirect to?
         // redirect: {
         //     destination: "/",
         // },
