@@ -63,7 +63,7 @@ export default function LoginFields(props: LoginFieldsProps) {
                 _focus={{ boxShadow: "lg" }}
                 onClick={() => signIn("email", { email })}//TODO this needs to be changed
             >
-                Log in with Email
+                Login with Email
             </Button>
             <Button
                 leftIcon={<FaGoogle />}
@@ -76,7 +76,7 @@ export default function LoginFields(props: LoginFieldsProps) {
                 _focus={{ boxShadow: "lg" }}
                 onClick={() => signIn("email", { email })}//TODO this needs to be changed
             >
-                Log in with Google
+                Login with Google
             </Button>
 
             <VStack w="100%" spacing="1">
