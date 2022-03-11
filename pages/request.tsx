@@ -20,7 +20,7 @@ const Request: NextPage = () => {
     const{isOpen,onOpen,onClose} = useDisclosure()
     const [size, setSize] = useState('sm')
    
-    const handleSizeClick = (newSize) => {//You can ignore the newSize error/warning, for now?
+    const handleSizeClick = (newSize: React.SetStateAction<string>) => {//You can ignore the newSize error/warning, for now?
       setSize(newSize)
       onOpen()
     }
