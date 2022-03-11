@@ -3,7 +3,7 @@ describe('Home Page Navigation', () => {
     const baseUrl = `http://localhost:${port}`
     it('should contain a login button', () => {
         cy.visit(`${baseUrl}/login`)
-        cy.get('button').contains('Login with email').click()
+        cy.get('button').contains('Login with Email').click()
     })
     it('should contain a login with google button', () => {
         cy.visit(`${baseUrl}/login`)
@@ -11,7 +11,7 @@ describe('Home Page Navigation', () => {
     })
     it('should contain a TOS button', () => {
         cy.visit(`${baseUrl}/login`)
-        cy.get('button').contains('Terms of service').click()
+        cy.get('button').contains('Terms of Service').click()
     })
     it('should contain a privacy policy button', () => {
         cy.visit(`${baseUrl}/login`)
