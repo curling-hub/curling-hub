@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push: 
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  cypress-tests:
+
+    runs-on: self-hosted
+    container: cypress/browsers:node16.14.0-slim-chrome99-ff97
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cypress ct
+      uses: cypress-io/github-action@v2
+      with:
+        command: npx cypress run-ct --config video=false
+    - name: Build nextjs
+      run: npm run build
+    - name: Cypress run
+      uses: cypress-io/github-action@v2
+      env:
+        NEXTAUTH_SECRET: gitactions-test
+        NEXTAUTH_URL: "http://localhost:3000"
+      with:
+        # already installed in the previous step
+        install: false
+        start: npm start
