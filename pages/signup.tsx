@@ -59,12 +59,11 @@ const Signup: NextPage = () => {
             <Box
                 position="absolute"
                 w="100%"
-                h="100vh"
                 minW="md"
                 bgGradient="linear-gradient(#735FED, #FFFFFF) repeat"
             >
                 <AuthLayout>
-                    <Container maxW="2xl" centerContent>
+                    <Container maxW="2xl" centerContent h="100vh">
                         {/* Outer box */}
                         <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
                             <Flex flexDirection="row" h="100%">
@@ -88,11 +87,6 @@ const Signup: NextPage = () => {
                                             <TermsOfServiceModal
                                                 isOpen={termsOfServiceIsOpen}
                                                 onClose={termsOfServiceOnClose}
-                                            />
-                                            <HostAccountPopover
-                                                isOpen={hostAccountDisclosure.isOpen}
-                                                onOpen={hostAccountDisclosure.onOpen}
-                                                onClose={hostAccountDisclosure.onClose}
                                             />
                                             <SignupFields
                                                 email={email}
@@ -118,13 +112,24 @@ const Signup: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context)
     if (!session || !session["user"]) {
-        // not signed in
+        // not signed in / signed up
         return {
             props: {}
         }
     }
+    const user = session["user"]
+    if (!user["account_type"]) {
+        // has not completed sign up up
+        return {
+            redirect: {
+                destination: "/new-user",
+            },
+            props: {},
+        }
+    }
     // already signed in, redirect
     return {
+        // TODO: Where do we redirect to?
         // redirect: {
         //     destination: "/",
         // },
@@ -193,37 +198,18 @@ function SignupFields(props: SignupFieldsProps) {
                 Sign up with Google
             </Button>
             <VStack w="100%" spacing="1">
-                <HStack align="center">
-                    <Text fontSize={helperTextFontSize}>Host account?</Text>
-                    <Checkbox
-                        aria-label="Host account"
-                        size="sm"
-                        borderRadius="50%"
-                        colorScheme="teal"
-                        checked={isHost}
-                        css={`
-                            > span:first-of-type {
-                                box-shadow: unset;
-                            }
-                        `}
-                        onChange={() => {
-                            if (!isHost) onPopoverOpen()
-                            onIsHostChange()
-                        }}
-                    />
-                </HStack>
                 <Text fontSize={helperTextFontSize}>
                     Already have an account?{" "}
                     <NextLink href="/login" passHref>
-                        <ChakraLink>Login</ChakraLink>
+                        <ChakraLink color="blue.500">Login</ChakraLink>
                     </NextLink>
                 </Text>
                 <Text fontSize={helperTextFontSize}>
-                    <Button variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
+                    <Button variant="link" color="blue.500" size={helperTextFontSize} onClick={onOpenTermsOfService}>
                         Terms of Service
                     </Button>
                     {" "}and{" "}
-                    <Button variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
+                    <Button variant="link" color="blue.500" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
                         Privacy Policy
                     </Button>
                 </Text>

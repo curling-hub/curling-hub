@@ -90,8 +90,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             props: {}
         }
     }
+    const user = session["user"]
+    if (!user["account_type"]) {
+        // has not completed sign up up
+        return {
+            redirect: {
+                destination: "/new-user",
+            },
+            props: {},
+        }
+    }
     // already signed in, redirect
     return {
+        // TODO: Where do we redirect to?
         // redirect: {
         //     destination: "/",
         // },

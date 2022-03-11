@@ -74,7 +74,7 @@ export default function LoginFields(props: LoginFieldsProps) {
                 _hover={{ bg: "gray.400" }}
                 _active={{ bg: "gray.600" }}
                 _focus={{ boxShadow: "lg" }}
-                onClick={() => signIn("email", { email })}//TODO this needs to be changed
+                onClick={() => signIn("google")}//TODO this needs to be changed
             >
                 Login with Google
             </Button>
