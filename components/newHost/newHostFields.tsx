@@ -113,45 +113,57 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                     <VStack alignItems="start" spacing="4">
                         <Stack>
                             <Field name="organization">
-                            {({field, form}: FieldProps<string>) => (
-                                <FormControl isInvalid={form.errors.organization != undefined && form.touched.organization != undefined}>
-                                    <Input
-                                        {...field}
-                                        borderRadius="full"
-                                        focusBorderColor="green.400"
-                                        shadow="sm"
-                                        placeholder="Organization"
-                                        value={organization}
-                                        onChange={(e) => onOrgChange(e.target.value)}
-                                    />
-                                    <FormErrorMessage>{form.errors.organization}</FormErrorMessage>
-                                </FormControl>
-                            )}
+                                {({field, form}: FieldProps<string>) => (
+                                    <FormControl isInvalid={form.errors.organization != undefined && form.touched.organization != undefined}>
+                                        <Input
+                                            {...field}
+                                            borderRadius="full"
+                                            focusBorderColor="green.400"
+                                            shadow="sm"
+                                            placeholder="Organization"
+                                            value={organization}
+                                            onChange={(e) => onOrgChange(e.target.value)}
+                                        />
+                                        <FormErrorMessage>{form.errors.organization}</FormErrorMessage>
+                                    </FormControl>
+                                )}
                             </Field>
 
-                            <Field name="website"/>
-                            <FormControl isInvalid={errors.website != undefined && touched.website}>
-                                <Input
-                                    borderRadius="full"
-                                    focusBorderColor="green.400"
-                                    shadow="sm"
-                                    placeholder="Website"
-                                    value={website}
-                                    onChange={(e) => onWebsiteChange(e.target.value)}
-                                />
-                            <FormErrorMessage>{errors.website}</FormErrorMessage>
-                            </FormControl>
+                            <Field name="website">
+                                {({field, form}: FieldProps<string>) => (
+                                    <FormControl isInvalid={form.errors.website != undefined && form.touched.website != undefined}>
+                                        <Input
+                                            {...field}
+                                            borderRadius="full"
+                                            focusBorderColor="green.400"
+                                            shadow="sm"
+                                            placeholder="Website"
+                                            value={website}
+                                            onChange={(e) => onWebsiteChange(e.target.value)}
+                                        />
+                                    <FormErrorMessage>{form.errors.website}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>
                             <HStack>
-                                <Input
-                                    // width=".75"
-                                    type="phone"
-                                    borderRadius="full"
-                                    focusBorderColor="green.400"
-                                    shadow="sm"
-                                    placeholder="Phone"
-                                    value={phone}
-                                    onChange={(e) => onPhoneChange(e.target.value)}
-                                />
+                                <Field name="phone">
+                                    {({field, form}: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.phone != undefined && form.touched.phone != undefined}>
+                                            <Input
+                                                // width=".75"
+                                                {...field}
+                                                type="phone"
+                                                borderRadius="full"
+                                                focusBorderColor="green.400"
+                                                shadow="sm"
+                                                placeholder="Phone"
+                                                value={phone}
+                                                onChange={(e) => onPhoneChange(e.target.value)}
+                                            />
+                                        <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>    
                                 <Select
                                     // width=".5"
                                     borderRadius="full"
@@ -161,43 +173,75 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                     <option value={phoneType}>Business</option>
                                 </Select>
                             </HStack>
-                            <Input
-                                borderRadius="full"
-                                focusBorderColor="green.400"
-                                shadow="sm"
-                                placeholder="Street Address"
-                                value={address1}
-                                onChange={(e) => onAddress1Change(e.target.value)}
-                            />
-                            <Input
-                                borderRadius="full"
-                                focusBorderColor="green.400"
-                                shadow="sm"
-                                placeholder="Apt., Suite, Unit, etc."
-                                value={address2}
-                                onChange={(e) => onAddress2Change(e.target.value)}
-                            />
+                            <Field name="address">
+                                {({field, form}: FieldProps<string>) => (
+                                    <FormControl isInvalid={form.errors.address != undefined && form.touched.address != undefined}>
+                                        <Input
+                                            {...field}
+                                            borderRadius="full"
+                                            focusBorderColor="green.400"
+                                            shadow="sm"
+                                            placeholder="Street Address"
+                                            value={address1}
+                                            onChange={(e) => onAddress1Change(e.target.value)}
+                                        />
+                                    <FormErrorMessage>{form.errors.address}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>        
+                            <Field name="address2">
+                                {({field, form}: FieldProps<string>) => (
+                                    <FormControl isInvalid={form.errors.address2 != undefined && form.touched.address2 != undefined}>
+                                        <Input
+                                            {...field}
+                                            borderRadius="full"
+                                            focusBorderColor="green.400"
+                                            shadow="sm"
+                                            placeholder="Apt., Suite, Unit, etc."
+                                            value={address2}
+                                            onChange={(e) => onAddress2Change(e.target.value)}
+                                        />
+                                    <FormErrorMessage>{form.errors.address2}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>   
                             <HStack>
-                                <Input
-                                    borderRadius="full"
-                                    focusBorderColor="green.400"
-                                    shadow="sm"
-                                    placeholder="City"
-                                    value={city}
-                                    onChange={(e) => onCityChange(e.target.value)}
-
-                                />
+                                <Field name="city">
+                                    {({field, form}: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.city != undefined && form.touched.city != undefined}>
+                                            <Input
+                                                {...field}
+                                                borderRadius="full"
+                                                focusBorderColor="green.400"
+                                                shadow="sm"
+                                                placeholder="City"
+                                                value={city}
+                                                onChange={(e) => onCityChange(e.target.value)}
+                                            />
+                                        <FormErrorMessage>{form.errors.city}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
                                 <StateDropdown />
                             </HStack>
                             <HStack>
-                                <Input
-                                    borderRadius="full"
-                                    focusBorderColor="green.400"
-                                    shadow="sm"
-                                    placeholder="Zipcode"
-                                    value={zipcode}
-                                    onChange={(e) => onZipcodeChange(e.target.value)}
-                                />
+
+                                <Field name="zip">
+                                    {({field, form}: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.zip != undefined && form.touched.zip != undefined}>
+                                            <Input
+                                                {...field}
+                                                borderRadius="full"
+                                                focusBorderColor="green.400"
+                                                shadow="sm"
+                                                placeholder="Zipcode"
+                                                value={zipcode}
+                                                onChange={(e) => onZipcodeChange(e.target.value)}
+                                            />
+                                        <FormErrorMessage>{form.errors.zip}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>        
                                 <Select
                                     borderRadius="full"
                                     placeholder='Country'>
