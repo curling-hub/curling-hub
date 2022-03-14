@@ -1,11 +1,11 @@
 import NextLink from 'next/link'
 import StateDropdown from './StateDropdown'
 import { object, string, number, date, InferType } from 'yup';
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, FieldProps } from 'formik';
 
-const MyInput = ({ field, form, ...props }) => {
+const MyInput = ({ ...props }) => {
 
-    return <input {...field} {...props} />;
+    return <input {...props} />;
  
 };
 
@@ -113,8 +113,8 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                     <VStack alignItems="start" spacing="4">
                         <Stack>
                             <Field name="organization">
-                            {({ field, form }) => (
-                                <FormControl isInvalid={form.errors.organization != undefined && form.touched.organization}>
+                            {({field, form}: FieldProps<string>) => (
+                                <FormControl isInvalid={form.errors.organization != undefined && form.touched.organization != undefined}>
                                     <Input
                                         {...field}
                                         borderRadius="full"
