@@ -38,7 +38,7 @@ const NewHost: NextPage = () => {
         onOpen: termsOfServiceOnOpen,
         onClose: termsOfServiceOnClose,
     } = useDisclosure()
-    const signupContainerHeight = "530"
+    const signupContainerHeight = "630"
     const popoverHeight = "450"
 
     useEffect(() => { setMounted(true) }, [])
@@ -58,14 +58,14 @@ const NewHost: NextPage = () => {
                 <AuthLayout>
                     <Container maxW="2xl" centerContent>
                         {/* Outer box */}
-                        <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
+                        <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h="auto" my="4" borderRadius="20" bg="white" shadow="md">
                             <Flex flexDirection="row" h="100%">
                                 {/* Left */}
                                 <Box
                                     display={{ base: "none", md: "block" }}
                                     borderRadius="20"
                                     bg="primary.green"
-                                    h="100%"
+                                    h="auto"
                                     w="100%"
                                 >
                                 </Box>
