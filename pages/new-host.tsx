@@ -16,16 +16,7 @@ import {
 
 
 const NewHost: NextPage = () => {
-    const [organization, setOrg] = useState("")
-    const [website, setWebsite] = useState("")
-    const [phone, setPhone] = useState("")
     const [phoneType, setPhoneType] = useState("")
-    const [address1, setAddress1] = useState("")
-    const [address2, setAddress2] = useState("")
-    const [city, setCity] = useState("")
-    const [state, setState] = useState("")
-    const [zipcode, setZipcode] = useState("")
-    const [country, setCountry] = useState("")
     const [mounted, setMounted] = useState(false)
     const [isAgreedPP, setIsAgreedPP] = useState(false)
     const {
@@ -82,26 +73,8 @@ const NewHost: NextPage = () => {
                                                 onClose={termsOfServiceOnClose}
                                             />
                                             <NewHostFields
-                                                organization={organization}
-                                                onOrgChange={setOrg}
-                                                website={website}
-                                                onWebsiteChange={setWebsite}
-                                                phone={phone}
-                                                onPhoneChange={setPhone}
                                                 phoneType={phoneType}
                                                 onPhoneTypeChange={setPhoneType}
-                                                address1={address1}
-                                                onAddress1Change={setAddress1}
-                                                address2={address2}
-                                                onAddress2Change={setAddress2}
-                                                city={city}
-                                                onCityChange={setCity}
-                                                state={state}
-                                                onStatechange={setState}
-                                                zipcode={zipcode}
-                                                onZipcodeChange={setZipcode}
-                                                country={country}
-                                                onCountryChange={setCountry}
                                                 isAgreedPP={isAgreedPP}
                                                 onIsAgreedPPChange={() => setIsAgreedPP(!isAgreedPP)}
                                                 onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
