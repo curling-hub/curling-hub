@@ -25,26 +25,8 @@ import {
 } from '@chakra-ui/react'
 
 interface NewHostFieldsProps {
-    organization: string;
-    onOrgChange: (Organization: string) => void;
-    website: string;
-    onWebsiteChange: (website: string) => void;
-    phone: string;
-    onPhoneChange: (Phone: string) => void;
     phoneType: string;
     onPhoneTypeChange: (phoneType: string) => void
-    address1: string;
-    onAddress1Change: (address1: string) => void;
-    address2: string;
-    onAddress2Change: (address2: string) => void;
-    city: string;
-    onCityChange: (city: string) => void;
-    state: string;
-    onStatechange: (state: string) => void;
-    zipcode: string;
-    onZipcodeChange: (zipcode: string) => void;
-    country: string;
-    onCountryChange: (country: string) => void;
     isAgreedPP: boolean;
     onIsAgreedPPChange: () => void;
     onOpenPrivacyPolicy: () => void;
@@ -53,26 +35,8 @@ interface NewHostFieldsProps {
 
 export default function NewHostFields(props: NewHostFieldsProps) {
     const {
-        organization,
-        onOrgChange,
-        website,
-        onWebsiteChange,
-        phone,
-        onPhoneChange,
         phoneType,
         onPhoneTypeChange,
-        address1,
-        onAddress1Change,
-        address2,
-        onAddress2Change,
-        city,
-        onCityChange,
-        state,
-        onStatechange,
-        zipcode,
-        onZipcodeChange,
-        country,
-        onCountryChange,
         isAgreedPP,
         onIsAgreedPPChange,
         onOpenPrivacyPolicy,
