@@ -106,9 +106,9 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                 country: ''
             }}
             validationSchema={hostSignupSchema}
-            onSubmit={values => {console.log(values)}}
+            onSubmit={values => {console.log('hello')}}
         >
-            {({ errors, touched }) => (
+            {( props ) => (
                 <Form>
                     <VStack alignItems="start" spacing="4">
                         <Stack>
@@ -121,8 +121,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                             focusBorderColor="green.400"
                                             shadow="sm"
                                             placeholder="Organization"
-                                            value={organization}
-                                            onChange={(e) => onOrgChange(e.target.value)}
+                                            onChange={props.handleChange('organization')}
                                         />
                                         <FormErrorMessage>{form.errors.organization}</FormErrorMessage>
                                     </FormControl>
@@ -137,8 +136,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                             focusBorderColor="green.400"
                                             shadow="sm"
                                             placeholder="Website"
-                                            value={website}
-                                            onChange={(e) => onWebsiteChange(e.target.value)}
+                                            onChange={props.handleChange('website')}
                                         />
                                     <FormErrorMessage>{form.errors.website}</FormErrorMessage>
                                     </FormControl>
@@ -156,8 +154,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                                 focusBorderColor="green.400"
                                                 shadow="sm"
                                                 placeholder="Phone"
-                                                value={phone}
-                                                onChange={(e) => onPhoneChange(e.target.value)}
+                                                onChange={props.handleChange('phone')}
                                             />
                                         <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
                                         </FormControl>
@@ -181,8 +178,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                             focusBorderColor="green.400"
                                             shadow="sm"
                                             placeholder="Street Address"
-                                            value={address1}
-                                            onChange={(e) => onAddress1Change(e.target.value)}
+                                            onChange={props.handleChange('address')}
                                         />
                                     <FormErrorMessage>{form.errors.address}</FormErrorMessage>
                                     </FormControl>
@@ -197,8 +193,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                             focusBorderColor="green.400"
                                             shadow="sm"
                                             placeholder="Apt., Suite, Unit, etc."
-                                            value={address2}
-                                            onChange={(e) => onAddress2Change(e.target.value)}
+                                            onChange={props.handleChange('address2')}
                                         />
                                     <FormErrorMessage>{form.errors.address2}</FormErrorMessage>
                                     </FormControl>
@@ -214,8 +209,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                                 focusBorderColor="green.400"
                                                 shadow="sm"
                                                 placeholder="City"
-                                                value={city}
-                                                onChange={(e) => onCityChange(e.target.value)}
+                                                onChange={props.handleChange('city')}
                                             />
                                         <FormErrorMessage>{form.errors.city}</FormErrorMessage>
                                         </FormControl>
@@ -233,8 +227,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                                 focusBorderColor="green.400"
                                                 shadow="sm"
                                                 placeholder="Zipcode"
-                                                value={zipcode}
-                                                onChange={(e) => onZipcodeChange(e.target.value)}
+                                                onChange={props.handleChange('zip')}
                                             />
                                         <FormErrorMessage>{form.errors.zip}</FormErrorMessage>
                                         </FormControl>
@@ -248,6 +241,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                             </HStack>
                         </Stack>
                         <Button
+                            type='submit'
                             isFullWidth
                             bg="primary.green"
                             borderRadius="full"
