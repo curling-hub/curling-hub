@@ -27,7 +27,7 @@ export default function RequestModal(props: RequestModalProps) {
                         </Center>
                     </ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody align="center" pb={6} mx="15px" >
+                    <ModalBody textAlign="center" pb={6} mx="15px" >
                         At Curlo, club accounts matter. We Verify
                         that every club account that is opened in
                         connected to a real club that has a curling
