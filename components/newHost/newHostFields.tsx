@@ -83,15 +83,15 @@ export default function NewHostFields(props: NewHostFieldsProps) {
     let hostSignupSchema = object({
         organization: string().required(), // TODO: ??
         website: string().required().url().nullable(),
-        phone: string().matches(phoneRE, 'invalid phone number'),
+        phone: string().matches(phoneRE, 'invalid phone number').required(),
         address: string().required(), // TODO: ??
         address2: string().required(), // TODO: ??
         city: string().required(), // TODO: ??
         state: string().required(), 
         zip: string().required(), // TODO: ??
         country: string().required() 
-    })
-    const helperTextFontSize = "12"
+    });
+    const helperTextFontSize = "12";
     return (
         <Formik
             initialValues={{
@@ -128,7 +128,6 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                     </FormControl>
                                 )}
                             </Field>
-
                             <Field name="website">
                                 {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.website != undefined && form.touched.website != undefined}>
@@ -225,7 +224,6 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                 <StateDropdown />
                             </HStack>
                             <HStack>
-
                                 <Field name="zip">
                                     {({field, form}: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.zip != undefined && form.touched.zip != undefined}>
