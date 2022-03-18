@@ -45,7 +45,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
 
     // RE used to identify valid phone number. pulled randomly from internet.
     const phoneRE = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/g;
-    
+    const zipRE = /^\d{5}(?:[- ]?\d{4})?$/
     // Defines a valid form state
     let hostSignupSchema = object({
         organization: string().required(), 
@@ -56,7 +56,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
         address2: string().required(), 
         city: string().required(), 
         state: string().required(),
-        zip: string().required(), 
+        zip: string().matches(zipRE, 'invalid zip code').required(), 
         country: string().required(), 
         agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
@@ -75,7 +75,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
             country: string;
             agreed: boolean;
         }) => {
-            console.log(values)
+            alert(JSON.stringify(values))
     }
 
     const helperTextFontSize = "12";
