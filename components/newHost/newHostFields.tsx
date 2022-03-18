@@ -43,9 +43,10 @@ export default function NewHostFields(props: NewHostFieldsProps) {
         onOpenTermsOfService
     } = props
 
-    // RE used to identify valid phone number. pulled randomly from internet.
+    // REs used to identify valid phone number and zip code. pulled randomly from internet.
     const phoneRE = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/g;
     const zipRE = /^\d{5}(?:[- ]?\d{4})?$/
+
     // Defines a valid form state
     let hostSignupSchema = object({
         organization: string().required(), 
@@ -53,7 +54,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
         phone: string().matches(phoneRE, 'invalid phone number').required(),
         phoneType: string().required("phone type is a required field"),
         address: string().required(), 
-        address2: string().required(), 
+        address2: string().optional(), 
         city: string().required(), 
         state: string().required(),
         zip: string().matches(zipRE, 'invalid zip code').required(), 
