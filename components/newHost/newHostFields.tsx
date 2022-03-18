@@ -1,6 +1,6 @@
 import NextLink from 'next/link'
 import StateDropdown from './StateDropdown'
-import { object, string, number, date, InferType } from 'yup';
+import { object, string, boolean } from 'yup';
 import { Field, Form, Formik, FieldProps } from 'formik';
 
 const MyInput = ({ ...props }) => {
@@ -43,18 +43,41 @@ export default function NewHostFields(props: NewHostFieldsProps) {
         onOpenTermsOfService
     } = props
 
+    // RE used to identify valid phone number. pulled randomly from internet.
     const phoneRE = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/g;
+    
+    // Defines a valid form state
     let hostSignupSchema = object({
-        organization: string().required(), // TODO: ??
+        organization: string().required(), 
         website: string().required().url().nullable(),
         phone: string().matches(phoneRE, 'invalid phone number').required(),
-        address: string().required(), // TODO: ??
-        address2: string().required(), // TODO: ??
-        city: string().required(), // TODO: ??
-        state: string().required(), 
-        zip: string().required(), // TODO: ??
-        country: string().required() 
+        phoneType: string().required("phone type is a required field"),
+        address: string().required(), 
+        address2: string().required(), 
+        city: string().required(), 
+        state: string().required(),
+        zip: string().required(), 
+        country: string().required(), 
+        agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
+
+    // Eventually we will call the auth signup method here
+    const submit = (values: {
+            organization: string;
+            website: string;
+            phone: string;
+            phoneType: string;
+            address: string;
+            address2: string;
+            city: string;
+            state: string;
+            zip: string;
+            country: string;
+            agreed: boolean;
+        }) => {
+            console.log(values)
+    }
+
     const helperTextFontSize = "12";
     return (
         <Formik
@@ -62,15 +85,17 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                 organization: '',
                 website: '',
                 phone: '',
+                phoneType: '',
                 address: '',
                 address2: '',
                 city: '',
                 state: '',
                 zip: '',
-                country: ''
+                country: '',
+                agreed: false
             }}
             validationSchema={hostSignupSchema}
-            onSubmit={values => {console.log(values)}} // Eventually do auth stuff here
+            onSubmit={(values) => submit(values)} // Eventually do auth stuff here
         >
             {( props ) => (
                 <Form>
@@ -124,14 +149,23 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                         </FormControl>
                                     )}
                                 </Field>    
-                                <Select
-                                    // width=".5"
-                                    borderRadius="full"
-                                    placeholder='Phone'>
-                                    <option value={phoneType}>Home</option>
-                                    <option value={phoneType}>Mobile</option>
-                                    <option value={phoneType}>Business</option>
-                                </Select>
+                                <Field name="phoneType">
+                                    {({field, form}: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.phoneType != undefined && form.touched.phoneType != undefined}>
+                                            <Select
+                                                // width=".5"
+                                                {...field}
+                                                borderRadius="full"
+                                                placeholder='Phone'>
+                                                <option>Home</option>
+                                                <option>Mobile</option>
+                                                <option>Business</option>
+                                            </Select>
+                                            <FormErrorMessage>{form.errors.phoneType}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
+
                             </HStack>
                             <Field name="address">
                                 {({field, form}: FieldProps<string>) => (
@@ -179,7 +213,76 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                         </FormControl>
                                     )}
                                 </Field>
-                                <StateDropdown />
+                                <Field name="state">
+                                    {({field, form}: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.state != undefined && form.touched.state != undefined}>
+                                            <Select
+                                                {...field}
+                                                borderRadius="full"
+                                                placeholder='State'>
+                                                <option value='AL'>Alabama</option>
+                                                <option value='AK'>Alaska</option>
+                                                <option value='AS'>American Samoa</option>
+                                                <option value='AZ'>Arizona</option>
+                                                <option value='AR'>Arkansas</option>
+                                                <option value='CA'>California</option>
+                                                <option value='CO'>Colorado</option>
+                                                <option value='CT'>Connecticut</option>
+                                                <option value='DE'>Delaware</option>
+                                                <option value='DC'>District Of Columbia</option>
+                                                <option value='FM'>Federated States Of Micronesia</option>
+                                                <option value='FL'>Florida</option>
+                                                <option value='GA'>Georgia</option>
+                                                <option value='GU'>Guam</option>
+                                                <option value='HI'>Hawaii</option>
+                                                <option value='ID'>Idaho</option>
+                                                <option value='IL'>Illinois</option>
+                                                <option value='IN'>Indiana</option>
+                                                <option value='IA'>Iowa</option>
+                                                <option value='KS'>Kansas</option>
+                                                <option value='KY'>Kentucky</option>
+                                                <option value='LA'>Louisiana</option>
+                                                <option value='ME'>Maine</option>
+                                                <option value='MD'>Maryland</option>
+                                                <option value='MA'>Massachusetts</option>
+                                                <option value='MI'>Michigan</option>
+                                                <option value='MN'>Minnesota</option>
+                                                <option value='MS'>Mississippi</option>
+                                                <option value='MO'>Missouri</option>
+                                                <option value='MT'>Montana</option>
+                                                <option value='NE'>Nebraska</option>
+                                                <option value='NV'>Nevada</option>
+                                                <option value='NH'>New Hampshire</option>
+                                                <option value='NJ'>New Jersey</option>
+                                                <option value='NM'>New Mexico</option>
+                                                <option value='NY'>New York</option>
+                                                <option value='NC'>North Carolina</option>
+                                                <option value='ND'>North Dakota</option>
+                                                <option value='MP'>Northern Mariana Islands</option>
+                                                <option value='OH'>Ohio</option>
+                                                <option value='OK'>Oklahoma</option>
+                                                <option value='OR'>Oregon</option>
+                                                <option value='PW'>Palau</option>
+                                                <option value='PA'>Pennsylvania</option>
+                                                <option value='PR'>Puerto Rico</option>
+                                                <option value='RI'>Rhode Island</option>
+                                                <option value='SC'>South Carolina</option>
+                                                <option value='SD'>South Dakota</option>
+                                                <option value='TN'>Tennessee</option>
+                                                <option value='TX'>Texas</option>
+                                                <option value='UT'>Utah</option>
+                                                <option value='VT'>Vermont</option>
+                                                <option value='VI'>Virgin Islands</option>
+                                                <option value='VA'>Virginia</option>
+                                                <option value='WA'>Washington</option>
+                                                <option value='WV'>West Virginia</option>
+                                                <option value='WI'>Wisconsin</option>
+                                                <option value='WY'>Wyoming</option>
+                                            </Select>
+                                            <FormErrorMessage>{form.errors.state}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
                             </HStack>
                             <HStack>
                                 <Field name="zip">
@@ -197,11 +300,19 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                         </FormControl>
                                     )}
                                 </Field>        
-                                <Select
-                                    borderRadius="full"
-                                    placeholder='Country'>
-                                    <option value='USA'>USA</option>
-                                </Select>
+                                <Field name="country">
+                                    {({field, form}: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.country != undefined && form.touched.country != undefined}>
+                                            <Select
+                                                {...field}
+                                                borderRadius="full"
+                                                placeholder='Country'>
+                                                <option value='USA'>USA</option>
+                                            </Select>
+                                            <FormErrorMessage>{form.errors.country}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
                             </HStack>
                         </Stack>
                         <Button
@@ -226,28 +337,36 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                     <ChakraLink>Login</ChakraLink>
                                 </NextLink>
                             </Text>
-                            <Text fontSize={helperTextFontSize}>
-                                <Checkbox
-                                    aria-label=""
-                                    size="sm"
-                                    borderRadius="50%"
-                                    colorScheme="teal"
-                                    checked={isAgreedPP}
-                                    css={`
-                                        > span:first-of-type {
-                                            box-shadow: unset;
-                                        }
-                                    `}
-                                />
-                                {" "}I agree to the {" "}
-                                <Button variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
-                                    Terms of Service
-                                </Button>
-                                {" "}and{" "}
-                                <Button variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
-                                    Privacy Policy
-                                </Button>
-                            </Text>
+                                <Field name="agreed">
+                                    {({field, form}: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
+                                            <Text fontSize={helperTextFontSize}>
+                                            <Checkbox
+                                                {...field}
+                                                aria-label=""
+                                                size="sm"
+                                                borderRadius="50%"
+                                                colorScheme="teal"
+                                                checked={isAgreedPP}
+                                                css={`
+                                                    > span:first-of-type {
+                                                        box-shadow: unset;
+                                                    }
+                                                `}
+                                            />
+                                            {" "}I agree to the {" "}
+                                            <Button variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
+                                                Terms of Service
+                                            </Button>
+                                            {" "}and{" "}
+                                            <Button variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
+                                                Privacy Policy
+                                            </Button>
+                                            <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
+                                            </Text>        
+                                        </FormControl>
+                                    )}
+                                </Field>
                         </VStack>
                     </VStack>
                 </Form>
