@@ -70,7 +70,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                 country: ''
             }}
             validationSchema={hostSignupSchema}
-            onSubmit={values => {console.log('hello')}}
+            onSubmit={values => {console.log(values)}} // Eventually do auth stuff here
         >
             {( props ) => (
                 <Form>
