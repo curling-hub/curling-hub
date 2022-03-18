@@ -1,6 +1,7 @@
 import { Box, Grid, Image, Heading, Text, Flex } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from '../components/layouts/StandardLayout'
 
 const About: NextPage = () => {
@@ -9,14 +10,17 @@ const About: NextPage = () => {
             <Head>
                 <title>About | Curlo</title>
             </Head>
-            <div style={{
-                background: "linear-gradient(#735FED, #FFFFFF)",
-                height: "100vh",
-                width: '100%'
-            }}>
+            <Box
+                position="absolute"
+                w="100%"
+                h="100vh"
+                bgGradient="linear-gradient(primary.purple, primary.white)"
+            >
                 <StandardLayout />
-                <Box w="90%" bg="#FFFFFF" borderRadius="20px" mx="auto" py="1px">
-                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
+                {/* TODO: Make better mobile view */}
+                <Box w="90%" bg="primary.white" borderRadius={CONST_BORDER_RADIUS} boxShadow="lg" m="5%" py="1px">
+                    <Grid w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
+                        {/* TODO: Add new logo */}
                         <Image src="/curloLogo2.svg" alt="Curlo logo" w="100px" h="100px" m="auto" />
                         <Box gridColumn="2 / 5">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
@@ -31,7 +35,7 @@ const About: NextPage = () => {
                             </Text>
                         </Box>
                     </Grid>
-                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
+                    <Grid w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
                         <Box my="auto">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 $50
@@ -51,7 +55,7 @@ const About: NextPage = () => {
                             </Text>
                         </Box>
                     </Grid>
-                    <Grid w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
+                    <Grid w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
                         <Box gridColumn="2 / 5">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Rating System
@@ -65,13 +69,14 @@ const About: NextPage = () => {
                             </Text>
                         </Box>
                     </Grid>
-                    <Box w="90%" bg="#7FD6A4" borderRadius="20px" m="5%" py="1px">
+                    <Box w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px">
                         <Box w="60%" mx="auto">
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Categories
                             </Heading>
                         </Box>
                         <Flex flexFlow="row wrap" justifyContent="center">
+                            {/* TODO: Link to future pages */}
                             <Heading fontWeight="bold" m="2.5%">
                                 Open
                             </Heading>
@@ -99,7 +104,7 @@ const About: NextPage = () => {
                         </Flex>
                     </Box>
                 </Box>
-            </div>
+            </Box>
         </>
     )
 }
