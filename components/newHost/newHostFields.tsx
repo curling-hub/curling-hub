@@ -330,7 +330,6 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                         <Divider orientation="horizontal" mt={2} width="100%" />
 
                         <VStack w="100%" spacing="1">
-
                             <Text fontSize={helperTextFontSize}>
                                 Already have an account?{" "}
                                 <NextLink href="/login" passHref>
@@ -340,30 +339,32 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                 <Field name="agreed">
                                     {({field, form}: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
-                                            <Text fontSize={helperTextFontSize}>
-                                            <Checkbox
-                                                {...field}
-                                                aria-label=""
-                                                size="sm"
-                                                borderRadius="50%"
-                                                colorScheme="teal"
-                                                checked={isAgreedPP}
-                                                css={`
-                                                    > span:first-of-type {
-                                                        box-shadow: unset;
-                                                    }
-                                                `}
-                                            />
-                                            {" "}I agree to the {" "}
-                                            <Button variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
-                                                Terms of Service
-                                            </Button>
-                                            {" "}and{" "}
-                                            <Button variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
-                                                Privacy Policy
-                                            </Button>
+                                            <HStack>
+                                                <Checkbox
+                                                    {...field}
+                                                    aria-label=""
+                                                    size="sm"
+                                                    borderRadius="50%"
+                                                    colorScheme="teal"
+                                                    checked={isAgreedPP}
+                                                    css={`
+                                                        > span:first-of-type {
+                                                            box-shadow: unset;
+                                                        }
+                                                    `}
+                                                />
+                                                <Text fontSize={helperTextFontSize}>
+                                                {" "}I agree to the {" "}
+                                                <Button variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
+                                                    Terms of Service
+                                                </Button>
+                                                {" "}and{" "}
+                                                <Button variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
+                                                    Privacy Policy
+                                                </Button>
+                                                </Text>
+                                            </HStack>
                                             <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
-                                            </Text>        
                                         </FormControl>
                                     )}
                                 </Field>
