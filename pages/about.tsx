@@ -17,12 +17,11 @@ const About: NextPage = () => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 <StandardLayout />
-                {/* TODO: Make better mobile view */}
                 <Box w="90%" bg="primary.white" borderRadius={CONST_BORDER_RADIUS} boxShadow="lg" m="5%" py="1px">
                     <Grid w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
                         {/* TODO: Add new logo */}
-                        <Image src="/curloLogo2.svg" alt="Curlo logo" w="100px" h="100px" m="auto" />
-                        <Box gridColumn="2 / 5">
+                        <Image src="/curloLogo2.svg" alt="Curlo logo" w="100px" h="100px" m="auto" gridColumn={{base: "1 / 6", md: "1"}} />
+                        <Box gridColumn={{base: "1 / 6", md: "2 / 5"}}>
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Who we are
                             </Heading>
@@ -36,7 +35,7 @@ const About: NextPage = () => {
                         </Box>
                     </Grid>
                     <Grid w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
-                        <Box my="auto">
+                        <Box my="auto" gridColumn={{base: "1 / 6", md: "1"}}>
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 $50
                             </Heading>
@@ -44,7 +43,7 @@ const About: NextPage = () => {
                                 Per Year
                             </Text>
                         </Box>
-                        <Box gridColumn="2 / 5">
+                        <Box gridColumn={{base: "1 / 6", md: "2 / 5"}}>
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Membership
                             </Heading>
