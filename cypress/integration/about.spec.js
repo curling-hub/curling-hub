@@ -3,6 +3,6 @@ describe('About page rendering', () => {
     const baseUrl = `http://localhost:${port}`
     it('should contain about', () => {
         cy.visit(`${baseUrl}/about`)
-        cy.get('p').contains('Curlo is a not for profit website')
+        cy.get('h1').contains('Who we are')
     })
 })
