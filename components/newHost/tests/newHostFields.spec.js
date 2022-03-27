@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { mount } from '@cypress/react'
 import { ChakraProvider } from '@chakra-ui/react'
-import NewHost from '../new-host'
+import NewHostFields from '../newHostFields.tsx'
 
 it('New Host Page', () => {
     mount(
         <ChakraProvider>
-            <NewHost/>
+            <NewHostFields/>
         </ChakraProvider>
     )
     cy.get('button').contains('Request Account').click()
