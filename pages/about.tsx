@@ -55,7 +55,7 @@ const About: NextPage = () => {
                         </Box>
                     </Grid>
                     <Grid w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
-                        <Box gridColumn="2 / 5">
+                        <Box gridColumn={{base: "1 / 6", md: "2 / 5"}}>
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Rating System
                             </Heading>
