@@ -7,7 +7,7 @@ import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import AuthLayout from '../components/layouts/AuthLayout'
 import NewHostFields from '../components/newHost/newHostFields'
-import LoginFields from '../components/LoginBox'
+import LoginFields from '../components/login/LoginBox'
 import {
     Box,
     Container,

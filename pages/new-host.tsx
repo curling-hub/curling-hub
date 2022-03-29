@@ -1,4 +1,3 @@
-
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { getSession } from 'next-auth/react'
@@ -17,16 +16,7 @@ import {
 
 
 const NewHost: NextPage = () => {
-    const [organization, setOrg] = useState("")
-    const [website, setWebsite] = useState("")
-    const [phone, setPhone] = useState("")
     const [phoneType, setPhoneType] = useState("")
-    const [address1, setAddress1] = useState("")
-    const [address2, setAddress2] = useState("")
-    const [city, setCity] = useState("")
-    const [state, setState] = useState("")
-    const [zipcode, setZipcode] = useState("")
-    const [country, setCountry] = useState("")
     const [mounted, setMounted] = useState(false)
     const [isAgreedPP, setIsAgreedPP] = useState(false)
     const {
@@ -39,9 +29,9 @@ const NewHost: NextPage = () => {
         onOpen: termsOfServiceOnOpen,
         onClose: termsOfServiceOnClose,
     } = useDisclosure()
-    const signupContainerHeight = "530"
+    const signupContainerHeight = "630"
     const popoverHeight = "450"
-
+    
     useEffect(() => { setMounted(true) }, [])
 
     return (
@@ -59,14 +49,14 @@ const NewHost: NextPage = () => {
                 <AuthLayout>
                     <Container maxW="2xl" centerContent>
                         {/* Outer box */}
-                        <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
+                        <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h="auto" my="4" borderRadius="20" bg="white" shadow="md">
                             <Flex flexDirection="row" h="100%">
                                 {/* Left */}
                                 <Box
                                     display={{ base: "none", md: "block" }}
                                     borderRadius="20"
                                     bg="primary.green"
-                                    h="100%"
+                                    h="auto"
                                     w="100%"
                                 >
                                 </Box>
@@ -83,26 +73,8 @@ const NewHost: NextPage = () => {
                                                 onClose={termsOfServiceOnClose}
                                             />
                                             <NewHostFields
-                                                organization={organization}
-                                                onOrgChange={setOrg}
-                                                website={website}
-                                                onWebsiteChange={setWebsite}
-                                                phone={phone}
-                                                onPhoneChange={setPhone}
                                                 phoneType={phoneType}
                                                 onPhoneTypeChange={setPhoneType}
-                                                address1={address1}
-                                                onAddress1Change={setAddress1}
-                                                address2={address2}
-                                                onAddress2Change={setAddress2}
-                                                city={city}
-                                                onCityChange={setCity}
-                                                state={state}
-                                                onStatechange={setState}
-                                                zipcode={zipcode}
-                                                onZipcodeChange={setZipcode}
-                                                country={country}
-                                                onCountryChange={setCountry}
                                                 isAgreedPP={isAgreedPP}
                                                 onIsAgreedPPChange={() => setIsAgreedPP(!isAgreedPP)}
                                                 onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
