@@ -8,7 +8,7 @@ describe('Team Profile Page Navigation', () => {
     })
     it('should navigate to the add match page', () => {
         cy.visit(`${baseUrl}/team-profile`)
-        cy.get('button').contains('Add Team').click()
+        cy.get('button').contains('Add Match').click()
         cy.url().should('include', '/team-add-match')
     })
     it('should navigate to the matches page', () => {
