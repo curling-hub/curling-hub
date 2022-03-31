@@ -27,7 +27,7 @@ function getNavItems(): NavItem[] {
     const data: NavItem[] = [
         {
             label: "My Team",
-            link: '/teams-profile',
+            link: '/team-profile',
         },
         {
             label: "Add Match",
