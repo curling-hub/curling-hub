@@ -63,7 +63,7 @@ const About: NextPage = () => {
                                 Curlo uses a professional rating system called Glicko. Designed by Mark Glickman,
                                 Glicko uses game scores to rate the strength of players and teams. It uses a simple
                                 formula to give a score to a team or individual. This rating system is used in popular
-                                games such as chess, pokeman, and more. Glicko is used by Curlo to rate teams. This
+                                games such as chess, pokémon, and more. Glicko is used by Curlo to rate teams. This
                                 allows us to compare teams in order to present a worldwide leaderboard.
                             </Text>
                         </Box>
