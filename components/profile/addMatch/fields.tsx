@@ -43,7 +43,9 @@ const getInitialValues = () => ({
 const Fields = (): JSX.Element => {
     const resultOptions = [ 'Win', 'Loss', 'Tie' ]
     const { getRootProps, getRadioProps } = useRadioGroup({
+        name: 'matchResult',
         defaultValue: 'Win',
+        onChange: (val) => console.log(val)
     })
     const group = getRootProps()
 
@@ -71,8 +73,12 @@ const Fields = (): JSX.Element => {
                                                     {resultOptions.map((value) => (
                                                         <ResultRadio
                                                             key={value}
-                                                            {...getRadioProps({ value })}
-                                                            onChange={field.onChange}
+                                                            {...getRadioProps({value})}
+                                                            onChange={(e) => {
+                                                                field.onChange(e);
+                                                                const radioProps = getRadioProps({value});
+                                                                radioProps.onChange && radioProps.onChange(e);
+                                                            }}
                                                             name={field.name}
                                                             id={value.toLowerCase()}
                                                         >
