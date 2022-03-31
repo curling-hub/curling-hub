@@ -347,7 +347,6 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                                     size="sm"
                                                     borderRadius="50%"
                                                     colorScheme="teal"
-                                                    checked={isAgreedPP}
                                                     css={`
                                                         > span:first-of-type {
                                                             box-shadow: unset;

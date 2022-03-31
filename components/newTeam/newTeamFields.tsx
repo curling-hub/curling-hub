@@ -27,7 +27,6 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
 
     const [mode, setMode] = useState(true)
     const [alternate, setAlternate] = useState(false)
-    const [isAgreedPP, setIsAgreedPP] = useState(false)
     const modeMap = new Map<boolean, string>([
         [true, "classic"],
         [false, "doubles"]
@@ -104,8 +103,6 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                     size="sm"
                     borderRadius="50%"
                     colorScheme="teal"
-                    checked={isAgreedPP}
-                    onClick={() => setIsAgreedPP(!isAgreedPP)}
                     css={`
                         > span:first-of-type {
                             box-shadow: unset;
