@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import AuthLayout from '../components/layouts/AuthLayout'
-import { Box, Button, Container } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 
 const NewTeam: NextPage = () => {
     return (
