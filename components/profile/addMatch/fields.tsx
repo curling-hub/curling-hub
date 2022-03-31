@@ -1,4 +1,3 @@
-import * as yup from 'yup'
 import {
     ErrorMessage,
     Field,
@@ -11,7 +10,6 @@ import {
     Button,
     Flex,
     FormControl,
-    FormErrorMessage,
     Grid,
     HStack,
     Input,
@@ -44,6 +42,10 @@ const getInitialValues = () => ({
 
 const Fields = (): JSX.Element => {
     const resultOptions = [ 'Win', 'Loss', 'Tie' ]
+    const { getRootProps, getRadioProps } = useRadioGroup({
+        defaultValue: 'Win',
+    })
+    const group = getRootProps()
 
     return (
         <Formik
@@ -63,13 +65,6 @@ const Fields = (): JSX.Element => {
                             <Box w="100%">
                                 <Field name="matchResult">
                                     {({field, form}: FieldProps<string>) => {
-                                        const { getRootProps, getRadioProps } = useRadioGroup({
-                                            name: field.name,
-                                            value: field.value,
-                                        })
-
-                                        const group = getRootProps()
-
                                         return (
                                             <FormControl>
                                                 <Flex justifyContent="space-between" {...group}>

@@ -2,6 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import TeamLayout from '../components/layouts/TeamLayout'
 import { Box } from '@chakra-ui/react'
+import AddMatch from '../components/profile/addMatch'
+import AddMatchFields from '../components/profile/addMatch/fields'
 
 const TeamAddMatch: NextPage = () => {
     return (
@@ -15,7 +17,11 @@ const TeamAddMatch: NextPage = () => {
                 h="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <TeamLayout />
+                <TeamLayout>
+                    <AddMatch>
+                        <AddMatchFields />
+                    </AddMatch>
+                </TeamLayout>
             </Box>
         </>
     )
