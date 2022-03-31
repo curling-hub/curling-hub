@@ -74,6 +74,7 @@ const Fields = (): JSX.Element => {
                                                             {...getRadioProps({ value })}
                                                             onChange={field.onChange}
                                                             name={field.name}
+                                                            id={value.toLowerCase()}
                                                         >
                                                             {value}
                                                         </ResultRadio>
