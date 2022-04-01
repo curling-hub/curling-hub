@@ -72,9 +72,6 @@ const Fields = (): JSX.Element => {
                                             <FormControl>
                                                 <Flex justifyContent="space-between" {...group}>
                                                     {resultOptions.map((value) => (
-                                                        <FormLabel htmlFor={value.toLowerCase()}>{value}</FormLabel>
-                                                    ))}
-                                                    {resultOptions.map((value) => (
                                                         <ResultRadio
                                                             key={value}
                                                             {...getRadioProps({value})}
@@ -86,7 +83,7 @@ const Fields = (): JSX.Element => {
                                                             name={field.name}
                                                             id={value.toLowerCase()}
                                                         >
-                                                            {value}
+                                                            <FormLabel htmlFor={value.toLowerCase()}>{value}</FormLabel>
                                                         </ResultRadio>
                                                     ))}
                                                 </Flex>
