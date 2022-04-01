@@ -5,7 +5,7 @@ interface CreateAccountButtonProps {
     onClick?: () => void;
 }
 
-export default function TextField({ }: CreateAccountButtonProps) {
+export default function CreateAccountButton({ }: CreateAccountButtonProps) {
     return (
         <>
             <Button
