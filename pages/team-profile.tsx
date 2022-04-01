@@ -62,7 +62,6 @@ const TeamProfile: NextPage = () => {
                                     Rating
                                 </Text>
                             </LeftHandBox>
-
                         </VStack>
                     </SideBySideContainer>
                     <Spacer />
