@@ -10,6 +10,7 @@ import {
     Button,
     Flex,
     FormControl,
+    FormLabel,
     Grid,
     HStack,
     Input,
@@ -70,6 +71,9 @@ const Fields = (): JSX.Element => {
                                         return (
                                             <FormControl>
                                                 <Flex justifyContent="space-between" {...group}>
+                                                    {resultOptions.map((value) => (
+                                                        <FormLabel htmlFor={value.toLowerCase()}>{value}</FormLabel>
+                                                    ))}
                                                     {resultOptions.map((value) => (
                                                         <ResultRadio
                                                             key={value}
