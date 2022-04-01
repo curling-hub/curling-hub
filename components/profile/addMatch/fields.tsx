@@ -83,7 +83,7 @@ const Fields = (): JSX.Element => {
                                                             name={field.name}
                                                             id={value.toLowerCase()}
                                                         >
-                                                            <FormLabel htmlFor={value.toLowerCase()}>{value}</FormLabel>
+                                                            <FormLabel htmlFor={value.toLowerCase()} m='auto'>{value}</FormLabel>
                                                         </ResultRadio>
                                                     ))}
                                                 </Flex>
