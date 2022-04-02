@@ -6,7 +6,7 @@ const nextConfig = {
     mysql_port: parseInt(process.env.MYSQL_PORT) || 3306,
     mysql_user: 'curloadmin',
     mysql_password: 'XRlshstEG1grBbimRNPP',
-    mysql_database: process.env.MYSQL_DATABASE || 'curlo-1',
+    mysql_database: process.env.MYSQL_DATABASE || 'curlo',
     google_client_id: process.env.GOOGLE_CLIENT_ID,
     google_client_secret: process.env.GOOGLE_CLIENT_SECRET,
   },

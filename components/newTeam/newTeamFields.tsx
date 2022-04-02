@@ -31,7 +31,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         onOpenTermsOfService,
         categories
     } = props
-    console.log(categories)
+    
     const [mode, setMode] = useState(true)
     const [alternate, setAlternate] = useState(false)
     const modeMap = new Map<boolean, string>([
@@ -191,6 +191,11 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                 borderRadius="full"
                                 placeholder="Select Categories..."
                                 >
+                                    {categories.map((category: RowDataPacket) => {
+                                        return (
+                                            <option value={category.name}>{category.name}</option>
+                                        )
+                                    })}
                                 </Select>
                             <FormErrorMessage>{form.errors.categories}</FormErrorMessage>
                             </FormControl>

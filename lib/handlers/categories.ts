@@ -2,8 +2,7 @@ import { RowDataPacket } from 'mysql2'
 import pool from '../db'
 
 export async function categories() {
-    pool.query('SELECT `name` FROM `categories`', function(err, rows, fields) {
-        if (err) throw err
-        else return rows
-    })
+    const [rows, _] = await pool.promise().query('SELECT `name` FROM `categories`')
+    const r = rows as RowDataPacket[]
+    return r
 }
