@@ -17,18 +17,21 @@ import {
 } from '@chakra-ui/react'
 import { object, string, boolean } from 'yup';
 import { Field, Form, Formik, FieldProps } from 'formik';
+import { RowDataPacket } from 'mysql2';
 
 interface NewTeamFieldsProps {
     onOpenPrivacyPolicy: () => void;
     onOpenTermsOfService: () => void;
+    categories: RowDataPacket
 }
 
 export default function NewTeamFields(props: NewTeamFieldsProps) {
     const {
         onOpenPrivacyPolicy,
-        onOpenTermsOfService
+        onOpenTermsOfService,
+        categories
     } = props
-
+    console.log(categories)
     const [mode, setMode] = useState(true)
     const [alternate, setAlternate] = useState(false)
     const modeMap = new Map<boolean, string>([
@@ -42,9 +45,13 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         curler2: string().required("Curler Two is required").max(255),
         curler3: string().required("Curler Three is required").max(255),
         curler4: string().required("Curler Four is required").max(255),
-        alternate: string().optional().max(255),
+        showAlternate: boolean().required(),
+        alternate: string().when("showAlternate", {
+            is: true,
+            then: string().required("Alternate is required")
+        }),
         categories: string().required("Must pick at least one category"),
-        agreed: boolean().required().isTrue()
+        agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
     
     return (
@@ -56,6 +63,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler3: '',
                 curler4: '',
                 curler5: '',
+                showAlternate: mode,
                 alternate: '',
                 categories: '',
                 agreed:false
@@ -89,6 +97,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         {({field, form}: FieldProps<string>) => (
                              <FormControl isInvalid={form.errors.curler1 != undefined && form.touched.curler1 != undefined}>
                                 <Input
+                                    {...field}
                                     borderRadius="full"
                                     focusBorderColor="green.400"
                                     shadow="sm"
@@ -102,6 +111,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         {({field, form}: FieldProps<string>) => (
                                 <FormControl isInvalid={form.errors.curler2 != undefined && form.touched.curler2 != undefined}>
                                 <Input
+                                    {...field}
                                     borderRadius="full"
                                     focusBorderColor="green.400"
                                     shadow="sm"
@@ -118,6 +128,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                             {({field, form}: FieldProps<string>) => (
                                  <FormControl isInvalid={form.errors.curler3 != undefined && form.touched.curler3 != undefined}>
                                 <Input
+                                    {...field}
                                     borderRadius="full"
                                     focusBorderColor="green.400"
                                     shadow="sm"
@@ -132,6 +143,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                             {({field, form}: FieldProps<string>) => (
                                 <FormControl isInvalid={form.errors.curler4 != undefined && form.touched.curler4 != undefined}>
                                 <Input
+                                    {...field}
                                     borderRadius="full"
                                     focusBorderColor="green.400"
                                     shadow="sm"
@@ -145,12 +157,20 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
 
                             {alternate ? 
                                 <>
-                                    <Input
-                                        borderRadius="full"
-                                        focusBorderColor="green.400"
-                                        shadow="sm"
-                                        placeholder="Alternate"
-                                    />
+                                    <Field name="alternate">
+                                        {({field, form}: FieldProps<string>) => (
+                                            <FormControl isInvalid={form.errors.alternate != undefined && form.touched.alternate != undefined}>
+                                            <Input
+                                                {...field}
+                                                borderRadius="full"
+                                                focusBorderColor="green.400"
+                                                shadow="sm"
+                                                placeholder="Alternate"
+                                            />
+                                            <FormErrorMessage>{form.errors.alternate}</FormErrorMessage>
+                                            </FormControl>
+                                        )}
+                                    </Field>
                                     <Button onClick={() => setAlternate(!alternate)} variant="link" color="black" size="xs">
                                         Remove Alternate
                                     </Button>
@@ -162,34 +182,52 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                             }
                         </>
                     }
-                    <Select
-                        // TODO: POPULATE CATEGORIES VIA SERVER SIDE RENDER. SEE JIRA BOARD FOR DETAILS.
-                        borderRadius="full"
-                        placeholder="Select Categories..."
-                    >
-                    </Select>
+                    <Field name="categories">
+                        {({field, form}: FieldProps<string>) => (
+                            <FormControl isInvalid={form.errors.categories != undefined && form.touched.categories != undefined}>
+                                <Select
+                                // TODO: POPULATE CATEGORIES VIA SERVER SIDE RENDER. SEE JIRA BOARD FOR DETAILS.
+                                {...field}
+                                borderRadius="full"
+                                placeholder="Select Categories..."
+                                >
+                                </Select>
+                            <FormErrorMessage>{form.errors.categories}</FormErrorMessage>
+                            </FormControl>
+                        )}
+                    </Field>
                     <HStack>
-                        <Checkbox
-                            aria-label=""
-                            size="sm"
-                            borderRadius="50%"
-                            colorScheme="teal"
-                            css={`
-                                > span:first-of-type {
-                                    box-shadow: unset;
-                                }
-                            `}
-                        />
-                        <Text fontSize="12">
-                        {" "}I agree to the {" "}
-                        <Button variant="link" size="12" onClick={onOpenTermsOfService}>
-                            Terms of Service
-                        </Button>
-                        {" "}and{" "}
-                        <Button variant="link" size="12" onClick={onOpenPrivacyPolicy}>
-                            Privacy Policy
-                        </Button>
-                        </Text>
+                    <Field name="agreed">
+                        {({field, form}: FieldProps<string>) => (
+                            <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
+                                <HStack>
+                                    <Checkbox
+                                        {...field}
+                                        aria-label=""
+                                        size="sm"
+                                        borderRadius="50%"
+                                        colorScheme="teal"
+                                        css={`
+                                            > span:first-of-type {
+                                                box-shadow: unset;
+                                            }
+                                        `}
+                                    />
+                                    <Text fontSize="12">
+                                    {" "}I agree to the {" "}
+                                    <Button variant="link" size="12" onClick={onOpenTermsOfService}>
+                                        Terms of Service
+                                    </Button>
+                                    {" "}and{" "}
+                                    <Button variant="link" size="12" onClick={onOpenPrivacyPolicy}>
+                                        Privacy Policy
+                                    </Button>
+                                    </Text>
+                                </HStack>
+                                <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
+                            </FormControl>
+                        )}
+                    </Field>
                     </HStack>
                     <Button
                         type='submit'

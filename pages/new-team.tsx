@@ -1,4 +1,4 @@
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import AuthLayout from '../components/layouts/AuthLayout'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
@@ -14,8 +14,10 @@ import {
 } from '@chakra-ui/react'
 import NewTeamFields from '../components/newTeam/newTeamFields'
 import { useState } from 'react'
+import { categories } from '../lib/handlers/categories'
+import { RowDataPacket } from 'mysql2'
 
-const NewTeam: NextPage = () => {
+function NewTeam({ data }: RowDataPacket) {
     const {
         isOpen: privacyPolicyIsOpen = false,
         onOpen: privacyPolicyOnOpen,
@@ -68,6 +70,7 @@ const NewTeam: NextPage = () => {
                                     <NewTeamFields
                                         onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
                                         onOpenTermsOfService={() => { termsOfServiceOnOpen() }}
+                                        categories={data}
                                     />
                                 </Box>
                             </Flex>
@@ -77,6 +80,13 @@ const NewTeam: NextPage = () => {
             </Box>
         </>
     )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const data = await categories()
+    return {
+        props: { data }
+    }
 }
 
 export default NewTeam

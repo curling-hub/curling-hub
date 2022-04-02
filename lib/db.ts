@@ -17,7 +17,7 @@ const pool = mysql.createPool({
     password: mysql_password,
     database: mysql_database,
 })
-
+console.log(serverRuntimeConfig)
 export async function health(): Promise<Number> {
     const query = `SELECT 1 AS status`
     const [rows, _] = await pool.promise().query(query)
@@ -27,3 +27,5 @@ export async function health(): Promise<Number> {
     }
     return r[0]['status'] as Number
 }
+
+export default pool

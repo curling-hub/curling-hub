@@ -2,11 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   serverRuntimeConfig: {
-    mysql_host: process.env.MYSQL_HOST,
+    mysql_host: 'curlo-1.cla5ezfb400l.us-west-2.rds.amazonaws.com',
     mysql_port: parseInt(process.env.MYSQL_PORT) || 3306,
-    mysql_user: process.env.MYSQL_USER,
-    mysql_password: process.env.MYSQL_PASSWORD,
-    mysql_database: process.env.MYSQL_DATABASE || '',
+    mysql_user: 'curloadmin',
+    mysql_password: 'XRlshstEG1grBbimRNPP',
+    mysql_database: process.env.MYSQL_DATABASE || 'curlo-1',
     google_client_id: process.env.GOOGLE_CLIENT_ID,
     google_client_secret: process.env.GOOGLE_CLIENT_SECRET,
   },
