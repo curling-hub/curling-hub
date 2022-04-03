@@ -1,4 +1,4 @@
-import type { NextPage } from 'next'
+import type { NextPage, GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { Box, Divider } from '@chakra-ui/react'
 
@@ -6,8 +6,25 @@ import TeamLayout from '../components/layouts/TeamLayout'
 import AddMatch from '../components/profile/addMatch'
 import AddMatchFields from '../components/profile/addMatch/fields'
 import AddMatchTitle from '../components/profile/addMatch/title'
+import { getAllCategories } from '../lib/handlers/categories'
+import type { Category, HostInfo, TeamInfo } from '../lib/models'
+import { getAllHosts } from '../lib/handlers/hosts'
+import { getAllTeams } from '../lib/handlers/teams'
 
-const TeamAddMatch: NextPage = () => {
+
+interface TeamAddMatchProps {
+    categories?: Category[]
+    hosts?: HostInfo[]
+    teams?: TeamInfo[]
+}
+
+const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => {
+    const {
+        categories = [],
+        hosts = [],
+        teams = [],
+    } = props
+
     return (
         <>
             <Head>
@@ -22,12 +39,40 @@ const TeamAddMatch: NextPage = () => {
                 <TeamLayout>
                     <AddMatch>
                         <AddMatchTitle />
-                        <AddMatchFields />
+                        <AddMatchFields
+                            hosts={hosts}
+                            teams={teams}
+                            categories={categories}
+                        />
                     </AddMatch>
                 </TeamLayout>
             </Box>
         </>
     )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    // Obtain team id and get team categories
+    try {
+        const [ categories, hosts, teams ] = await Promise.all([
+            getAllCategories(),
+            getAllHosts(),
+            getAllTeams(),
+        ])
+        //console.log({ categories, hosts })
+        return {
+            props: {
+                categories,
+                hosts,
+                teams,
+            },
+        }
+    } catch (error) {
+        console.log(error)
+    }
+    return {
+        props: {},
+    }
 }
 
 export default TeamAddMatch

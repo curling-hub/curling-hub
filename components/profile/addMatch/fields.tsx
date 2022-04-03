@@ -24,11 +24,8 @@ import {
 
 import schema from './schema'
 import ResultRadio from './resultRadio'
+import type { Category, HostInfo, TeamInfo } from '../../../lib/models'
 
-
-const getLocations = () => ([
-    'Other',
-])
 
 const getInitialValues = () => ({
     matchResult: 'Win',
@@ -41,7 +38,20 @@ const getInitialValues = () => ({
 })
 
 
-const Fields = (): JSX.Element => {
+interface FieldsProps {
+    categories?: Category[]
+    hosts?: HostInfo[]
+    teams?: TeamInfo[]
+}
+
+
+const Fields = (props: FieldsProps): JSX.Element => {
+    const {
+        categories = [],
+        hosts = [],
+        teams = [],
+    } = props
+
     const resultOptions = [ 'Win', 'Loss', 'Tie' ]
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'matchResult',
@@ -125,7 +135,12 @@ const Fields = (): JSX.Element => {
                                                 placeholder="Opponent"
                                                 {...field}
                                             >
-                                                <option value="other">Other</option>
+                                                {teams.map((val) => (
+                                                    <option key={val.teamId} value={val.teamId}>
+                                                        {val.name}
+                                                    </option>
+                                                ))}
+                                                <option key="other" value="other">Other</option>
                                             </Select>
                                         </FormControl>
                                     )}
@@ -143,7 +158,12 @@ const Fields = (): JSX.Element => {
                                                 placeholder="Category"
                                                 {...field}
                                             >
-                                                <option value="other">Other</option>
+                                                {categories.map((val) => (
+                                                    <option key={val.categoryId} value={val.categoryId}>
+                                                        {val.name}
+                                                    </option>
+                                                ))}
+                                                <option key="other" value="other">Other</option>
                                             </Select>
                                         </FormControl>
                                     )}
@@ -168,7 +188,12 @@ const Fields = (): JSX.Element => {
                                                 placeholder="Location"
                                                 {...field}
                                             >
-                                                <option value="other">Other</option>
+                                                {hosts.map((val) => (
+                                                    <option key={val.hostId} value={val.hostId}>
+                                                        {val.name}
+                                                    </option>
+                                                ))}
+                                                <option key="other" value="other">Other</option>
                                             </Select>
                                         </FormControl>
                                     )}
