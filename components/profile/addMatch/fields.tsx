@@ -95,7 +95,8 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                             name={field.name}
                                                             id={value.toLowerCase()}
                                                         >
-                                                            <FormLabel htmlFor={value.toLowerCase()} m='auto'>{value}</FormLabel>
+                                                            <FormLabel htmlFor={value.toLowerCase()} m='auto' srOnly>{value}</FormLabel>
+                                                            <span>{value}</span>
                                                         </ResultRadio>
                                                     ))}
                                                 </Flex>

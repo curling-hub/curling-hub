@@ -24,13 +24,15 @@ const ResultRadio = (props: ResultRadioProps & UseRadioProps): JSX.Element => {
                 {...checkbox}
                 cursor="pointer"
                 borderWidth="1px"
-                borderRadius="md"
+                borderRadius="full"
                 boxShadow="md"
                 _checked={{
                     bg: "gray.200",
+                    fontWeight: "medium",
                     borderColor: "gray.200",
                 }}
                 _focus={{
+                    fontWeight: "medium",
                     boxShadow: "outline",
                 }}
                 px={5}
