@@ -24,6 +24,13 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
         hosts = [],
         teams = [],
     } = props
+    const formOnSubmit = async (values: any) => {
+        await fetch('/api/match/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: (new URLSearchParams(values)).toString(),
+        })
+    }
 
     return (
         <>
@@ -43,6 +50,7 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
                             hosts={hosts}
                             teams={teams}
                             categories={categories}
+                            onSubmit={formOnSubmit}
                         />
                     </AddMatch>
                 </TeamLayout>

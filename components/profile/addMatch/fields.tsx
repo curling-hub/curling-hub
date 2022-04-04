@@ -42,6 +42,7 @@ interface FieldsProps {
     categories?: Category[]
     hosts?: HostInfo[]
     teams?: TeamInfo[]
+    onSubmit?: (values: ReturnType<typeof getInitialValues>) => Promise<void>
 }
 
 
@@ -50,6 +51,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
         categories = [],
         hosts = [],
         teams = [],
+        onSubmit = async () => {},
     } = props
 
     const resultOptions = [ 'Win', 'Loss', 'Tie' ]
@@ -64,9 +66,9 @@ const Fields = (props: FieldsProps): JSX.Element => {
         <Formik
             initialValues={getInitialValues()}
             validationSchema={schema}
-            onSubmit={(values) => { console.log(values) }}
+            onSubmit={onSubmit}
         >
-            {(props) => (
+            {({ isSubmitting }) => (
                 <Form>
                     <VStack spacing={4}>
                         <Grid
@@ -136,7 +138,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 {...field}
                                             >
                                                 {teams.map((val) => (
-                                                    <option key={val.teamId} value={val.teamId}>
+                                                    <option key={`${val.teamId}`} value={val.teamId}>
                                                         {val.name}
                                                     </option>
                                                 ))}
@@ -159,7 +161,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 {...field}
                                             >
                                                 {categories.map((val) => (
-                                                    <option key={val.categoryId} value={val.categoryId}>
+                                                    <option key={`${val.categoryId}`} value={val.categoryId}>
                                                         {val.name}
                                                     </option>
                                                 ))}
@@ -189,7 +191,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 {...field}
                                             >
                                                 {hosts.map((val) => (
-                                                    <option key={val.hostId} value={val.hostId}>
+                                                    <option key={`${val.hostId}`} value={val.hostId}>
                                                         {val.name}
                                                     </option>
                                                 ))}
@@ -236,6 +238,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             isFullWidth
                             borderRadius="full"
                             bg="primary.green"
+                            disabled={isSubmitting}
                             _hover={{ bg: "green.400" }}
                             _active={{ bg: "green.600" }}
                         >
