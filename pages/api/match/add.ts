@@ -23,9 +23,13 @@ const postHandler: NextApiHandler<Data> = async (req, res) => {
 
         // TODO: return message `Ok` and the created object
         res.status(200).json({ message: 'Ok' })
-    } catch (error) {
+    } catch (error: any) {
         console.log(error)
-        res.status(400).json({ error: 'Bad parameters' })
+        if (/^ValidationError/.test(error.toString())) {
+            res.status(400).json({ error: 'Bad parameters' })
+        } else {
+            res.status(500).json({ error: 'Internal server error'})
+        }
     }
 }
 

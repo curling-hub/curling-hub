@@ -1,6 +1,8 @@
 import type { NextPage, GetServerSideProps } from 'next'
 import Head from 'next/head'
-import { Box, Divider } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { Box, Center, Text } from '@chakra-ui/react'
 
 import TeamLayout from '../components/layouts/TeamLayout'
 import AddMatch from '../components/profile/addMatch'
@@ -19,17 +21,25 @@ interface TeamAddMatchProps {
 }
 
 const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => {
+    const router = useRouter()
     const {
         categories = [],
         hosts = [],
         teams = [],
     } = props
+    const [ submissionError, setSubmissionError ] = useState('')
     const formOnSubmit = async (values: any) => {
-        await fetch('/api/match/add', {
+        const res = await fetch('/api/match/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: (new URLSearchParams(values)).toString(),
         })
+        if (res.status !== 200) {
+            const { error } = await res.json()
+            setSubmissionError(error)
+            return
+        }
+        router.push('/team-profile')
     }
 
     return (
@@ -52,6 +62,11 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
                             categories={categories}
                             onSubmit={formOnSubmit}
                         />
+                        {submissionError !== '' && (
+                            <Center>
+                                <Text textColor="red.500">{submissionError}</Text>
+                            </Center>
+                        )}
                     </AddMatch>
                 </TeamLayout>
             </Box>
