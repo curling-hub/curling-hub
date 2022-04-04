@@ -18,7 +18,7 @@ export default function LeftHandBox(props: LeftHandBoxProps) {
                 boxShadow="md"
                 textAlign="center"
                 width="100%"
-                /* minW="415px" */
+                /* minW={{ base: "415px", md: "0px" }} */
                 /* height={{ base: "36%", md: "46%" }} */
                 height="46%"
             >

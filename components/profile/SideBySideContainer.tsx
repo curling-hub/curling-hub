@@ -16,8 +16,7 @@ export default function SideBySideContainer(props: SideBySideContainerProps) {
                 marginBottom="50px"
                 width={{ base: "81%", md: "42%" }}
                 maxW="605px"
-                minW={props.minW}
-                /* height={{ base: "900px", md: "1022px" }} */
+                /* minW={props.minW} */
                 height={props.height}
                 textAlign="center"
                 top="0"

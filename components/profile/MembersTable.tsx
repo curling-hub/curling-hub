@@ -1,46 +1,53 @@
 import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Td,
-    TableCaption,
-    TableContainer,
+    Flex,
+    VStack,
+    Text,
+    Spacer
 } from "@chakra-ui/react"
+import { TeamMembers } from '../../lib/models/teams'
+import { TeamCategories } from '../../lib/models/teams'
 
 interface MembersTableProps {
-
+    teamMembers?: TeamMembers[]
+    teamCategories?: TeamCategories[]
 }
 
 export default function MembersTable(props: MembersTableProps) {
+
+    const {
+        teamMembers = [],
+        teamCategories = []
+    } = props
+
     return (
         <>
-            {/* <TableContainer padding="0"> */}
-            <Table variant="unstyled" size="sm" padding="0 5%">
-                <Tbody>
-                    <Tr>
-                        <Td textAlign='center' fontWeight="bold" fontSize="1.25em">Curlers</Td>
-                        <Td textAlign='center' fontWeight="bold" fontSize="1.25em">Categories</Td>
-                    </Tr>
-                    <Tr>
-                        <Td textAlign='center' fontSize="14px">Stand-In Name</Td>
-                        <Td textAlign='center' fontSize="14px">Mixed</Td>
-                    </Tr>
-                    <Tr>
-                        <Td textAlign='center' fontSize="14px">Stand-In Name</Td>
-                        <Td textAlign='center' fontSize="14px">Open</Td>
-                    </Tr>
-                    <Tr>
-                        <Td textAlign='center' fontSize="14px">Stand-In Name</Td>
-                        <Td textAlign='center' fontSize="14px"></Td>
-                    </Tr>
-                    <Tr>
-                        <Td textAlign='center' fontSize="14px">Stand-In Name</Td>
-                        <Td textAlign='center' fontSize="14px"></Td>
-                    </Tr>
-                </Tbody>
-            </Table>
-            {/* </TableContainer> */}
+            <Flex align="start" w="100%">
+                <Spacer />
+                <VStack align="center" minW="110px" spacing="4px">
+                    <Text
+                        fontSize="1.5em"
+                        fontWeight="bold"
+                    >Curlers</Text>
+                    {teamMembers.map((member, i) => (
+                        <Text key={`${i}`}>
+                            {member.memberName}
+                        </Text>
+                    ))}
+                </VStack>
+                <Spacer />
+                <VStack align="center" spacing="4px">
+                    <Text
+                        fontSize="1.5em"
+                        fontWeight="bold"
+                    >Categories</Text>
+                    {teamCategories.map((category, i) => (
+                        <Text key={`${i}`}>
+                            {category.categoryName}
+                        </Text>
+                    ))}
+                </VStack>
+                <Spacer />
+            </Flex>
         </>
     );
 }
