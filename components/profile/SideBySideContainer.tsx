@@ -12,7 +12,7 @@ export default function SideBySideContainer(props: SideBySideContainerProps) {
         <>
             <Box
                 borderRadius={CONST_BORDER_RADIUS}
-                marginTop="37px"
+                marginTop="32px"
                 marginBottom="50px"
                 width={{ base: "81%", md: "42%" }}
                 maxW="605px"

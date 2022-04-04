@@ -15,7 +15,7 @@ import ProfileButton from '../components/profile/ProfileButton';
 import MatchesBox from '../components/profile/MatchesBox';
 import MatchesTable from '../components/profile/MatchesTable'
 import MembersTable from '../components/profile/MembersTable'
-import { TeamInfo, TeamMatches, TeamContactInfo, TeamCategories, TeamMembers } from '../lib/models/teams'
+import { TeamInfo, TeamMatches, TeamCategories, TeamMembers } from '../lib/models/teams'
 import { getSession } from 'next-auth/react'
 import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo } from '../lib/handlers/teams'
 
@@ -23,8 +23,7 @@ import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, 
 interface TeamProfileProps {
     teamInfo?: TeamInfo[]
     teamMatches?: TeamMatches[]
-    teamContactInfo?: TeamContactInfo[]
-    teamEmail?: string
+    teamEmail: string
     teamCategories?: TeamCategories[]
     teamMembers?: TeamMembers[]
 }
@@ -34,9 +33,9 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
     const {
         teamInfo = [],
         teamMatches = [],
-        teamContactInfo = [],
         teamCategories = [],
         teamMembers = [],
+        teamEmail
 
     } = props
 
@@ -72,11 +71,9 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                     >
                                         Contact
                                     </Text>
-                                    {/* {teamContactInfo?.map((team: TeamContactInfo, i: number) => (
-                                        <Text key={`${i}`}>
-                                            {team.teamEmail}
-                                        </Text>
-                                    ))} */}
+                                    {/* <Text>
+                                        {teamEmail}
+                                    </Text> */}
                                     <Text>
                                         ralphs.wonderful.life@gmail.com
                                     </Text>
@@ -138,13 +135,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             getTeamCategories('1'),
             getTeamMembers('1')
         ])
+        const teamEmail = session?.["user"].email || null
+        /* console.log(teamEmail) */
         return {
             props: {
                 teamInfo,
                 teamMatches,
                 teamContactInfo,
                 teamCategories,
-                teamMembers
+                teamMembers,
+                teamEmail,
             },
         }
     } catch (error) {
