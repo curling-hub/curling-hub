@@ -57,7 +57,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                     <SideBySideContainer height='1022px'>
                         <VStack spacing="78px" height="100%">
                             <LeftHandBox color='primary.white'>
-                                <VStack spacing="0px" h="368px">
+                                <VStack spacing="0px" h="356px">
                                     {teamInfo?.map((team: TeamInfo, i: number) => (
                                         <Text key={`${i}`}
                                             fontSize="2.5em"

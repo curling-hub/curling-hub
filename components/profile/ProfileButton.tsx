@@ -14,7 +14,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
                 background={props.color}
                 borderRadius="full"
                 boxShadow="md"
-                padding="25px 50px"
+                h="63px"
                 fontSize={REG_BUTTON_FONT_SIZE}
                 w="64%"
                 top={props.top}
