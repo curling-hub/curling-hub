@@ -15,10 +15,9 @@ import {
     FormControl,
     FormErrorMessage
 } from '@chakra-ui/react'
-import { object, string, boolean } from 'yup';
+import { object, string, boolean, number } from 'yup';
 import { Field, Form, Formik, FieldProps } from 'formik';
 import { RowDataPacket } from 'mysql2';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { useRouter } from 'next/router';
 
 interface NewTeamFieldsProps {
@@ -39,7 +38,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         curler4: string,
         showAlternate: boolean,
         alternate: string,
-        categories: string,
+        categories: number,
         agreed: boolean
     }) => {
 
@@ -72,7 +71,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 categories: [values.categories]
             }
         }
-
+        
         const res = await fetch('/api/team/create', {
             body: JSON.stringify(req),
             headers: {
@@ -82,6 +81,8 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         })
         
         if (res.status == 200) {
+            const result = await res.json()
+            console.log(result.error)
             router.push('/team-profile')
         } else {
             alert("error: "+res.statusText)
@@ -93,7 +94,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         onOpenTermsOfService,
         categories
     } = props
-    
+   
     const [mode, setMode] = useState(true)
     const [alternate, setAlternate] = useState(false)
 
@@ -120,7 +121,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
             is: true,
             then: string().required("Alternate is required")
         }),
-        categories: string().required("Must pick at least one category"),
+        categories: number()
+                    .required("Must pick at least one category")
+                    .min(categories[0].category_id)
+                    .max(categories[categories.length-1].category_id),
         agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
     
@@ -135,7 +139,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler4: '',
                 showAlternate: false,
                 alternate: '',
-                categories: '',
+                categories: 0,
                 agreed: false
             }}
             validationSchema={newTeamSchema}
@@ -298,7 +302,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                     >
                                         {categories.map((category: RowDataPacket) => {
                                             return (
-                                                <option key={category.name} value={category.name}>{category.name}</option>
+                                                <option key={category.name} value={category.category_id}>{category.name}</option>
                                             )
                                         })}
                                     </Select>

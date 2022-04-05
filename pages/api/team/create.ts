@@ -6,11 +6,11 @@ type Data = {
     error: string
 }
 
-export default function handler(
+export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    if (
+     if (
         req 
         && req.body 
         && req.body.team 
@@ -21,7 +21,18 @@ export default function handler(
         && req.body.alternate
         && req.body.categories
     ) {
-        const query1 = `INSERT INTO team_profile(${req.body.team}, 750)`
+        var query = `INSERT INTO team_profile(name, rating)\nVALUES("${req.body.team}", "750");\nINSERT INTO categories_rel(team_id, category_id)\nVALUES`
+        for (var category of req.body.categories) {
+            query += `(LAST_INSERT_ID(), ${category}),`
+        }
+        query = query.slice(0, query.length - 1)
+        query += `;\nINSERT INTO team_members(team_id, name)\n`
+        query += `VALUES(LAST_INSERT_ID(), "${req.body.curler1}"),(LAST_INSERT_ID(), "${req.body.curler2}"),`
+        query += `(LAST_INSERT_ID(), "${req.body.curler3}"),(LAST_INSERT_ID(), "${req.body.curler4}"),`
+        query += `(LAST_INSERT_ID(), "${req.body.alternate}");`
+        
+        //let qr = await pool.promise().query(query)
+        res.status(200).json({ error: query})
     } else if (
         req 
         && req.body
@@ -32,16 +43,34 @@ export default function handler(
         && req.body.curler4
         && req.body.categories
     ) {
-        res.status(200).json({ error: ""})
+        var query = `INSERT INTO team_profile(name, rating)\nVALUES("${req.body.team}", "750");\nINSERT INTO categories_rel(team_id, category_id)\nVALUES`
+        for (var category of req.body.categories) {
+            query += `(LAST_INSERT_ID(), ${category}),`
+        }
+        query = query.slice(0, query.length - 1)
+        query += `;`;
+        /* query += `;\nINSERT INTO team_members(team_id, name)\n`
+        query += `VALUES(LAST_INSERT_ID(), "${req.body.curler1}"),(LAST_INSERT_ID(), "${req.body.curler2}"),`
+        query += `(LAST_INSERT_ID(), "${req.body.curler3}"),(LAST_INSERT_ID(), "${req.body.curler4}");`
+       */  
+        let qr = await pool.promise().query(query)
+        res.status(200).json({ error: query})
     } else if (
-        req 
-        && req.body
-        && req.body.team 
+        req.body.team 
         && req.body.curler1 
         && req.body.curler2
         && req.body.categories
     ) {
-        res.status(200).json({ error: ""})
+        var query = `INSERT INTO team_profile(name, rating)\nVALUES("${req.body.team}", "750");\nINSERT INTO categories_rel(team_id, category_id)\nVALUES`
+        for (var category of req.body.categories) {
+            query += `(LAST_INSERT_ID(), ${category}),`
+        }
+        query = query.slice(0, query.length - 1)
+        query += `;\nINSERT INTO team_members(team_id, name)\nVALUES(LAST_INSERT_ID(), "${req.body.curler1}"),(LAST_INSERT_ID(), "${req.body.curler2}");`
+        
+        //let qr = await pool.promise().query(query)
+
+        res.status(200).json({ error: query})
     } else 
-        res.status(400).json({ error: "not getting data" })
+        res.status(400).json({ error: "missing team information" }) 
 }
