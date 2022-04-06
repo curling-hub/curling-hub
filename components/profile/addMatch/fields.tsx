@@ -101,13 +101,13 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                         return (
                                             <FormControl>
                                                 <Flex justifyContent="space-between" {...group}>
-                                                    {resultOptions.map((value) => (
-                                                        <ResultRadio
+                                                    {resultOptions.map((value) => {
+                                                        const radioProps = getRadioProps({value});
+                                                        return (<ResultRadio
                                                             key={value}
-                                                            {...getRadioProps({value})}
+                                                            {...radioProps}
                                                             onChange={(e) => {
                                                                 field.onChange(e);
-                                                                const radioProps = getRadioProps({value});
                                                                 radioProps.onChange && radioProps.onChange(e);
                                                             }}
                                                             name={field.name}
@@ -115,8 +115,8 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                         >
                                                             <FormLabel htmlFor={value.toLowerCase()} m='auto' srOnly>{value}</FormLabel>
                                                             <span>{value}</span>
-                                                        </ResultRadio>
-                                                    ))}
+                                                        </ResultRadio>)
+                                                    })}
                                                 </Flex>
                                             </FormControl>
                                         )
