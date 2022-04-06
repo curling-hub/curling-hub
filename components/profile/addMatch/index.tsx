@@ -19,6 +19,8 @@ const AddMatch = (props: AddMatchProps): JSX.Element => {
                 h="auto"
                 borderRadius="20"
                 bg="white"
+                shadow="md"
+                m="5%"
             >
                 <Box minW="sm" w="100%" h="100%" m={{ base: 0, md: 2 }} p={10} borderRadius="32">
                     {children}
