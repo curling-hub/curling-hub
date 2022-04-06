@@ -72,6 +72,7 @@ export default async function handler(
         && req.body.curler2
         && req.body.categories
     ) {
+        console.log(req.body.categories)
         var query = `INSERT INTO team_profile(name, rating)\nVALUES("${req.body.team}", "750");
                      INSERT INTO categories_rel(team_id, category_id)
                      VALUES`
@@ -82,7 +83,7 @@ export default async function handler(
         query += `INSERT INTO team_members(team_id, name)
                   VALUES(LAST_INSERT_ID(), "${req.body.curler1}"),(LAST_INSERT_ID(), "${req.body.curler2}"),
                   `
-          
+         
         try {
             let qr = await pool.promise().query(query)
             res.status(200).json({ error: ""})

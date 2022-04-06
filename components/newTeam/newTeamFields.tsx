@@ -1,4 +1,3 @@
-import NextLink from 'next/link'
 import { useState } from 'react'
 import {
     Link as ChakraLink,
@@ -9,16 +8,21 @@ import {
     Button,
     Radio,
     RadioGroup,
-    Select,
     Text,
     Checkbox,
     FormControl,
     FormErrorMessage
 } from '@chakra-ui/react'
-import { object, string, boolean, number } from 'yup';
+import {
+    Select,
+    OptionBase,
+    GroupBase
+} from "chakra-react-select"
+import { object, string, boolean, number, array } from 'yup';
 import { Field, Form, Formik, FieldProps } from 'formik';
 import { RowDataPacket } from 'mysql2';
 import { useRouter } from 'next/router';
+import { mapValueFieldNames } from 'sequelize/types/utils';
 
 interface NewTeamFieldsProps {
     onOpenPrivacyPolicy: () => void;
@@ -38,7 +42,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         curler4: string,
         showAlternate: boolean,
         alternate: string,
-        categories: number,
+        categories: Array<number>,
         agreed: boolean
     }) => {
 
@@ -49,7 +53,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 team: values.team,
                 curler1: values.curler1,
                 curler2: values.curler2,
-                categories: [values.categories]
+                categories: values.categories
             }
         } else if (values.showAlternate) {
             req = {
@@ -59,7 +63,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler3: values.curler3,
                 curler4: values.curler4,
                 alternate: values.alternate,
-                categories: [values.categories]
+                categories: values.categories
             }
         } else {
             req = {
@@ -68,7 +72,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler2: values.curler2,
                 curler3: values.curler3,
                 curler4: values.curler4,
-                categories: [values.categories]
+                categories: values.categories
             }
         }
         
@@ -120,12 +124,16 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
             is: true,
             then: string().required("Alternate is required")
         }),
-        categories: number()
-                    .required("Must pick at least one category")
+        categories: array()
+                    .of(number()
                     .min(categories[0].category_id)
-                    .max(categories[categories.length-1].category_id),
+                    .max(categories[categories.length-1].category_id)),
         agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
+    
+    const groupedOptions = categories.map((category: RowDataPacket) => {
+        return {value: category.category_id, label: category.name}
+    })
     
     return (
         <Formik
@@ -138,7 +146,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler4: '',
                 showAlternate: false,
                 alternate: '',
-                categories: 0,
+                categories: [],
                 agreed: false
             }}
             validationSchema={newTeamSchema}
@@ -292,19 +300,17 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         <Field name="categories">
                             {({field, form}: FieldProps<string>) => (
                                 <FormControl isInvalid={form.errors.categories != undefined && form.touched.categories != undefined}>
-                                    <Select
-                                    // TODO: POPULATE CATEGORIES VIA SERVER SIDE RENDER. SEE JIRA BOARD FOR DETAILS.
-                                        {...field}
-                                        borderRadius="full"
+                                    <Select<OptionBase, true, GroupBase<OptionBase>>
+                                        {...field.value}
+                                        isMulti
+                                        name="categories"
+                                        options={groupedOptions}
                                         placeholder="Select Categories..."
-                                        onChange={props.handleChange('categories')}
-                                    >
-                                        {categories.map((category: RowDataPacket) => {
-                                            return (
-                                                <option key={category.name} value={category.category_id}>{category.name}</option>
-                                            )
-                                        })}
-                                    </Select>
+                                        closeMenuOnSelect={false}
+                                        focusBorderColor="green.400"
+                                        onChange={(selected) => {field.value += 'e'}}
+                                    />
+                                    <p>{field.value}</p>
                                 <FormErrorMessage>{form.errors.categories}</FormErrorMessage>
                                 </FormControl>
                             )}
