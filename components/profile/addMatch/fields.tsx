@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
     ErrorMessage,
     Field,
@@ -54,6 +55,23 @@ const Fields = (props: FieldsProps): JSX.Element => {
         onSubmit = async () => {},
     } = props
 
+    const [ fetchingIceSheets, setFetchingIceSheets ] = useState(false)
+    const [ iceSheets, setIceSheets ] = useState<any[]>([])
+    const onLocationChange = async (hostId: string) => {
+        setFetchingIceSheets(true)
+        try {
+            const res = await fetch(`/api/location/${hostId}/info`)
+            if (res.status === 200) {
+                const hostInfo = await res.json()
+                setIceSheets(hostInfo.data.iceSheets || [])
+            }
+        } catch (error: any) {
+            console.log(error)
+        } finally {
+            setFetchingIceSheets(false)
+        }
+    }
+
     const resultOptions = [ 'Win', 'Loss', 'Tie' ]
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'matchResult',
@@ -68,7 +86,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
             validationSchema={schema}
             onSubmit={onSubmit}
         >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, values }) => (
                 <Form>
                     <VStack spacing={4}>
                         <Grid
@@ -190,10 +208,14 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 borderRadius="full"
                                                 placeholder="Location"
                                                 {...field}
+                                                onChange={(e) => {
+                                                    onLocationChange(e.target.value)
+                                                    field.onChange(e)
+                                                }}
                                             >
                                                 {hosts.map((val) => (
                                                     <option key={`${val.hostId}`} value={val.hostId}>
-                                                        {val.name}
+                                                        {val.organization}
                                                     </option>
                                                 ))}
                                                 <option key="other" value="other">Other</option>
@@ -207,17 +229,23 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             </Box>
                             <Box w="100%">
                                 <Field name="sheetOfIce">
-                                    {({field, form}: FieldProps) => (
+                                    {iceSheets.length > 0 ? ({field, form}: FieldProps) => (
                                         <FormControl>
                                             <Select
+                                                disabled={!values.location || values.location === 'other' || fetchingIceSheets}
                                                 borderRadius="full"
                                                 placeholder="Sheet of Ice"
                                                 {...field}
                                             >
+                                                {iceSheets.map((val) => (
+                                                    <option key={`${val}`} value={val}>
+                                                        {val}
+                                                    </option>
+                                                ))}
                                                 <option value="other">Other</option>
                                             </Select>
                                         </FormControl>
-                                    )}
+                                    ) : () => (<></>)}
                                 </Field>
                                 <Box textColor="red.500" px={2}>
                                     <ErrorMessage name="sheetOfIce" />
