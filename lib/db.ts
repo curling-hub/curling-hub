@@ -16,6 +16,7 @@ const pool = mysql.createPool({
     user: mysql_user,
     password: mysql_password,
     database: mysql_database,
+    multipleStatements: true
 })
 
 export async function health(): Promise<Number> {

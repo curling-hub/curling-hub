@@ -43,17 +43,18 @@ export default async function handler(
         && req.body.curler4
         && req.body.categories
     ) {
-        var query = `INSERT INTO team_profile(name, rating)\nVALUES("${req.body.team}", "750");\nINSERT INTO categories_rel(team_id, category_id)\nVALUES`
+        var query = `INSERT INTO team_profile(name, rating)\nVALUES("${req.body.team}", "750");`
+        query += `\nINSERT INTO categories_rel(team_id, category_id)\nVALUES`
         for (var category of req.body.categories) {
             query += `(LAST_INSERT_ID(), ${category}),`
         }
-        query = query.slice(0, query.length - 1)
-        query += `;`;
-        /* query += `;\nINSERT INTO team_members(team_id, name)\n`
+        query = query.slice(0, query.length - 1) + `;\n`
+        query += `INSERT INTO team_members(team_id, name)\n`
         query += `VALUES(LAST_INSERT_ID(), "${req.body.curler1}"),(LAST_INSERT_ID(), "${req.body.curler2}"),`
         query += `(LAST_INSERT_ID(), "${req.body.curler3}"),(LAST_INSERT_ID(), "${req.body.curler4}");`
-       */  
+          
         let qr = await pool.promise().query(query)
+        .catch((err) => console.log(err))
         res.status(200).json({ error: query})
     } else if (
         req.body.team 
