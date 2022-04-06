@@ -81,11 +81,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         })
         
         if (res.status == 200) {
-            const result = await res.json()
-            console.log(result.error)
             router.push('/team-profile')
         } else {
-            alert("error: "+res.statusText)
+            const result = await res.json()
+            alert("error: "+result.error)
         }
     }
 
