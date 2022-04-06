@@ -102,7 +102,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                             <FormControl>
                                                 <Flex justifyContent="space-between" {...group}>
                                                     {resultOptions.map((value) => (
-                                                        <FormLabel htmlFor={value.toLowerCase()} m='auto' srOnly>{value}</FormLabel>
+                                                        <FormLabel htmlFor={value.toLowerCase()} srOnly>{value}</FormLabel>
                                                     ))}
                                                     {resultOptions.map((value) => {
                                                         const radioProps = getRadioProps({value});
