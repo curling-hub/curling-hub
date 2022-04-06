@@ -2,6 +2,7 @@
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 
 import addMatchSchema from '../../../components/profile/addMatch/schema'
+import { create } from '../../../lib/handlers/matches'
 
 
 type Data = {
@@ -18,8 +19,7 @@ const postHandler: NextApiHandler<Data> = async (req, res) => {
         const form = await addMatchSchema.validate(req.body)
         console.log(form)
         
-        // TODO: find out how the id should be handled - typically as auto-incremented int
-        const query = ``
+        await create(form)
 
         // TODO: return message `Ok` and the created object
         res.status(200).json({ message: 'Ok' })

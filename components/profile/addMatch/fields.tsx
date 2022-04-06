@@ -28,7 +28,7 @@ import ResultRadio from './resultRadio'
 import type { Category, HostInfo, TeamInfo } from '../../../lib/models'
 
 
-const getInitialValues = () => ({
+const getInitialValues = (otherFields: any = {}) => ({
     matchResult: 'Win',
     date: '',
     opponent: '',
@@ -36,10 +36,12 @@ const getInitialValues = () => ({
     location: '',
     sheetOfIce: '',
     comments: '',
+    ...otherFields,
 })
 
 
 interface FieldsProps {
+    currentTeam?: TeamInfo
     categories?: Category[]
     hosts?: HostInfo[]
     teams?: TeamInfo[]
@@ -49,6 +51,7 @@ interface FieldsProps {
 
 const Fields = (props: FieldsProps): JSX.Element => {
     const {
+        currentTeam = {} as TeamInfo,
         categories = [],
         hosts = [],
         teams = [],
@@ -82,7 +85,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
 
     return (
         <Formik
-            initialValues={getInitialValues()}
+            initialValues={getInitialValues({ currentTeam: currentTeam.teamId })}
             validationSchema={schema}
             onSubmit={onSubmit}
         >
