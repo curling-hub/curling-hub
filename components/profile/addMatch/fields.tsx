@@ -129,11 +129,13 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 <Field name="date">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
+                                            <FormLabel htmlFor="date" srOnly>Date</FormLabel>
                                             <Input
                                                 type="date"
                                                 w="100%"
                                                 borderRadius="full"
                                                 {...field}
+                                                id="date"
                                             />
                                         </FormControl>
                                     )}
@@ -153,10 +155,12 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 <Field name="opponent">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
+                                            <FormLabel htmlFor="opponent" srOnly>Opponent</FormLabel>
                                             <Select
                                                 borderRadius="full"
                                                 placeholder="Opponent"
                                                 {...field}
+                                                id="opponent"
                                             >
                                                 {teams.map((val) => (
                                                     <option key={`${val.teamId}`} value={val.teamId}>
@@ -176,10 +180,12 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 <Field name="category">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
+                                            <FormLabel htmlFor="category" srOnly>Category</FormLabel>
                                             <Select
                                                 borderRadius="full"
                                                 placeholder="Category"
                                                 {...field}
+                                                id="category"
                                             >
                                                 {categories.map((val) => (
                                                     <option key={`${val.categoryId}`} value={val.categoryId}>
@@ -206,6 +212,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 <Field name="location">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
+                                            <FormLabel htmlFor="location" srOnly>Location</FormLabel>
                                             <Select
                                                 borderRadius="full"
                                                 placeholder="Location"
@@ -214,6 +221,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                     onLocationChange(e.target.value)
                                                     field.onChange(e)
                                                 }}
+                                                id="location"
                                             >
                                                 {hosts.map((val) => (
                                                     <option key={`${val.hostId}`} value={val.hostId}>
@@ -233,11 +241,13 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 <Field name="sheetOfIce">
                                     {iceSheets.length > 0 ? ({field, form}: FieldProps) => (
                                         <FormControl>
+                                            <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
                                             <Select
                                                 disabled={!values.location || values.location === 'other' || fetchingIceSheets}
                                                 borderRadius="full"
                                                 placeholder="Sheet of Ice"
                                                 {...field}
+                                                id="sheet-of-ice"
                                             >
                                                 {iceSheets.map((val) => (
                                                     <option key={`${val}`} value={val}>
@@ -257,9 +267,11 @@ const Fields = (props: FieldsProps): JSX.Element => {
                         <Field name="comments">
                             {({field, form}: FieldProps) => (
                                 <FormControl>
+                                    <FormLabel htmlFor="comment" srOnly>Comment</FormLabel>
                                     <Textarea
                                         {...field}
                                         placeholder="Comment"
+                                        id="comment"
                                     />
                                 </FormControl>
                             )}
