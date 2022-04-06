@@ -248,7 +248,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             </Box>
                             <Box w="100%">
                                 <Field name="sheetOfIce">
-                                    {iceSheets.length > 0 ? ({field, form}: FieldProps) => (
+                                    {({field, form}: FieldProps) => (
                                         <FormControl>
                                             <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
                                             <Select
@@ -266,7 +266,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 <option value="other">Other</option>
                                             </Select>
                                         </FormControl>
-                                    ) : () => (<></>)}
+                                    )}
                                 </Field>
                                 <Box textColor="red.500" px={2}>
                                     <ErrorMessage name="sheetOfIce" />
