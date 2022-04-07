@@ -44,6 +44,14 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
         }
         router.push('/team-profile')
     }
+    const fetchIceSheetsByHostId = async (hostId: string): Promise<any[]> => {
+        const res = await fetch(`/api/location/${hostId}/info`)
+        if (res.status === 200) {
+            const hostInfo = await res.json()
+            return hostInfo.data.iceSheets || []
+        }
+        return []
+    }
 
     return (
         <>
@@ -65,6 +73,7 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
                             categories={categories}
                             currentTeam={currentTeam}
                             onSubmit={formOnSubmit}
+                            fetchIceSheetsByHostId={fetchIceSheetsByHostId}
                         />
                         {submissionError !== '' && (
                             <Center>

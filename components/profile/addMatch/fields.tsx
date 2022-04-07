@@ -46,12 +46,14 @@ interface FieldsProps {
     hosts?: HostInfo[]
     teams?: TeamInfo[]
     onSubmit?: (values: ReturnType<typeof getInitialValues>) => Promise<void>
+    fetchIceSheetsByHostId?: (hostId: string) => Promise<any[]>
 }
 
 
 const Fields = (props: FieldsProps): JSX.Element => {
     const {
         currentTeam = {} as TeamInfo,
+        fetchIceSheetsByHostId = async (_) => [],
         categories = [],
         hosts = [],
         teams = [],
@@ -63,11 +65,8 @@ const Fields = (props: FieldsProps): JSX.Element => {
     const onLocationChange = async (hostId: string) => {
         setFetchingIceSheets(true)
         try {
-            const res = await fetch(`/api/location/${hostId}/info`)
-            if (res.status === 200) {
-                const hostInfo = await res.json()
-                setIceSheets(hostInfo.data.iceSheets || [])
-            }
+            const iceSheets = await fetchIceSheetsByHostId(hostId)
+            setIceSheets(iceSheets)
         } catch (error: any) {
             console.log(error)
         } finally {
