@@ -1,4 +1,4 @@
-export interface HostInfo {
+export interface HostInfoBase {
     hostId: string
     organization: string
     website?: string
@@ -10,5 +10,8 @@ export interface HostInfo {
     zip: string
     country: string
     updatedAt?: Date
+}
+
+export interface HostInfo extends HostInfoBase {
     iceSheets?: string[]
 }

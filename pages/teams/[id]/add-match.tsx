@@ -9,7 +9,7 @@ import AddMatch from '../../../components/profile/addMatch'
 import AddMatchFields from '../../../components/profile/addMatch/fields'
 import AddMatchTitle from '../../../components/profile/addMatch/title'
 import type { Category, HostInfo, TeamInfo } from '../../../lib/models'
-import { getAllCategories } from '../../../lib/handlers/categories'
+import { getAllCategories, getCategoriesByTeamId } from '../../../lib/handlers/categories'
 import { getAllHosts } from '../../../lib/handlers/hosts'
 import { getAllTeams, getTeamById } from '../../../lib/handlers/teams'
 
@@ -94,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const teamId = Number.parseInt(Array.isArray(_tidString) ? '' : (_tidString || ''))
     try {
         const [ categories, hosts, teams, team ] = await Promise.all([
-            getAllCategories(),
+            getCategoriesByTeamId(teamId),
             getAllHosts(),
             getAllTeams(),
             getTeamById(teamId),

@@ -7,6 +7,7 @@ import { pool } from '../db'
 type AddMatchSchema = yup.InferType<typeof addMatchSchema>
 
 export async function create(form: AddMatchSchema) {
+    // TODO: use sequelize
     let winner = 'tie'
     if (form.matchResult.toUpperCase() === 'WIN') {
         winner = 'team_id_1'

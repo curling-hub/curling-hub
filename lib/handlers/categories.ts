@@ -1,6 +1,4 @@
-import { RowDataPacket } from 'mysql2'
-
-import { pool } from '../db'
+import * as DbModels from '../db_model'
 import type { Category } from '../models'
 
 
@@ -9,34 +7,25 @@ export async function categories() {
 }
 
 export async function getAllCategories(): Promise<Category[]> {
-    const query = `
-        SELECT
-            category_id,
-            name
-        FROM categories;
-    `
-    const [rows, _] = await pool.promise().query(query)
-    const r = rows as RowDataPacket[]
-    return r.map((val) => ({
-        categoryId: val["category_id"],
-        name: val["name"],
-    }))
+    const categories = await DbModels.CategoryModel.findAll()
+    if (!categories) {
+        return []
+    }
+    return categories.map((category) => (category.get()))
 }
 
-export async function getCategoriesByTeamId(teamId: string): Promise<Category[]> {
-    const query = `
-        SELECT
-            categories.category_id,
-            categories.name
-        FROM categories_rel
-        INNER JOIN categories
-            ON categories.category_id = categories_rel.category_id
-        WHERE ? = categories_rel.team_id;
-    `
-    const [rows, _] = await pool.promise().query(query, [teamId])
-    const r = rows as RowDataPacket[]
-    return r.map((val) => ({
-        categoryId: val["category_id"],
-        name: val["name"],
-    }))
+export async function getCategoriesByTeamId(teamId: number): Promise<Category[]> {
+    const categories = await DbModels.CategoryModel.findAll({
+        include: [{
+            model: DbModels.TeamInfoModel,
+            where: {
+                teamId: teamId,
+            },
+            attributes: [],
+        }],
+    })
+    if (!categories) {
+        return []
+    }
+    return categories.map((category) => category.get())
 }
