@@ -16,10 +16,12 @@ import {
 import {
     Select,
     OptionBase,
-    GroupBase
+    GroupBase,
+    ActionMeta,
+    MultiValue
 } from "chakra-react-select"
 import { object, string, boolean, number, array } from 'yup';
-import { Field, Form, Formik, FieldProps } from 'formik';
+import { Field, Form, Formik, FieldProps, FieldArray, FieldArrayRenderProps } from 'formik';
 import { RowDataPacket } from 'mysql2';
 import { useRouter } from 'next/router';
 import { mapValueFieldNames } from 'sequelize/types/utils';
@@ -42,10 +44,11 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         curler4: string,
         showAlternate: boolean,
         alternate: string,
-        categories: Array<number>,
+        categories: Array<{value: number, label: string}>,
         agreed: boolean
     }) => {
-
+        const cats = values.categories.map((category) => {return category.value})
+        
         var req = {}
 
         if (values.gameMode == 'doubles') {
@@ -53,7 +56,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 team: values.team,
                 curler1: values.curler1,
                 curler2: values.curler2,
-                categories: values.categories
+                categories: cats
             }
         } else if (values.showAlternate) {
             req = {
@@ -63,7 +66,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler3: values.curler3,
                 curler4: values.curler4,
                 alternate: values.alternate,
-                categories: values.categories
+                categories: cats
             }
         } else {
             req = {
@@ -72,7 +75,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler2: values.curler2,
                 curler3: values.curler3,
                 curler4: values.curler4,
-                categories: values.categories
+                categories: cats
             }
         }
         
@@ -89,7 +92,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         } else {
             const result = await res.json()
             alert("error: "+result.error)
-        }
+        } 
     }
 
     const {
@@ -125,9 +128,11 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
             then: string().required("Alternate is required")
         }),
         categories: array()
-                    .of(number()
-                    .min(categories[0].category_id)
-                    .max(categories[categories.length-1].category_id)),
+                    .of(object({
+                        value: number().min(categories[0].category_id)
+                                       .max(categories[categories.length-1].category_id),
+                        label: string().required()
+                    })).min(1, "Please select at least one category"),
         agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
     
@@ -209,7 +214,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                         shadow="sm"
                                         placeholder="Curler Two"
                                         onChange={props.handleChange('curler2')}
-                                        />
+                                    />
                                     <FormErrorMessage>{form.errors.curler2}</FormErrorMessage>
                                     </FormControl> 
                                 )}
@@ -297,24 +302,28 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                 }
                             </>
                         }
-                        <Field name="categories">
-                            {({field, form}: FieldProps<string>) => (
+                        <FieldArray name="categories">
+                            {({form, remove}: FieldArrayRenderProps) => (
                                 <FormControl isInvalid={form.errors.categories != undefined && form.touched.categories != undefined}>
                                     <Select<OptionBase, true, GroupBase<OptionBase>>
-                                        {...field.value}
                                         isMulti
-                                        name="categories"
                                         options={groupedOptions}
                                         placeholder="Select Categories..."
                                         closeMenuOnSelect={false}
                                         focusBorderColor="green.400"
-                                        onChange={(selected) => {field.value += 'e'}}
+                                        instanceId="multi-item-dropdown"
+                                        onFocus={() => {form.setFieldTouched("categories", true, true)}}
+                                        onChange={
+                                            ((newValue: MultiValue<OptionBase>, actionMeta: ActionMeta<OptionBase>) => {
+                                                form.values.categories = newValue
+                                                form.validateField("categories")
+                                            })
+                                        }
                                     />
-                                    <p>{field.value}</p>
-                                <FormErrorMessage>{form.errors.categories}</FormErrorMessage>
+                                    <FormErrorMessage>{form.errors.categories}</FormErrorMessage>
                                 </FormControl>
                             )}
-                        </Field>
+                        </FieldArray>
                         <HStack>
                         <Field name="agreed">
                             {({field, form}: FieldProps<string>) => (
@@ -366,4 +375,8 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
             )}
         </Formik>
     )
+}
+
+function SelectOptionActionMeta<T>() {
+    throw new Error('Function not implemented.');
 }
