@@ -24,7 +24,6 @@ import { object, string, boolean, number, array } from 'yup';
 import { Field, Form, Formik, FieldProps, FieldArray, FieldArrayRenderProps } from 'formik';
 import { RowDataPacket } from 'mysql2';
 import { useRouter } from 'next/router';
-import { mapValueFieldNames } from 'sequelize/types/utils';
 
 interface NewTeamFieldsProps {
     onOpenPrivacyPolicy: () => void;
@@ -189,7 +188,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                 </RadioGroup>
                             )}
                         </Field>
-                        <Field name = "curler1">
+                        <Field name="curler1">
                             {({field, form}: FieldProps<string>) => (
                                 <FormControl isInvalid={form.errors.curler1 != undefined && form.touched.curler1 != undefined}>
                                     <Input
@@ -204,7 +203,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                     </FormControl>
                             )}
                         </Field>
-                        <Field name = "curler2">
+                        <Field name="curler2">
                             {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.curler2 != undefined && form.touched.curler2 != undefined}>
                                     <Input
@@ -221,7 +220,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         </Field>
                         { mode && 
                             <>
-                            <Field name = "curler3">
+                            <Field name="curler3">
                                 {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.curler3 != undefined && form.touched.curler3 != undefined}>
                                     <Input
@@ -237,7 +236,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                 )}
                             </Field>
 
-                            <Field name = "curler4">
+                            <Field name="curler4">
                                 {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.curler4 != undefined && form.touched.curler4 != undefined}>
                                     <Input
@@ -320,7 +319,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                             })
                                         }
                                     />
-                                    <FormErrorMessage>{form.errors.categories}</FormErrorMessage>
+                                    <FormErrorMessage>{form.errors.categories}</FormErrorMessage> 
                                 </FormControl>
                             )}
                         </FieldArray>
@@ -331,7 +330,9 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                     <HStack>
                                         <Checkbox
                                             {...field}
+                                            name="agree-box"
                                             aria-label=""
+                                            checked={form.values.agree}
                                             size="sm"
                                             borderRadius="50%"
                                             colorScheme="teal"
@@ -375,8 +376,4 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
             )}
         </Formik>
     )
-}
-
-function SelectOptionActionMeta<T>() {
-    throw new Error('Function not implemented.');
 }
