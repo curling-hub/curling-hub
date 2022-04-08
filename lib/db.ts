@@ -9,14 +9,13 @@ const {
     mysql_password,
     mysql_database,
 } = serverRuntimeConfig
-
+console.log(serverRuntimeConfig)
 const pool = mysql.createPool({
     host: mysql_host,
     port: mysql_port,
     user: mysql_user,
     password: mysql_password,
-    database: mysql_database,
-    multipleStatements: true
+    database: mysql_database
 })
 
 export async function health(): Promise<Number> {
