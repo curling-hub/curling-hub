@@ -10,7 +10,7 @@ const {
     mysql_database,
 } = serverRuntimeConfig
 
-const pool = mysql.createPool({
+export const pool = mysql.createPool({
     host: mysql_host,
     port: mysql_port,
     user: mysql_user,
@@ -27,5 +27,3 @@ export async function health(): Promise<Number> {
     }
     return r[0]['status'] as Number
 }
-
-export default pool

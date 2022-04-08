@@ -1,5 +1,5 @@
 import { RowDataPacket } from 'mysql2'
-import pool from '../db'
+import { pool } from '../db'
 
 export async function categories() {
     const conn = await pool.promise().getConnection()
