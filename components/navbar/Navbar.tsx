@@ -32,7 +32,7 @@ export default function Navbar({ navItems, navAnchor }: NavbarProps) {
                             <Button
                                 variant="nav"
                                 color="primary.black"
-                                style={{ fontSize: 18, fontWeight: '500' }}
+                                style={{ fontSize: 18, fontWeight: 500 }}
                                 _hover={{ bg: "primary.white" }}
                             >
                                 {item.label}

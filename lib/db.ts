@@ -24,7 +24,7 @@ export const pool = mysql.createPool({
     port: mysql_port,
     user: mysql_user,
     password: mysql_password,
-    database: mysql_database,
+    database: mysql_database
 })
 
 export async function health(): Promise<Number> {
