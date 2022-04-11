@@ -19,7 +19,7 @@ const sequelize = new Sequelize(mysql_database, mysql_user, mysql_password, {
     host: mysql_host,
     port: mysql_port,
     dialect: 'mysql',
-    logging: process.env.NODE_ENV === 'development',
+    logging: process.env.NODE_ENV === 'development' && console.log,
 })
 
 

@@ -1,4 +1,5 @@
 import mysql, { OkPacket, RowDataPacket } from 'mysql2'
+import { Sequelize } from 'sequelize'
 import getConfig from 'next/config'
 
 const { serverRuntimeConfig } = getConfig()
@@ -10,7 +11,15 @@ const {
     mysql_database,
 } = serverRuntimeConfig
 
-const pool = mysql.createPool({
+// Use sequelize to avoid formatting between db rows and js objects
+export const sequelize = new Sequelize(mysql_database, mysql_user, mysql_password, {
+    host: mysql_host,
+    port: mysql_port,
+    dialect: 'mysql',
+    logging: process.env.NODE_ENV === 'development' && console.log,
+})
+
+export const pool = mysql.createPool({
     host: mysql_host,
     port: mysql_port,
     user: mysql_user,
