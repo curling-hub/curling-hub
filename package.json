@@ -22,6 +22,7 @@
     "cookie": "^0.4.2",
     "formik": "^2.2.9",
     "framer-motion": "^6.2.6",
+    "glicko2": "^0.8.7",
     "mysql2": "^2.3.3",
     "next": "^12.1.0",
     "next-auth": "^4.2.1",
