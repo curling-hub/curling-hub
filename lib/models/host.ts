@@ -15,3 +15,4 @@ export interface HostInfoBase {
 export interface HostInfo extends HostInfoBase {
     iceSheets?: string[]
 }
+
