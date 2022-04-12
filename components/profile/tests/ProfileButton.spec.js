@@ -12,5 +12,5 @@ it('Team Profile Page', () => {
             </ProfileButton>
         </ChakraProvider>
     )
-    cy.get('button').contains('View Matches').click()
+    cy.get('button').contains('Profile Button').click()
 })
