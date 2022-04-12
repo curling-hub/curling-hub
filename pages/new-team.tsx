@@ -79,6 +79,7 @@ function NewTeam({ data }: RowDataPacket) {
                         </Box>
                     </Container>
                 </AuthLayout>
+                <Footer />
             </Box>
         </>
     )

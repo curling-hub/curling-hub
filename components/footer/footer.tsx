@@ -44,17 +44,26 @@ export default function Footer() {
     return (
 
         <Box
+            pos="absolute"
+            bottom="0"
+            h="4rem"
             color={useColorModeValue('gray.700', 'gray.200')}>
             <Container
-                pos="static"
-                bottom="5px"
+                // paddingTop="2.5rem"
+                // marginTop="1rem"
+                // marginBottom="5px"
+                // py={{ base: '2', md: '5' }}
+                // pos="absolute"
+                // bottom="0"
+                left="0"
                 as={Stack}
                 maxW="100%"
                 py={4}
                 direction={{ base: 'column', md: 'row' }}
                 spacing={4}
                 justify={{ base: 'center', md: 'space-between' }}
-                align={{ base: 'center', md: 'center' }}>
+                align={{ base: 'center', md: 'center' }}
+            >
                 <Stack direction={'row'} spacing={6} paddingTop="20px">
                     <Text > &copy; {new Date().getFullYear()} Curlo</Text>
                     <TermsOfServiceModal

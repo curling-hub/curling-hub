@@ -42,42 +42,41 @@ const NewHost: NextPage = () => {
                 <title>Login | Curlo</title>
             </Head>
             <Box
-                position="absolute"
+                position="relative"
                 w="100%"
-                h="100vh"
+                minH="100vh"
                 minW="md"
                 bgGradient="linear-gradient(#735FED, #FFFFFF) repeat"
             >
-                <AuthLayout>
-                    <Container maxW="xl" centerContent>
-                        {/* Outer box */}
-                        <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
-                            <Flex flexDirection="row" h="100%">
-                                <Box minW="sm" w="50%" h="100%" m={{ base: 0, md: 0 }} p={10} borderRadius="20" bg="primary.green" >
-                                    {mounted && (
-                                        <>
-                                            <PrivacyPolicyModal
-                                                isOpen={privacyPolicyIsOpen}
-                                                onClose={privacyPolicyOnClose}
-                                            />
-                                            <TermsOfServiceModal
-                                                isOpen={termsOfServiceIsOpen}
-                                                onClose={termsOfServiceOnClose}
-                                            />
-                                            <LoginFields
-                                                email={email}
-                                                onEmailChange={setEmail}
-                                                onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
-                                                onOpenTermsOfService={() => { termsOfServiceOnOpen() }}
-                                            />
-                                        </>
-                                    )}
+                <AuthLayout />
+                <Container maxW="xl" centerContent paddingBottom="4rem">
+                    {/* Outer box */}
+                    <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
+                        <Flex flexDirection="row" h="100%">
+                            <Box minW="sm" w="50%" h="100%" m={{ base: 0, md: 0 }} p={10} borderRadius="20" bg="primary.green" >
+                                {mounted && (
+                                    <>
+                                        <PrivacyPolicyModal
+                                            isOpen={privacyPolicyIsOpen}
+                                            onClose={privacyPolicyOnClose}
+                                        />
+                                        <TermsOfServiceModal
+                                            isOpen={termsOfServiceIsOpen}
+                                            onClose={termsOfServiceOnClose}
+                                        />
+                                        <LoginFields
+                                            email={email}
+                                            onEmailChange={setEmail}
+                                            onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
+                                            onOpenTermsOfService={() => { termsOfServiceOnOpen() }}
+                                        />
+                                    </>
+                                )}
 
-                                </Box>
-                            </Flex>
-                        </Box>
-                    </Container>
-                </AuthLayout>
+                            </Box>
+                        </Flex>
+                    </Box>
+                </Container>
                 <Footer />
             </Box>
         </>

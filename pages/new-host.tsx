@@ -47,47 +47,47 @@ const NewHost: NextPage = () => {
                 minW="md"
                 bgGradient="linear-gradient(#735FED, #FFFFFF) repeat"
             >
-                <AuthLayout>
-                    <Container maxW="2xl" centerContent>
-                        {/* Outer box */}
-                        <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h="auto" my="4" borderRadius="20" bg="white" shadow="md">
-                            <Flex flexDirection="row" h="100%">
-                                {/* Left */}
-                                <Box
-                                    display={{ base: "none", md: "block" }}
-                                    borderRadius="20"
-                                    bg="primary.green"
-                                    h="auto"
-                                    w="100%"
-                                >
-                                </Box>
-                                {/* Sign up container (should only run on client side, e.g mounted) */}
-                                <Box minW="sm" w="100%" h="100%" m={{ base: 0, md: 2 }} p={10} borderRadius="32">
-                                    {mounted && (
-                                        <>
-                                            <PrivacyPolicyModal
-                                                isOpen={privacyPolicyIsOpen}
-                                                onClose={privacyPolicyOnClose}
-                                            />
-                                            <TermsOfServiceModal
-                                                isOpen={termsOfServiceIsOpen}
-                                                onClose={termsOfServiceOnClose}
-                                            />
-                                            <NewHostFields
-                                                phoneType={phoneType}
-                                                onPhoneTypeChange={setPhoneType}
-                                                isAgreedPP={isAgreedPP}
-                                                onIsAgreedPPChange={() => setIsAgreedPP(!isAgreedPP)}
-                                                onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
-                                                onOpenTermsOfService={() => { termsOfServiceOnOpen() }}
-                                            />
-                                        </>
-                                    )}
-                                </Box>
-                            </Flex>
-                        </Box>
-                    </Container>
-                </AuthLayout>
+                <AuthLayout />
+                <Container maxW="2xl" centerContent>
+                    {/* Outer box */}
+                    <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h="auto" my="4" borderRadius="20" bg="white" shadow="md">
+                        <Flex flexDirection="row" h="100%">
+                            {/* Left */}
+                            <Box
+                                display={{ base: "none", md: "block" }}
+                                borderRadius="20"
+                                bg="primary.green"
+                                h="auto"
+                                w="100%"
+                            >
+                            </Box>
+                            {/* Sign up container (should only run on client side, e.g mounted) */}
+                            <Box minW="sm" w="100%" h="100%" m={{ base: 0, md: 2 }} p={10} borderRadius="32">
+                                {mounted && (
+                                    <>
+                                        <PrivacyPolicyModal
+                                            isOpen={privacyPolicyIsOpen}
+                                            onClose={privacyPolicyOnClose}
+                                        />
+                                        <TermsOfServiceModal
+                                            isOpen={termsOfServiceIsOpen}
+                                            onClose={termsOfServiceOnClose}
+                                        />
+                                        <NewHostFields
+                                            phoneType={phoneType}
+                                            onPhoneTypeChange={setPhoneType}
+                                            isAgreedPP={isAgreedPP}
+                                            onIsAgreedPPChange={() => setIsAgreedPP(!isAgreedPP)}
+                                            onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
+                                            onOpenTermsOfService={() => { termsOfServiceOnOpen() }}
+                                        />
+                                    </>
+                                )}
+                            </Box>
+                        </Flex>
+                    </Box>
+                </Container>
+                <Footer />
             </Box>
         </>
     )
