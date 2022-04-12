@@ -337,38 +337,37 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                     <ChakraLink>Login</ChakraLink>
                                 </NextLink>
                             </Text>
-                                <Field name="agreed">
-                                    {({field, form}: FieldProps<string>) => (
-                                        <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
-                                            <HStack>
-                                                <Checkbox
-                                                    {...field}
-                                                    aria-label=""
-                                                    size="sm"
-                                                    borderRadius="50%"
-                                                    colorScheme="teal"
-                                                    checked={isAgreedPP}
-                                                    css={`
-                                                        > span:first-of-type {
-                                                            box-shadow: unset;
-                                                        }
-                                                    `}
-                                                />
-                                                <Text fontSize={helperTextFontSize}>
-                                                {" "}I agree to the {" "}
-                                                <Button variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
-                                                    Terms of Service
-                                                </Button>
-                                                {" "}and{" "}
-                                                <Button variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
-                                                    Privacy Policy
-                                                </Button>
-                                                </Text>
-                                            </HStack>
-                                            <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
-                                        </FormControl>
-                                    )}
-                                </Field>
+                            <Field name="agreed">
+                                {({field, form}: FieldProps<string>) => (
+                                    <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
+                                        <HStack>
+                                            <Checkbox
+                                                {...field}
+                                                aria-label=""
+                                                size="sm"
+                                                borderRadius="50%"
+                                                colorScheme="teal"
+                                                css={`
+                                                    > span:first-of-type {
+                                                        box-shadow: unset;
+                                                    }
+                                                `}
+                                            />
+                                            <Text fontSize={helperTextFontSize}>
+                                            {" "}I agree to the {" "}
+                                            <Button variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
+                                                Terms of Service
+                                            </Button>
+                                            {" "}and{" "}
+                                            <Button variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
+                                                Privacy Policy
+                                            </Button>
+                                            </Text>
+                                        </HStack>
+                                        <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>
                         </VStack>
                     </VStack>
                 </Form>

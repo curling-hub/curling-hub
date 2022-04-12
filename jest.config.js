@@ -4,4 +4,6 @@ const createJestConfig = nextJest({
     dir: './',
 })
 
-module.exports = createJestConfig({})
+module.exports = createJestConfig({
+    testRegex: '(/__tests__/.*)\\.[jt]sx?$',
+})
