@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import AuthLayout from '../components/layouts/AuthLayout'
+import Footer from "../components/footer/footer";
 import RequestModal from '../components/modals/RequestModal'
 import {
     Box, Text, Image, Button, Spacer, Center, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, VStack

@@ -9,6 +9,7 @@ import {
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import AuthLayout from '../components/layouts/AuthLayout'
+import Footer from "../components/footer/footer";
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import InfoModal from '../components/modals/signup/infoModal'
@@ -52,7 +53,7 @@ const NewUser: NextPage = () => {
     const onInfoOpen = () => {
         infoOnOpen()
     }
-    const [ mounted, setMounted ] = useState(false)
+    const [mounted, setMounted] = useState(false)
     useEffect(() => { setMounted(true) }, [])
 
     return (
@@ -82,53 +83,54 @@ const NewUser: NextPage = () => {
                     </Center>
                     <SignupLayout>
                         {mounted ?
-                        <VerticalSpacing>
-                            <HorizontalSpacing>
-                                <TextField fieldPlaceholder='First Name' width='185px' />
-                                <TextField fieldPlaceholder='Last Name' width='185px' />
-                            </HorizontalSpacing>
-                            <HorizontalSpacing>
-                                <TextField fieldPlaceholder='Date of Birth' width='185px' />
-                                <Box
-                                    width="185px"
-                                    height="62px"
-                                    fontSize="20px"
-                                    //fontFamily="Roboto"
-                                    fontWeight="bold"
-                                    color={theme.colors.primary.black}
-                                    textAlign="center"
-                                >
-                                    You qualify for age based teams
-                                </Box>
-                            </HorizontalSpacing>
-                            <ButtonGroup>
+                            <VerticalSpacing>
                                 <HorizontalSpacing>
-                                    <ToggleButtonGroup />
+                                    <TextField fieldPlaceholder='First Name' width='185px' />
+                                    <TextField fieldPlaceholder='Last Name' width='185px' />
                                 </HorizontalSpacing>
-                            </ButtonGroup>
-                            <Center>
-                                <VStack height="82px">
-                                    <ClubDropDown dropDownText='Club' />
-                                    <InfoButton onOpen={onInfoOpen} />
+                                <HorizontalSpacing>
+                                    <TextField fieldPlaceholder='Date of Birth' width='185px' />
+                                    <Box
+                                        width="185px"
+                                        height="62px"
+                                        fontSize="20px"
+                                        //fontFamily="Roboto"
+                                        fontWeight="bold"
+                                        color={theme.colors.primary.black}
+                                        textAlign="center"
+                                    >
+                                        You qualify for age based teams
+                                    </Box>
+                                </HorizontalSpacing>
+                                <ButtonGroup>
+                                    <HorizontalSpacing>
+                                        <ToggleButtonGroup />
+                                    </HorizontalSpacing>
+                                </ButtonGroup>
+                                <Center>
+                                    <VStack height="82px">
+                                        <ClubDropDown dropDownText='Club' />
+                                        <InfoButton onOpen={onInfoOpen} />
+                                    </VStack>
+                                </Center>
+                                <VStack spacing="25px">
+                                    <HStack
+                                        spacing="10px"
+                                        height="24px"
+                                    >
+                                        <CheckBoxButton />
+                                        <TermsAndPolicy
+                                            termsOnOpen={onTermsOfServiceOpen}
+                                            policyOnOpen={onPrivacyPolicyOpen}
+                                        />
+                                    </HStack>
+                                    <CreateAccountButton />
                                 </VStack>
-                            </Center>
-                            <VStack spacing="25px">
-                                <HStack
-                                    spacing="10px"
-                                    height="24px"
-                                >
-                                    <CheckBoxButton />
-                                    <TermsAndPolicy
-                                        termsOnOpen={onTermsOfServiceOpen}
-                                        policyOnOpen={onPrivacyPolicyOpen}
-                                    />
-                                </HStack>
-                                <CreateAccountButton />
-                            </VStack>
-                        </VerticalSpacing>
-                        : <></>}
+                            </VerticalSpacing>
+                            : <></>}
                     </SignupLayout>
                 </AuthLayout>
+                <Footer />
             </div>
         </>
     )

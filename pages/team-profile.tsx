@@ -1,6 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import TeamLayout from '../components/layouts/TeamLayout'
+import Footer from "../components/footer/footer";
 import {
     Box,
     Text,

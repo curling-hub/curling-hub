@@ -29,12 +29,13 @@ import {
 import AuthLayout from '../components/layouts/AuthLayout'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
+import Footer from "../components/footer/footer";
 
 
 const Signup: NextPage = () => {
-    const [ email, setEmail ] = useState("")
-    const [ isHost, setIsHost ] = useState(false)
-    const [ mounted, setMounted ] = useState(false)
+    const [email, setEmail] = useState("")
+    const [isHost, setIsHost] = useState(false)
+    const [mounted, setMounted] = useState(false)
     const hostAccountDisclosure = useDisclosure()
     const {
         isOpen: privacyPolicyIsOpen = false,
@@ -226,7 +227,7 @@ interface HostAccountPopoverProps {
 }
 
 function HostAccountPopover(props: HostAccountPopoverProps) {
-    const { h, isOpen=false, onOpen=(()=>{}), onClose=(()=>{}) } = props
+    const { h, isOpen = false, onOpen = (() => { }), onClose = (() => { }) } = props
     return (
         <Popover
             isOpen={isOpen}

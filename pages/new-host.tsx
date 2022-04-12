@@ -7,6 +7,7 @@ import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import AuthLayout from '../components/layouts/AuthLayout'
 import NewHostFields from '../components/newHost/newHostFields'
+import Footer from "../components/footer/footer";
 import {
     Box,
     Container,
@@ -31,7 +32,7 @@ const NewHost: NextPage = () => {
     } = useDisclosure()
     const signupContainerHeight = "630"
     const popoverHeight = "450"
-    
+
     useEffect(() => { setMounted(true) }, [])
 
     return (

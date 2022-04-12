@@ -8,6 +8,7 @@ import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import AuthLayout from '../components/layouts/AuthLayout'
 import NewHostFields from '../components/newHost/newHostFields'
 import LoginFields from '../components/login/LoginBox'
+import Footer from "../components/footer/footer";
 import {
     Box,
     Container,
@@ -77,6 +78,7 @@ const NewHost: NextPage = () => {
                         </Box>
                     </Container>
                 </AuthLayout>
+                <Footer />
             </Box>
         </>
     )

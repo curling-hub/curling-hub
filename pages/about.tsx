@@ -3,6 +3,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from '../components/layouts/StandardLayout'
+import Footer from '../components/footer/footer';
 
 const About: NextPage = () => {
     return (
@@ -20,8 +21,8 @@ const About: NextPage = () => {
                 <Box w="90%" bg="primary.white" borderRadius={CONST_BORDER_RADIUS} boxShadow="lg" m="5%" py="1px">
                     <Grid w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
                         {/* TODO: Add new logo */}
-                        <Image src="/curloLogo2.svg" alt="Curlo logo" w="100px" h="100px" m="auto" gridColumn={{base: "1 / 6", md: "1"}} />
-                        <Box gridColumn={{base: "1 / 6", md: "2 / 5"}}>
+                        <Image src="/curloLogo2.svg" alt="Curlo logo" w="100px" h="100px" m="auto" gridColumn={{ base: "1 / 6", md: "1" }} />
+                        <Box gridColumn={{ base: "1 / 6", md: "2 / 5" }}>
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Who we are
                             </Heading>
@@ -35,7 +36,7 @@ const About: NextPage = () => {
                         </Box>
                     </Grid>
                     <Grid w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
-                        <Box my="auto" gridColumn={{base: "1 / 6", md: "1"}}>
+                        <Box my="auto" gridColumn={{ base: "1 / 6", md: "1" }}>
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 $50
                             </Heading>
@@ -43,19 +44,19 @@ const About: NextPage = () => {
                                 Per Year
                             </Text>
                         </Box>
-                        <Box gridColumn={{base: "1 / 6", md: "2 / 5"}}>
+                        <Box gridColumn={{ base: "1 / 6", md: "2 / 5" }}>
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Membership
                             </Heading>
                             <Text fontSize="medium" textAlign="center" m="2.5%">
                                 In order to signup and join Curlo, you must pay an annual fee. This is a flat rate fee
                                 that allows you to join as many teams as you desire. This fee will be charged yearly in
-                                July. If you own a curling company and want to signup as a host, there is no fee. 
+                                July. If you own a curling company and want to signup as a host, there is no fee.
                             </Text>
                         </Box>
                     </Grid>
                     <Grid w="90%" bg="primary.green" borderRadius={CONST_BORDER_RADIUS} m="5%" py="1px" templateColumns="repeat(5, 1fr)" >
-                        <Box gridColumn={{base: "1 / 6", md: "2 / 5"}}>
+                        <Box gridColumn={{ base: "1 / 6", md: "2 / 5" }}>
                             <Heading fontWeight="bold" textAlign="center" m="2.5%">
                                 Rating System
                             </Heading>
@@ -104,6 +105,7 @@ const About: NextPage = () => {
                     </Box>
                 </Box>
             </Box>
+            <Footer />
         </>
     )
 }
