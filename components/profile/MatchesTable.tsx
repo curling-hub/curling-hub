@@ -44,7 +44,7 @@ export default function MatchesTable(props: MatchesTableProps) {
                             <Td fontWeight="bold">Date</Td>
                             <Td fontWeight="bold">Outcome</Td>
                             <Td fontWeight="bold">Opponent</Td>
-                            <Td fontWeight="bold">Category</Td>
+                            {/* <Td fontWeight="bold">Category</Td> */}
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -54,7 +54,7 @@ export default function MatchesTable(props: MatchesTableProps) {
                                 {/* <Td>{match.date}</Td> */}
                                 <Td>{outcome(match.winner, match.team_1_name)}</Td>
                                 <Td>{(match.team_1_name == props.teamName) ? match.team_1_name : match.team_2_name}</Td>
-                                <Td>{match.category}</Td>
+                                {/* <Td>{match.category}</Td> */}
                             </Tr>
                         ))}
                     </Tbody>
