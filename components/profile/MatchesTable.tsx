@@ -24,7 +24,7 @@ function outcome(winner: string, team: string) {
 }
 
 function formatDate(dateString: string) {
-    const index_of_time: number = dateString.indexOf("00:00:00")
+    const index_of_time: number = dateString.indexOf("GMT+0000")
     return dateString.substring(0, index_of_time)
 }
 
@@ -51,6 +51,7 @@ export default function MatchesTable(props: MatchesTableProps) {
                         {teamMatches.map((match) => (
                             <Tr key={`${match.matchId}`}>
                                 <Td>{formatDate(match.date)}</Td>
+                                {/* <Td>{match.date}</Td> */}
                                 <Td>{outcome(match.winner, match.team_1_name)}</Td>
                                 <Td>{(match.team_1_name == props.teamName) ? match.team_1_name : match.team_2_name}</Td>
                                 <Td>{match.category}</Td>

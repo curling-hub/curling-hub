@@ -48,7 +48,7 @@ export async function getTeamMatches(teamId: string) {
             team_2.name as team_id_2,
             winner,
             cat.name as category,
-            mi.date as match_date
+            mi.date
         FROM match_info mi
         JOIN team_profile team_1 
         ON mi.team_id_1 = team_1.team_id
@@ -70,7 +70,7 @@ export async function getTeamMatches(teamId: string) {
         team_2_name: val['team_id_2'],
         winner: val[val['winner']] || null, // winner is literally 'team_id_1'
         category: val['category'],
-        date: `${val['match_date']}`,
+        date: `${val['date']}`,
     }))
 }
 
