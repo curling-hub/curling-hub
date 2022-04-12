@@ -7,9 +7,7 @@ import themes from '../../../themes/colors'
 it('Team Profile Page', () => {
     mount(
         <ChakraProvider>
-            <ProfileButton color='primary.green'>
-                Profile Button
-            </ProfileButton>
+            <ProfileButton color='primary.green' buttonText='Profile Button' />
         </ChakraProvider>
     )
     cy.get('button').contains('Profile Button').click()
