@@ -1,8 +1,3 @@
-export interface HostInfo {
-    hostId: string
-    name: string
-}
-
 export interface HostInfoBase {
     hostId: string
     organization: string
