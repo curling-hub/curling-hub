@@ -1,8 +1,9 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import NextLink from 'next/link'
-import { getSession, signIn } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useEffect, useState } from 'react'
+import { getSession, getSessionServerSideResult } from '../lib/auth/session'
 import {
     Box,
     Button,
@@ -30,6 +31,7 @@ import AuthLayout from '../components/layouts/AuthLayout'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import Footer from "../components/footer/footer";
+import { serverSideRedirectTo } from '../lib/auth/redirect'
 
 
 const Signup: NextPage = () => {
@@ -114,31 +116,18 @@ const Signup: NextPage = () => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getSession(context)
-    if (!session || !session["user"]) {
+    const sessionWrapper = await getSession(context)
+    const { signedIn, signedUp, session } = sessionWrapper
+    if (!signedIn) {
         // not signed in / signed up
-        return {
-            props: {}
-        }
+        return { props: {} }
     }
-    const user = session["user"]
-    if (!user["account_type"]) {
-        // has not completed sign up up
-        return {
-            redirect: {
-                destination: "/new-user",
-            },
-            props: {},
-        }
+    if (!signedUp) {
+        // has not completed sign up
+        return serverSideRedirectTo('/new-team')
     }
     // already signed in, redirect
-    return {
-        // TODO: Where do we redirect to?
-        // redirect: {
-        //     destination: "/",
-        // },
-        props: {},
-    }
+    return serverSideRedirectTo('/team-profile')
 }
 
 interface SignupFieldsProps {
