@@ -1,16 +1,64 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, HasManyAddAssociationMixin, BelongsToManyAddAssociationMixin } from 'sequelize'
 import { sequelize } from './db'
-import { Category, HostInfoBase, TeamInfo } from './models'
+import { models } from "@next-auth/sequelize-adapter"
+import type { Account as AdapterAccount } from 'next-auth'
+import type { AdapterUser } from 'next-auth/adapters'
 
+import { Category, HostInfoBase, TeamInfo, TeamMember } from './models'
 
-interface TeamInfoInstance
-    extends Model<TeamInfo, TeamInfo>, TeamInfo {}
+interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember {}
 
-interface CategoryInstance extends Model<Category, Category>, Category {}
+interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo {
+    members: Array<TeamMember>
+    // Allows `addMember` on a team instance
+    addMember: HasManyAddAssociationMixin<TeamMemberInstance, number>
+    categories: Array<Category>
+    addCategory: BelongsToManyAddAssociationMixin<Category, number>
+}
+
+interface CategoryInstance extends Model<Category, any>, Category {}
 
 interface HostInfoInstance extends Model<HostInfoBase, HostInfoBase>, HostInfoBase {
-    iceSheets: Array<{ hostId: string, name: string }>,
+    iceSheets: Array<{ hostId: string, name: string }>
 }
+
+/**
+ * Redefine next-auth's User instance
+ */
+interface UserInstance extends
+        Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
+    account_type?: String
+}
+
+interface AccountInstance extends
+        Model<AdapterAccount, Partial<AdapterAccount>>, AdapterAccount {}
+
+declare module 'next-auth' {
+    interface UserInstance extends
+            Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
+        account_type?: String
+    }
+}
+
+
+/**
+ * Managed by NextAuth, extends the default User model to include `account_type`
+ */ 
+export const UserModel = sequelize.define<UserInstance>('users', {
+    ...models.User,
+    // account_type is one of: ['curler', 'club', 'admin']
+    account_type: DataTypes.STRING(256),
+})
+
+
+/**
+ * Managed by NextAuth, override the default `id_token` to use longer string
+ */
+export const AccountModel = sequelize.define<AccountInstance>("accounts", {
+    ...models.Account,
+    // overwrite default `id_token` data type because VARCHAR(255) is too short
+    id_token: DataTypes.STRING(8192),
+})
 
 
 export const TeamInfoModel = sequelize.define<TeamInfoInstance>('TeamInfo', {
@@ -31,6 +79,49 @@ export const TeamInfoModel = sequelize.define<TeamInfoInstance>('TeamInfo', {
 }, {
     tableName: 'team_profile',
     timestamps: false,
+})
+
+
+export const TeamMemberModel = sequelize.define<TeamMemberInstance>('TeamMember', {
+    memberId: {
+        type: DataTypes.BIGINT,
+        field: 'member_id',
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    teamId: {
+        type: DataTypes.BIGINT,
+        field: 'team_id',
+        allowNull: false,
+        references: {
+            model: TeamInfoModel,
+            key: 'team_id',
+        },
+    },
+    name: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+    },
+    email: {
+        type: DataTypes.STRING(255),
+        // TODO: find out if unique can be true with a nullable field
+        //unique: true,
+    },
+}, {
+    tableName: 'team_members',
+    timestamps: false,
+})
+
+
+TeamInfoModel.hasMany(TeamMemberModel, {
+    foreignKey: 'teamId',
+    as: {
+        singular: 'member',
+        plural: 'members',
+    },
+})
+TeamMemberModel.belongsTo(TeamInfoModel, {
+    foreignKey: 'teamId',
 })
 
 
@@ -74,8 +165,22 @@ export const CategoryTeamRel = sequelize.define('CategoryTeamRel', {
 })
 
 
-CategoryModel.belongsToMany(TeamInfoModel, { through: CategoryTeamRel, foreignKey: 'category_id' })
-TeamInfoModel.belongsToMany(CategoryModel, { through: CategoryTeamRel, foreignKey: 'team_id' })
+CategoryModel.belongsToMany(TeamInfoModel, {
+    through: CategoryTeamRel,
+    foreignKey: 'category_id',
+    as: {
+        singular: 'Team',
+        plural: 'Teams',
+    },
+})
+TeamInfoModel.belongsToMany(CategoryModel, {
+    through: CategoryTeamRel,
+    foreignKey: 'team_id',
+    as: {
+        singular: 'Category',
+        plural: 'Categories',
+    },
+})
 
 
 export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
