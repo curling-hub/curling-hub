@@ -35,6 +35,7 @@ export default function SignupLayout(props: SignupLayoutProps) {
 
                     <Image
                         src="/curlo_Logo.svg"
+                        alt="Curlo logo"
                         w="243px"
                         h="196px"
                         style={{
