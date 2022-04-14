@@ -56,7 +56,7 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
     return (
         <>
             <Head>
-                <title>Add Match Result | Curlo</title>
+                <title>Add Match | Curlo</title>
             </Head>
             <Box
                 position="absolute"
