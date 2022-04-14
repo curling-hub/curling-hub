@@ -23,8 +23,7 @@ export async function create(form: AddMatchSchema): Promise<MatchResult> {
             winner: winner,
             sheetOfIce: form.sheetOfIce || null,
             comments: form.comments || null,
-            categoryId: form.category,
-            date: form.date
+            date: form.date,
         })
         // TODO: Add checks for teamId1 and teamId2 - what if some team plays against themselves?
         // 2. Create relation between match and team

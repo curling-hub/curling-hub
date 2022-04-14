@@ -3,7 +3,6 @@ export interface MatchCreationForm {
     matchResult: string,
     date: Date,
     opponent: number,
-    category: number,
     location: string,
     sheetOfIce: string | null,
     comments?: string | null,
@@ -17,6 +16,5 @@ export interface MatchResult {
     winner: string
     sheetOfIce: string | null
     comments: string | null
-    categoryId: number
     date: Date
 }

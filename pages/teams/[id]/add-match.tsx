@@ -9,7 +9,6 @@ import AddMatch from '../../../components/profile/addMatch'
 import AddMatchFields from '../../../components/profile/addMatch/fields'
 import AddMatchTitle from '../../../components/profile/addMatch/title'
 import type { Category, HostInfo, TeamInfo } from '../../../lib/models'
-import { getAllCategories, getCategoriesByTeamId } from '../../../lib/handlers/categories'
 import { getAllHosts } from '../../../lib/handlers/hosts'
 import { getAllTeams, getTeamById } from '../../../lib/handlers/teams'
 import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
@@ -57,7 +56,7 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
     return (
         <>
             <Head>
-                <title>Add Match | Curlo</title>
+                <title>Add Match Result | Curlo</title>
             </Head>
             <Box
                 position="absolute"
@@ -71,7 +70,6 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
                         <AddMatchFields
                             hosts={hosts}
                             teams={teams}
-                            categories={categories}
                             currentTeam={currentTeam}
                             onSubmit={formOnSubmit}
                             fetchIceSheetsByHostId={fetchIceSheetsByHostId}
@@ -100,8 +98,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const teamId = Number.parseInt(Array.isArray(_tidString) ? '' : (_tidString || ''))
     // TODO: redirect on error?
     try {
-        const [ categories, hosts, teams, team ] = await Promise.all([
-            getCategoriesByTeamId(teamId),
+        const [ hosts, teams, team ] = await Promise.all([
             getAllHosts(),
             getAllTeams(),
             getTeamById(teamId),
@@ -112,7 +109,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         //console.log({ categories, hosts })
         return {
             props: {
-                categories,
                 hosts,
                 teams,
                 currentTeam: team,

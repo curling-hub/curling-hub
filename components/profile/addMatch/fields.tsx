@@ -25,7 +25,7 @@ import {
 
 import schema from './schema'
 import ResultRadio from './resultRadio'
-import type { Category, HostInfo, TeamInfo } from '../../../lib/models'
+import type { HostInfo, TeamInfo } from '../../../lib/models'
 
 
 const getInitialValues = (otherFields: any = {}) => ({
@@ -154,7 +154,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             </Box>
                         </Grid>
                         <Grid
-                            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
+                            templateColumns="repeat(1, 1fr)"
                             rowGap={4}
                             columnGap={12}
                             w="100%"
@@ -182,31 +182,6 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 </Field>
                                 <Box textColor="red.500" px={2}>
                                     <ErrorMessage name="opponent" />
-                                </Box>
-                            </Box>
-                            <Box w="100%">
-                                <Field name="category">
-                                    {({field, form}: FieldProps) => (
-                                        <FormControl>
-                                            <FormLabel htmlFor="category" srOnly>Category</FormLabel>
-                                            <Select
-                                                borderRadius="full"
-                                                placeholder="Category"
-                                                {...field}
-                                                id="category"
-                                            >
-                                                {categories.map((val) => (
-                                                    <option key={`${val.categoryId}`} value={val.categoryId}>
-                                                        {val.name}
-                                                    </option>
-                                                ))}
-                                                <option key="other" value="other">Other</option>
-                                            </Select>
-                                        </FormControl>
-                                    )}
-                                </Field>
-                                <Box textColor="red.500" px={2}>
-                                    <ErrorMessage name="category" />
                                 </Box>
                             </Box>
                         </Grid>
@@ -293,7 +268,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             _hover={{ bg: "green.400" }}
                             _active={{ bg: "green.600" }}
                         >
-                            Add Match
+                            Add Match Result
                         </Button>
                     </VStack>
                 </Form>

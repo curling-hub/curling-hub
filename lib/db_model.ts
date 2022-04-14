@@ -310,14 +310,6 @@ export const MatchModel = sequelize.define<MatchResultInstance>('Match Info', {
     comments: {
         type: DataTypes.STRING(512),
     },
-    categoryId: {
-        type: DataTypes.BIGINT,
-        field: 'category_id',
-        references: {
-            model: CategoryModel,
-            key: 'category_id',
-        },
-    },
     date: {
         type: DataTypes.DATE,
         allowNull: false,
