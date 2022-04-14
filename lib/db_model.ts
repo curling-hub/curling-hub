@@ -345,7 +345,7 @@ export const MatchTeamRel = sequelize.define('MatchTeamRel', {
 
 MatchModel.belongsToMany(TeamInfoModel, {
     through: MatchTeamRel,
-    foreignKey: 'match_id',
+    foreignKey: 'matchId',
     as: {
         singular: 'Team',
         plural: 'Teams',
@@ -353,9 +353,149 @@ MatchModel.belongsToMany(TeamInfoModel, {
 })
 TeamInfoModel.belongsToMany(MatchModel, {
     through: MatchTeamRel,
-    foreignKey: 'team_id',
+    foreignKey: 'teamId',
     as: {
         singular: 'Match',
         plural: 'Matches',
     },
+})
+
+
+export const RatingPeriodModel = sequelize.define('RatindPeriod', {
+    ratingPeriodId: {
+        type: DataTypes.BIGINT,
+        field: 'rating_period_id',
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    name: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+    },
+    start_date: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    end_date: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+}, {
+    tableName: 'rating_periods',
+    timestamps: false,
+})
+
+
+export const GlickoVariableModel = sequelize.define('GlickoVariable', {
+    id: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    systemConstant: {
+        type: DataTypes.FLOAT,
+        field: 'system_constant',
+        allowNull: false,
+    },
+    defaultRating: {
+        type: DataTypes.DOUBLE,
+        field: 'default_rating',
+        allowNull: false,
+    },
+    defaultRatingDeviation: {
+        type: DataTypes.FLOAT,
+        field: 'default_rating_deviation',
+        allowNull: false,
+    },
+    defaultVolatility: {
+        type: DataTypes.FLOAT,
+        field: 'default_volatility',
+        allowNull: false,
+    },
+    currentRatingPeriodId: {
+        type: DataTypes.BIGINT,
+        field: 'current_rating_period_id',
+        references: {
+            model: RatingPeriodModel,
+            key: 'rating_period_id',
+        },
+    },
+    version: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        field: 'created_at',
+        defaultValue: DataTypes.NOW,
+    },
+}, {
+    tableName: 'glicko_variables',
+    timestamps: false,
+})
+
+
+RatingPeriodModel.hasOne(GlickoVariableModel, { foreignKey: 'currentRatingPeriodId' })
+GlickoVariableModel.belongsTo(RatingPeriodModel, { foreignKey: 'currentRatingPeriodId' })
+
+
+export const TeamGlickoInfoModel = sequelize.define('TeamGlickoInfo', {
+    teamId: {
+        type: DataTypes.BIGINT,
+        field: 'team_id',
+        primaryKey: true,
+        references: {
+            model: TeamInfoModel,
+            key: 'teamId',
+        },
+    },
+    rating: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+    },
+    ratingDeviation: {
+        type: DataTypes.FLOAT,
+        field: 'rating_deviation',
+        allowNull: false,
+    },
+    volatility: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+}, {
+    tableName: 'team_glicko_info',
+    timestamps: false,
+})
+
+
+TeamInfoModel.hasOne(TeamGlickoInfoModel, { foreignKey: 'teamId' })
+TeamGlickoInfoModel.belongsTo(TeamInfoModel, { foreignKey: 'teamId' })
+
+
+export const RatingHistoryModel = sequelize.define('RatingHistory', {
+    teamId: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        field: 'team_id',
+        references: {
+            model: TeamInfoModel,
+            key: 'team_id',
+        },
+    },
+    ratingPeriodId: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        field: 'rating_period_id',
+        references: {
+            model: RatingPeriodModel,
+            key: 'rating_period_id',
+        },
+    },
+    rating: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+    },
+}, {
+    tableName: 'rating_history',
+    timestamps: false,
 })
