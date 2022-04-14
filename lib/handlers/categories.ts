@@ -32,6 +32,7 @@ export async function getCategoriesByTeamId(teamId: number): Promise<Category[]>
             where: {
                 teamId: teamId,
             },
+            as: 'Teams',    // has to match `as` in `belongsToMany`
             attributes: [],
         }],
     })
