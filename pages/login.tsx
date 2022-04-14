@@ -8,6 +8,7 @@ import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import AuthLayout from '../components/layouts/AuthLayout'
 import NewHostFields from '../components/newHost/newHostFields'
 import LoginFields from '../components/login/LoginBox'
+import Footer from "../components/footer/footer";
 import {
     Box,
     Container,
@@ -41,14 +42,15 @@ const NewHost: NextPage = () => {
                 <title>Login | Curlo</title>
             </Head>
             <Box
-                position="absolute"
+                position="relative"
                 w="100%"
-                h="100vh"
+                minH="100vh"
                 minW="md"
                 bgGradient="linear-gradient(#735FED, #FFFFFF) repeat"
             >
-                <AuthLayout>
-                    <Container maxW="xl" centerContent>
+                <AuthLayout />
+                <Box paddingBottom="4rem">
+                    <Container maxW="xl" centerContent paddingBottom="4rem">
                         {/* Outer box */}
                         <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
                             <Flex flexDirection="row" h="100%">
@@ -76,7 +78,8 @@ const NewHost: NextPage = () => {
                             </Flex>
                         </Box>
                     </Container>
-                </AuthLayout>
+                </Box>
+                <Footer />
             </Box>
         </>
     )

@@ -1,6 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import TeamLayout from '../components/layouts/TeamLayout'
+import Footer from "../components/footer/footer";
 import {
     Box,
     Text,
@@ -45,81 +46,85 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                 <title>Team Profile | Curlo</title>
             </Head>
             <Box
-                position="absolute"
+                position="relative"
                 w="100%"
-                h="100vh"
+                minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 <TeamLayout />
-                <Flex alignItems={{ base: "center", md: "start" }} direction={{ base: "column", md: "row" }}>
-                    <Spacer />
-                    <SideBySideContainer height='1022px'>
-                        <VStack spacing="78px" height="100%">
-                            <LeftHandBox color='primary.white'>
-                                <VStack spacing="0px" h="356px">
-                                    {teamInfo?.map((team: TeamInfo, i: number) => (
-                                        <Text key={`${i}`}
+                <Box paddingBottom={"4rem"}>
+
+                    <Flex alignItems={{ base: "center", md: "start" }} direction={{ base: "column", md: "row" }}>
+                        <Spacer />
+                        <SideBySideContainer height='1022px'>
+                            <VStack spacing="78px" height="100%">
+                                <LeftHandBox color='primary.white'>
+                                    <VStack spacing="0px" h="356px">
+                                        {teamInfo?.map((team: TeamInfo, i: number) => (
+                                            <Text key={`${i}`}
+                                                fontSize="2.5em"
+                                                fontWeight="bold"
+                                            >
+                                                {team.name}
+                                            </Text>
+                                        ))}
+                                        <Text
+                                            fontSize="1.5em"
+                                            fontWeight="bold"
+                                        >
+                                            Contact
+                                        </Text>
+                                        {/* <Text>
+                                        {teamEmail}
+                                    </Text> */}
+                                        <Text>
+                                            ralphs.wonderful.life@gmail.com
+                                        </Text>
+                                        <MembersTable teamMembers={teamMembers} teamCategories={teamCategories} />
+                                    </VStack>
+                                    <ProfileButton buttonText='Edit' color='primary.gray' />
+                                </LeftHandBox>
+                                <LeftHandBox color='primary.green'>
+                                    <VStack>
+                                        <Text
                                             fontSize="2.5em"
                                             fontWeight="bold"
                                         >
-                                            {team.name}
+                                            Rating
                                         </Text>
-                                    ))}
-                                    <Text
-                                        fontSize="1.5em"
-                                        fontWeight="bold"
-                                    >
-                                        Contact
-                                    </Text>
-                                    {/* <Text>
-                                        {teamEmail}
-                                    </Text> */}
-                                    <Text>
-                                        ralphs.wonderful.life@gmail.com
-                                    </Text>
-                                    <MembersTable teamMembers={teamMembers} teamCategories={teamCategories} />
-                                </VStack>
-                                <ProfileButton buttonText='Edit' color='primary.gray' />
-                            </LeftHandBox>
-                            <LeftHandBox color='primary.green'>
-                                <VStack>
-                                    <Text
-                                        fontSize="2.5em"
-                                        fontWeight="bold"
-                                    >
-                                        Rating
-                                    </Text>
-                                    {teamInfo?.map((team: TeamInfo, i: number) => (
-                                        <Text key={`${i}`}
-                                            fontSize="6em"
-                                            fontWeight="bold"
-                                        >
-                                            {team.rating}
-                                        </Text>
-                                    ))}
-                                </VStack>
-                            </LeftHandBox>
-                        </VStack>
-                    </SideBySideContainer>
-                    <Spacer />
-                    <SideBySideContainer>
-                        <MatchesBox
-                            color="primary.white"
-                            boxShadow='lg'
-                        >
-                            <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
-                                Matches
-                            </Text>
-                            <MatchesTable teamMatches={teamMatches} teamName="The Sliding Stones" />
-                            <Box marginTop="63px">
-                                <Link href="/matches">
-                                    <ProfileButton buttonText='View Matches' color='primary.green' top="-20px" />
-                                </Link>
-                            </Box>
-                        </MatchesBox>
-                    </SideBySideContainer>
-                    <Spacer />
-                </Flex>
+                                        {teamInfo?.map((team: TeamInfo, i: number) => (
+                                            <Text key={`${i}`}
+                                                fontSize="6em"
+                                                fontWeight="bold"
+                                            >
+                                                {team.rating}
+                                            </Text>
+                                        ))}
+                                    </VStack>
+                                </LeftHandBox>
+                            </VStack>
+                        </SideBySideContainer>
+                        <Spacer />
+                        <SideBySideContainer>
+                            <MatchesBox
+                                color="primary.white"
+                                boxShadow='lg'
+                            >
+                                <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+                                    Matches
+                                </Text>
+                                <MatchesTable teamMatches={teamMatches} teamName="The Sliding Stones" />
+                                <Box marginTop="63px">
+                                    <Link href="/matches">
+                                        <ProfileButton buttonText='View Matches' color='primary.green' top="-20px" />
+                                    </Link>
+                                </Box>
+                            </MatchesBox>
+                        </SideBySideContainer>
+                        <Spacer />
+                    </Flex>
+                </Box>
+                <Footer />
             </Box >
         </>
     )

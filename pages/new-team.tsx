@@ -3,14 +3,15 @@ import Head from 'next/head'
 import AuthLayout from '../components/layouts/AuthLayout'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
-import { 
-    Box, 
-    Container, 
-    Flex, 
-    Image, 
+import Footer from "../components/footer/footer";
+import {
+    Box,
+    Container,
+    Flex,
+    Image,
     useDisclosure,
     Stack,
-    VStack 
+    VStack
 } from '@chakra-ui/react'
 import NewTeamFields from '../components/newTeam/newTeamFields'
 import { useState } from 'react'
@@ -36,12 +37,14 @@ function NewTeam({ data }: RowDataPacket) {
                 <title>New Team | Curlo</title>
             </Head>
             <Box
-                position="absolute"
+                position="relative"
                 w="100%"
-                h="100vh"
+                minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <AuthLayout>
+                <AuthLayout />
+                <Box paddingBottom="4rem">
+
                     <Container maxW="2xl" centerContent>
                         {/* Outer box */}
                         <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h="auto" my="4" borderRadius="20" bg="white" shadow="md">
@@ -56,7 +59,7 @@ function NewTeam({ data }: RowDataPacket) {
                                     h="auto"
                                     w="100%"
                                 >
-                                     <Image src="/curlo_Logo.svg" w="60%" h="30%" />
+                                    <Image src="/curlo_Logo.svg" w="60%" h="30%" />
                                 </Box>
                                 {/* Sign up container (should only run on client side, e.g mounted) */}
                                 <Box minW="sm" w="100%" h="100%" m={{ base: 0, md: 2 }} p={10} borderRadius="32">
@@ -77,7 +80,8 @@ function NewTeam({ data }: RowDataPacket) {
                             </Flex>
                         </Box>
                     </Container>
-                </AuthLayout>
+                </Box>
+                <Footer />
             </Box>
         </>
     )

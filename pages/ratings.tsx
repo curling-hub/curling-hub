@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Footer from "../components/footer/footer";
 
 const Ratings: NextPage = () => {
     return (

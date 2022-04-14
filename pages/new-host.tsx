@@ -7,6 +7,7 @@ import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import AuthLayout from '../components/layouts/AuthLayout'
 import NewHostFields from '../components/newHost/newHostFields'
+import Footer from "../components/footer/footer";
 import {
     Box,
     Container,
@@ -31,7 +32,7 @@ const NewHost: NextPage = () => {
     } = useDisclosure()
     const signupContainerHeight = "630"
     const popoverHeight = "450"
-    
+
     useEffect(() => { setMounted(true) }, [])
 
     return (
@@ -40,13 +41,15 @@ const NewHost: NextPage = () => {
                 <title>New Host | Curlo</title>
             </Head>
             <Box
-                position="absolute"
+                position="relative"
                 w="100%"
-                h="100vh"
+                minH="100vh"
                 minW="md"
                 bgGradient="linear-gradient(#735FED, #FFFFFF) repeat"
             >
-                <AuthLayout>
+                <AuthLayout />
+                <Box paddingBottom="4rem">
+
                     <Container maxW="2xl" centerContent>
                         {/* Outer box */}
                         <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h="auto" my="4" borderRadius="20" bg="white" shadow="md">
@@ -86,7 +89,8 @@ const NewHost: NextPage = () => {
                             </Flex>
                         </Box>
                     </Container>
-                </AuthLayout>
+                </Box>
+                <Footer />
             </Box>
         </>
     )

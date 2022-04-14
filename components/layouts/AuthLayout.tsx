@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         <>
             <Header />
             <main style={{
-                height: '100%',
+                height: '10px',
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',

@@ -1,12 +1,14 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import AuthLayout from '../components/layouts/AuthLayout'
+import Footer from "../components/footer/footer";
 import RequestModal from '../components/modals/RequestModal'
 import {
     Box, Text, Image, Button, Spacer, Center, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, VStack
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 const linkTextSize = "12"
+import { Flex } from '@chakra-ui/react';
 
 
 
@@ -26,13 +28,14 @@ const Request: NextPage = () => {
                 <title>Request | Curlo</title>
             </Head>
             <Box
-                position="absolute"
+                position="relative"
                 w="100%"
-                h="100vh"
-                minW="md"
-                bgGradient="linear-gradient(primary.purple, primary.white) repeat"
+                minH="100vh"
+                bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <AuthLayout>
+                <AuthLayout />
+                <Box paddingBottom="4rem">
+
                     <Box
                         alignItems='center'
                         width={{ base: "300px", md: "400px", lg: "400px" }}
@@ -72,7 +75,8 @@ const Request: NextPage = () => {
 
                         </VStack>
                     </Box>
-                </AuthLayout>
+                </Box>
+                <Footer />
             </Box>
         </>
     )
