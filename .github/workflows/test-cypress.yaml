@@ -16,7 +16,7 @@ jobs:
     - name: Cypress ct
       uses: cypress-io/github-action@v2
       with:
-        command: npx cypress run-ct --config video=false
+        command: npx cypress run-ct --config video=false,screenshotOnRunFailure=false
     - name: Build nextjs
       run: npm run build
     - name: Cypress run
@@ -27,4 +27,5 @@ jobs:
       with:
         # already installed in the previous step
         install: false
+        config: video=false,screenshotOnRunFailure=false
         start: npm start
