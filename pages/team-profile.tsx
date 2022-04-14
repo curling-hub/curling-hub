@@ -17,8 +17,8 @@ import MatchesBox from '../components/profile/MatchesBox';
 import MatchesTable from '../components/profile/MatchesTable'
 import MembersTable from '../components/profile/MembersTable'
 import { TeamInfo, TeamMatches, TeamCategories, TeamMembers } from '../lib/models/teams'
-import { getSession } from 'next-auth/react'
 import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo } from '../lib/handlers/teams'
+import { getSession, getSessionServerSideResult } from '../lib/auth/session'
 
 
 interface TeamProfileProps {
@@ -37,7 +37,6 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
         teamCategories = [],
         teamMembers = [],
         teamEmail
-
     } = props
 
     return (
@@ -131,7 +130,12 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getSession(context)
+    // Redirect if not authentiated
+    const sessionWrapper = await getSession(context)
+    const { signedIn, signedUp, session } = sessionWrapper
+    if (!signedIn || !signedUp) {
+        return getSessionServerSideResult(sessionWrapper)
+    }
     try {
         const [teamInfo, teamMatches, teamContactInfo, teamCategories, teamMembers] = await Promise.all([
             getTeamInfo('1'),

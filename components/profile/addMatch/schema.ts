@@ -6,7 +6,6 @@ const addMatchSchema = yup.object({
     matchResult: yup.string().required(),
     date: yup.date().required(),
     opponent: yup.number().required(),
-    category: yup.number().required(),
     location: yup.string().required(),
     sheetOfIce: yup.string().required(),
     comments: yup.string().optional(),

@@ -1,4 +1,4 @@
-import Header from "../navbar/Navbar"
+import Header, { LogoutButton } from "../navbar/Navbar"
 import { NavItem } from '../navbar/MobileDrawer'
 
 interface LayoutProps {
@@ -16,12 +16,7 @@ export default function TeamLayout({ children }: LayoutProps) {
     )
 }
 
-function getNavAnchor(): NavItem {
-    return {
-        label: 'Logout',
-        link: '/',
-    }
-}
+const getNavAnchor = () => LogoutButton
 
 function getNavItems(): NavItem[] {
     const data: NavItem[] = [

@@ -1,8 +1,11 @@
 import NextAuth, { DefaultSession, DefaultUser, Session } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-import SequelizeAdaptor, { models } from "@next-auth/sequelize-adapter"
+import SequelizeAdaptor, { models, } from "@next-auth/sequelize-adapter"
 import { DataTypes, Sequelize } from "sequelize"
 import getConfig from 'next/config'
+
+import * as DbModels from '../../../lib/db_model'
+import { sequelize } from '../../../lib/db'
 
 const { serverRuntimeConfig } = getConfig()
 const {
@@ -14,14 +17,6 @@ const {
     google_client_id,
     google_client_secret,
 } = serverRuntimeConfig
-
-const sequelize = new Sequelize(mysql_database, mysql_user, mysql_password, {
-    host: mysql_host,
-    port: mysql_port,
-    dialect: 'mysql',
-    logging: process.env.NODE_ENV === 'development' && console.log,
-})
-
 
 declare module "next-auth" {
     /**
@@ -67,16 +62,8 @@ export default NextAuth({
     },
     adapter: SequelizeAdaptor(sequelize, {
         models: {
-            User: sequelize.define("users", {
-                ...models.User,
-                // account_type is one of: ['member', 'club', 'admin']
-                account_type: DataTypes.STRING(256),
-            }),
-            Account: sequelize.define("accounts", {
-                ...models.Account,
-                // overwrite default `id_token` data type because VARCHAR(255) is too short
-                id_token: DataTypes.STRING(8192),
-            }),
+            User: DbModels.UserModel,
+            Account: DbModels.AccountModel,
         },
     }),
 })

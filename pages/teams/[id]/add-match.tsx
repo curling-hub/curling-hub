@@ -9,9 +9,9 @@ import AddMatch from '../../../components/profile/addMatch'
 import AddMatchFields from '../../../components/profile/addMatch/fields'
 import AddMatchTitle from '../../../components/profile/addMatch/title'
 import type { Category, HostInfo, TeamInfo } from '../../../lib/models'
-import { getAllCategories, getCategoriesByTeamId } from '../../../lib/handlers/categories'
 import { getAllHosts } from '../../../lib/handlers/hosts'
 import { getAllTeams, getTeamById } from '../../../lib/handlers/teams'
+import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 
 
 interface TeamAddMatchProps {
@@ -70,7 +70,6 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
                         <AddMatchFields
                             hosts={hosts}
                             teams={teams}
-                            categories={categories}
                             currentTeam={currentTeam}
                             onSubmit={formOnSubmit}
                             fetchIceSheetsByHostId={fetchIceSheetsByHostId}
@@ -88,26 +87,28 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const sessionWrapper = await getSession(context)
+    const { signedIn, signedUp, session } = sessionWrapper
+    if (!signedIn || !signedUp) {
+        return getSessionServerSideResult(sessionWrapper)
+    }
     // Obtain team id and get team categories
     const { query } = context
     const { id: _tidString } = query
     const teamId = Number.parseInt(Array.isArray(_tidString) ? '' : (_tidString || ''))
+    // TODO: redirect on error?
     try {
-        const [ categories, hosts, teams, team ] = await Promise.all([
-            getCategoriesByTeamId(teamId),
+        const [ hosts, teams, team ] = await Promise.all([
             getAllHosts(),
             getAllTeams(),
             getTeamById(teamId),
         ])
         if (team === null) {
-            return {
-                notFound: true,
-            }
+            return { notFound: true }
         }
         //console.log({ categories, hosts })
         return {
             props: {
-                categories,
                 hosts,
                 teams,
                 currentTeam: team,
@@ -116,9 +117,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } catch (error) {
         console.log(error)
     }
-    return {
-        props: {},
-    }
+    return { props: {} }
 }
 
 export default TeamAddMatch

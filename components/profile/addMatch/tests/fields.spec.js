@@ -13,11 +13,6 @@ const teams = [
     { teamId: 2, name: 'Team B', rating: '660' },
 ]
 
-const categories = [
-    { categoryId: 1, name: 'Open' },
-    { categoryId: 2, name: 'Mixed' },
-]
-
 const hosts = [
     { hostId: 'host 1', organization: 'Curly Inc', website: null },
 ]
@@ -33,7 +28,6 @@ it('Renders add match fields that are selectable', () => {
         <ChakraProvider>
             <AddMatchFields
                 currentTeam={currentTeam}
-                categories={categories}
                 hosts={hosts}
                 teams={teams}
                 onSubmit={(values) => {
@@ -43,7 +37,6 @@ it('Renders add match fields that are selectable', () => {
                         matchResult: 'Win',
                         date: '2022-04-07',
                         opponent: '1',
-                        category: '2',
                         location: 'host 1',
                         sheetOfIce: 'Right',
                         comments: 'Coming from cypress test',
@@ -60,7 +53,6 @@ it('Renders add match fields that are selectable', () => {
     cy.get('#date').type('2022-04-07')
     cy.get('#location').select('Curly Inc')
     cy.get('#opponent').select('Team A')
-    cy.get('#category').select('Mixed')
     cy.get('#sheet-of-ice').select('Right')
     cy.get('#comment').type('Coming from cypress test')
     cy.get('button').contains('Add Match').click().then(() => {
