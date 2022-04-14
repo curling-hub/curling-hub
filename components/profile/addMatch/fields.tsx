@@ -32,7 +32,6 @@ const getInitialValues = (otherFields: any = {}) => ({
     matchResult: 'Win',
     date: '',
     opponent: '',
-    category: '',
     location: '',
     sheetOfIce: '',
     comments: '',
@@ -42,7 +41,6 @@ const getInitialValues = (otherFields: any = {}) => ({
 
 interface FieldsProps {
     currentTeam?: TeamInfo
-    categories?: Category[]
     hosts?: HostInfo[]
     teams?: TeamInfo[]
     onSubmit?: (values: ReturnType<typeof getInitialValues>) => Promise<void>
@@ -54,7 +52,6 @@ const Fields = (props: FieldsProps): JSX.Element => {
     const {
         currentTeam = {} as TeamInfo,
         fetchIceSheetsByHostId = async (_) => [],
-        categories = [],
         hosts = [],
         teams = [],
         onSubmit = async () => {},
