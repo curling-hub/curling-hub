@@ -12,13 +12,7 @@ import PrivacyPolicyModal from '../modals/PrivacyPolicyModal'
 import { useEffect, useState } from 'react'
 
 
-/*
-interface TermsAndPolicyProps {
-    termsOnOpen: () => void;
-    policyOnOpen: () => void;
-}
-props: TermsAndPolicyProps
-*/
+
 export default function Footer() {
     const {
         isOpen: termsOfServiceIsOpen = false,
@@ -44,18 +38,14 @@ export default function Footer() {
     return (
 
         <Box
-            pos="absolute"
-            bottom="0"
+            // pos="absolute"
+            //bottom="0"
             h="4rem"
             color={useColorModeValue('gray.700', 'gray.200')}>
             <Container
-                // paddingTop="2.5rem"
-                // marginTop="1rem"
-                // marginBottom="5px"
-                // py={{ base: '2', md: '5' }}
-                // pos="absolute"
-                // bottom="0"
-                left="0"
+
+                pos="absolute"
+                bottom="0"
                 as={Stack}
                 maxW="100%"
                 py={4}
@@ -64,8 +54,8 @@ export default function Footer() {
                 justify={{ base: 'center', md: 'space-between' }}
                 align={{ base: 'center', md: 'center' }}
             >
-                <Stack direction={'row'} spacing={6} paddingTop="20px">
-                    <Text > &copy; {new Date().getFullYear()} Curlo</Text>
+                <Text > &copy; {new Date().getFullYear()} Curlo</Text>
+                <Stack direction={'row'} spacing={6} >
                     <TermsOfServiceModal
                         isOpen={termsOfServiceIsOpen}
                         onClose={termsOfServiceOnClose}

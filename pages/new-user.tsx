@@ -9,7 +9,6 @@ import {
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import AuthLayout from '../components/layouts/AuthLayout'
-import Footer from "../components/footer/footer";
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import InfoModal from '../components/modals/signup/infoModal'
@@ -130,7 +129,6 @@ const NewUser: NextPage = () => {
                             : <></>}
                     </SignupLayout>
                 </AuthLayout>
-                <Footer />
             </div>
         </>
     )

@@ -58,12 +58,14 @@ const Signup: NextPage = () => {
                 <title>Signup | Curlo</title>
             </Head>
             <Box
-                position="absolute"
+                position="relative"
                 w="100%"
-                minW="md"
-                bgGradient="linear-gradient(#735FED, #FFFFFF) repeat"
+                minH="100vh"
+                bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <AuthLayout>
+                <AuthLayout />
+                <Box paddingBottom="4rem">
+
                     <Container maxW="2xl" centerContent h="100vh">
                         {/* Outer box */}
                         <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
@@ -104,7 +106,8 @@ const Signup: NextPage = () => {
                             </Flex>
                         </Box>
                     </Container>
-                </AuthLayout>
+                </Box>
+                <Footer />
             </Box>
         </>
     )
