@@ -4,14 +4,13 @@ import { Category, HostInfoBase, TeamInfo } from './models'
 
 
 interface TeamInfoInstance
-    extends Model<TeamInfo, TeamInfo>, TeamInfo {}
+    extends Model<TeamInfo, TeamInfo>, TeamInfo { }
 
-interface CategoryInstance extends Model<Category, Category>, Category {}
+interface CategoryInstance extends Model<Category, Category>, Category { }
 
 interface HostInfoInstance extends Model<HostInfoBase, HostInfoBase>, HostInfoBase {
     iceSheets: Array<{ hostId: string, name: string }>,
 }
-
 
 export const TeamInfoModel = sequelize.define<TeamInfoInstance>('TeamInfo', {
     teamId: {
@@ -209,3 +208,5 @@ export const MatchModel = sequelize.define('Match Info', {
     tableName: 'match_info',
     timestamps: false,
 })
+
+

@@ -56,8 +56,8 @@ export async function create(form: AddMatchSchema) {
         const matchId = r.insertId
         // 2. Insert match team rel
         await Promise.all([
-            conn.query(queryInsertMatchTeamRel, [ form.opponent, matchId ]),
-            conn.query(queryInsertMatchTeamRel, [ form.currentTeam, matchId ]),
+            conn.query(queryInsertMatchTeamRel, [form.opponent, matchId]),
+            conn.query(queryInsertMatchTeamRel, [form.currentTeam, matchId]),
         ])
         await conn.commit()
     } catch (error: any) {
@@ -66,3 +66,4 @@ export async function create(form: AddMatchSchema) {
         conn.release()
     }
 }
+
