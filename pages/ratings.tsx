@@ -9,14 +9,20 @@ import {
     Box
 } from '@chakra-ui/react'
 import RatingsBox from '../components/ratings/ratingsBox'
+import { getAllCategories } from '../lib/handlers/categories'
+import { Category } from '../lib/models/category'
+import { getAllRankings } from '../lib/handlers/teams'
+import { TeamRanking } from '../lib/models/teams'
 
 
 interface RatingsProps {
-    user?: Session
+    user?: Session,
+    categories: Category[],
+    rankings: TeamRanking[]
 }
 
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
-    
+
     return (
         <>
             <Head>
@@ -28,16 +34,22 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                 h="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-            {
-                props.user ? 
-                    <TeamLayout>
-                        <RatingsBox/>
-                    </TeamLayout>
-                :
-                    <StandardLayout>
-                        <RatingsBox/>
-                    </StandardLayout>
-            }
+                {
+                    props.user ?
+                        <TeamLayout>
+                            <RatingsBox
+                                categories={props.categories}
+                                teamRanking={props.rankings}
+                            />
+                        </TeamLayout>
+                        :
+                        <StandardLayout>
+                            <RatingsBox
+                                categories={props.categories}
+                                teamRanking={props.rankings}
+                            />
+                        </StandardLayout>
+                }
             </Box>
         </>
     )
@@ -45,11 +57,16 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context)
+    const categories = await getAllCategories()
+    const rankings = await getAllRankings()
+
     if (!session || !session["user"]) {
         // not signed in / signed up
         return {
             props: {
-                user: null
+                user: null,
+                categories: categories,
+                rankings: rankings
             }
         }
     }
@@ -59,7 +76,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         // has not completed sign up up
         return {
             props: {
-                user: null
+                user: null,
+                categories: categories,
+                rankings: rankings
             },
         }
     }
@@ -67,7 +86,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // signed in, share session with component
     return {
         props: {
-            user: session
+            user: session,
+            categories: categories,
+            rankings: rankings
         },
     }
 }
