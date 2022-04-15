@@ -15,6 +15,8 @@ import {
 } from 'react-icons/ai'
 import { TeamRanking } from '../../lib/models/teams'
 import { Category } from '../../lib/models/category'
+import { useState } from 'react'
+import { floor } from 'lodash'
 
 interface TeamTable {
     position: number,
@@ -35,6 +37,18 @@ export default function RatingsBox(props: RatingsBoxProps) {
     const {
         teamRanking = []
     } = props
+
+    const [pageIndex, setPageIndex] = useState(0)
+
+    const tableSize = 5
+    var pages: Array<TeamRanking[]> = []
+    var i = 0
+    for (i; i < floor(teamRanking.length / tableSize); ++i) {
+        pages[i] = teamRanking.slice(i*tableSize, i*tableSize + tableSize)
+    } if (teamRanking.length % tableSize > 0) {
+        pages[i] = teamRanking.slice(i*tableSize, i*tableSize + (teamRanking.length % tableSize))
+    }
+    const pageCount = pages.length
 
     return (
         <>
@@ -125,59 +139,73 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                     <Text fontWeight='bold'>Team</Text>
                                 </GridItem>
                                 <GridItem
-                                    colStart={7}
+                                    colStart={8}
                                 >
                                     <Text fontWeight='bold'>Rating</Text>
                                 </GridItem>
                                 <GridItem
-                                    colStart={9}
+                                    colStart={10}
                                 >
                                     <Text fontWeight='bold'>Type</Text>
                                 </GridItem>
                                 <GridItem
-                                    colStart={11}
+                                    colStart={12}
                                 >
                                     <Text fontWeight='bold'>Changes</Text>
                                 </GridItem>
                                 <GridItem
-                                    colStart={13}
+                                    colStart={14}
                                 >
                                     <Text fontWeight='bold'>Players</Text>
                                 </GridItem>
-                                { teamRanking.map((rank, index) => (
-                                <>
-                                    <Divider key={rank.team_id} orientation='horizontal' />
+                                { pages[pageIndex].map((rank, index) => (
+                                    <>
                                         <GridItem
-                                            key={rank.team_id}
+                                            key={rank.team_id+1}
+                                            colStart={1}
+                                            colSpan={20}
+                                        >
+                                            <Divider key={rank.team_id+2} orientation='horizontal' />
+                                        </GridItem>
+                                        <GridItem
+                                            key={rank.team_id+3}
                                             colStart={1}
                                         >
-                                            <Text>{index+1}</Text>
+                                            <Text key={rank.team_id+9}>{index+1}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.team_id}
+                                            key={rank.team_id+4}
                                             colStart={3}
+                                            colSpan={3}
                                         >
-                                            <Text>{rank.team_name}</Text>
+                                            <Text key={rank.team_id+10}>{rank.team_name}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.team_id}
-                                            colStart={7}
+                                            key={rank.team_id+5}
+                                            colStart={8}
                                         >
-                                            <Text>{rank.rating}</Text>
+                                            <Text key={rank.team_id+11}>{rank.rating}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.team_id}
-                                            colStart={9}
+                                            key={rank.team_id+6}
+                                            colStart={10}
                                         >
-                                            <Text>Type</Text>
+                                            <Text key={rank.team_id+12}>Type</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.team_id}
-                                            colStart={11}
+                                            key={rank.team_id+7}
+                                            colStart={12}
                                         >
-                                            <Text>Changes</Text>
+                                            <Text key={rank.team_id+13}>Changes</Text>
+                                        </GridItem> 
+                                        <GridItem
+                                            key={rank.team_id+8}
+                                            colStart={14}
+                                            colSpan={6}
+                                        >
+                                            <Text key={rank.team_id+14}>{rank.players}</Text>
                                         </GridItem>
-                                </>
+                                    </>
                             )) }
                             </Grid>
                            
@@ -202,7 +230,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                             fontWeight='bold'
                                             justifyItems='center'
                                         >
-                                            1 of 100
+                                            {pageIndex+1} of {pageCount}
                                         </Text>
                                     </Flex>
                                 </GridItem>
@@ -212,6 +240,11 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                     <IconButton
                                         aria-label='page-left'
                                         icon={<AiOutlineLeft />}
+                                        onClick={() => {
+                                            if (pageIndex + 1 > 1) {
+                                                setPageIndex(pageIndex-1)
+                                            }
+                                        }}
                                     />
                                 </GridItem>
                                 <GridItem
@@ -220,6 +253,11 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                     <IconButton
                                         aria-label='page-right'
                                         icon={<AiOutlineRight />}
+                                        onClick={() => {
+                                            if (pageIndex + 1 < pageCount) {
+                                                setPageIndex(pageIndex+1)
+                                            }
+                                        }}
                                     />
                                 </GridItem>
                             </Grid>
