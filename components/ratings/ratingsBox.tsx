@@ -30,17 +30,19 @@ interface TeamTable {
 interface RatingsBoxProps {
     teamRanking: TeamRanking[]
     categories: Category[]
+    tableSize: number
 }
 
 export default function RatingsBox(props: RatingsBoxProps) {
 
     const {
-        teamRanking = []
+        teamRanking = [],
+        categories = [],
+        tableSize
     } = props
 
     const [pageIndex, setPageIndex] = useState(0)
 
-    const tableSize = 5
     var pages: Array<TeamRanking[]> = []
     var i = 0
     for (i; i < floor(teamRanking.length / tableSize); ++i) {
