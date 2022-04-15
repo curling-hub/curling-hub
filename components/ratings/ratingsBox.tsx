@@ -171,7 +171,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                             key={rank.team_id+3}
                                             colStart={1}
                                         >
-                                            <Text key={rank.team_id+9}>{index+1}</Text>
+                                            <Text key={rank.team_id+9}>{tableSize*pageIndex + index+1}</Text>
                                         </GridItem>
                                         <GridItem
                                             key={rank.team_id+4}
