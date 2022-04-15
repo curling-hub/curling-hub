@@ -27,9 +27,9 @@ export interface TeamMembers {
 }
 
 export interface TeamRanking {
-    team_id: number
-    team_name: string
-    rating: number
+    ID: number
+    Team: string
+    Rating: number
     /* changes: number // TODO: account for ranking change */
-    players: string[]
+    Players: string[]
 }

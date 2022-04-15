@@ -42,15 +42,43 @@ export default function RatingsBox(props: RatingsBoxProps) {
     } = props
 
     const [pageIndex, setPageIndex] = useState(0)
-
-    var pages: Array<TeamRanking[]> = []
+    const [rankings, setRankings] = useState(teamRanking)
+    
     var i = 0
-    for (i; i < floor(teamRanking.length / tableSize); ++i) {
-        pages[i] = teamRanking.slice(i*tableSize, i*tableSize + tableSize)
+    var pages: Array<TeamRanking[]> = []
+    for (i; i < floor(rankings.length / tableSize); ++i) {
+        pages[i] = rankings.slice(i*tableSize, i*tableSize + tableSize)
     } if (teamRanking.length % tableSize > 0) {
-        pages[i] = teamRanking.slice(i*tableSize, i*tableSize + (teamRanking.length % tableSize))
+        pages[i] = rankings.slice(i*tableSize, i*tableSize + (rankings.length % tableSize))
     }
+    
     const pageCount = pages.length
+
+    async function getSelectedMatches(selected: number) {
+        if (Number.isNaN(selected)) {
+             selected = 0
+        }
+        
+        const req = {
+            id: selected
+        }
+        
+        const res = await fetch('/api/team/selected', {
+            body: JSON.stringify(req),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        })
+
+        if (res.status == 200 && res.body) {
+            const result = await res.json()
+            setRankings(result.data)
+        } else {
+            const result = await res.json()
+            alert("error: "+result.error)
+        } 
+    }
 
     return (
         <>
@@ -100,6 +128,9 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                         variant='filled'
                                         color='black'
                                         bg='gray.300'
+                                        onChange={async (e) => {
+                                            await getSelectedMatches(parseInt(e.target.value))
+                                        }}
                                     >
                                         {
                                             props.categories.map((category) => {
@@ -163,49 +194,49 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                 { pages[pageIndex].map((rank, index) => (
                                     <>
                                         <GridItem
-                                            key={rank.team_id+1}
+                                            key={rank.ID+1}
                                             colStart={1}
                                             colSpan={20}
                                         >
-                                            <Divider key={rank.team_id+2} orientation='horizontal' />
+                                            <Divider key={rank.ID+2} orientation='horizontal' />
                                         </GridItem>
                                         <GridItem
-                                            key={rank.team_id+3}
+                                            key={rank.ID+3}
                                             colStart={1}
                                         >
-                                            <Text key={rank.team_id+9}>{tableSize*pageIndex + index+1}</Text>
+                                            <Text key={rank.ID+9}>{tableSize*pageIndex + index+1}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.team_id+4}
+                                            key={rank.ID+4}
                                             colStart={3}
                                             colSpan={3}
                                         >
-                                            <Text key={rank.team_id+10}>{rank.team_name}</Text>
+                                            <Text key={rank.ID+10}>{rank.Team}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.team_id+5}
+                                            key={rank.ID+5}
                                             colStart={8}
                                         >
-                                            <Text key={rank.team_id+11}>{rank.rating}</Text>
+                                            <Text key={rank.ID+11}>{rank.Rating}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.team_id+6}
+                                            key={rank.ID+6}
                                             colStart={10}
                                         >
-                                            <Text key={rank.team_id+12}>Type</Text>
+                                            <Text key={rank.ID+12}>Type</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.team_id+7}
+                                            key={rank.ID+7}
                                             colStart={12}
                                         >
-                                            <Text key={rank.team_id+13}>Changes</Text>
+                                            <Text key={rank.ID+13}>Changes</Text>
                                         </GridItem> 
                                         <GridItem
-                                            key={rank.team_id+8}
+                                            key={rank.ID+8}
                                             colStart={14}
                                             colSpan={6}
                                         >
-                                            <Text key={rank.team_id+14}>{rank.players}</Text>
+                                            <Text key={rank.ID+14}>{rank.Players}</Text>
                                         </GridItem>
                                     </>
                             )) }
