@@ -140,10 +140,10 @@ export async function getAllRankings() {
     const r = rows as RowDataPacket[]
     
     return r.map((val) => ({
-        team_id: val['ID'],
-        team_name: val['Team'],
-        rating: val['Rating'],
+        ID: val['ID'],
+        Team: val['Team'],
+        Rating: val['Rating'],
         /* changes: val[], */
-        players: val['Players']
+        Players: val['Players']
     }))
 }
