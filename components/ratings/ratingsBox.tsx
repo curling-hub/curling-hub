@@ -88,7 +88,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                         {
                                             props.categories.map((category) => {
                                                 return (
-                                                    <option value={category.categoryId}>{category.name}</option>
+                                                    <option key={category.categoryId} value={category.categoryId}>{category.name}</option>
                                                 )
                                             })
                                         }
@@ -144,50 +144,43 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                 >
                                     <Text fontWeight='bold'>Players</Text>
                                 </GridItem>
-                            </Grid>
-                            {/* {teamRanking.map((rank) => (
+                                { teamRanking.map((rank, index) => (
                                 <>
-                                    <Divider orientation='horizontal' />
-                                    <Grid key={`${rank.team_id}`} templateColumns='repeat(20, 1fr)'>
+                                    <Divider key={rank.team_id} orientation='horizontal' />
                                         <GridItem
+                                            key={rank.team_id}
                                             colStart={1}
                                         >
-                                            <Text fontWeight='bold'>Position</Text>
+                                            <Text>{index+1}</Text>
                                         </GridItem>
                                         <GridItem
+                                            key={rank.team_id}
                                             colStart={3}
                                         >
-                                            <Text fontWeight='bold'>{rank.team_name}</Text>
+                                            <Text>{rank.team_name}</Text>
                                         </GridItem>
                                         <GridItem
+                                            key={rank.team_id}
                                             colStart={7}
                                         >
-                                            <Text fontWeight='bold'>{rank.rating}</Text>
+                                            <Text>{rank.rating}</Text>
                                         </GridItem>
                                         <GridItem
+                                            key={rank.team_id}
                                             colStart={9}
                                         >
-                                            <Text fontWeight='bold'>Type</Text>
+                                            <Text>Type</Text>
                                         </GridItem>
                                         <GridItem
+                                            key={rank.team_id}
                                             colStart={11}
                                         >
-                                            <Text fontWeight='bold'>Changes</Text>
+                                            <Text>Changes</Text>
                                         </GridItem>
-                                        {
-                                            rank.players.map((player, index) =>
-                                                <GridItem
-                                                    key={index}
-                                                    colStart={13 + index}
-                                                >
-                                                    <Text fontWeight='bold'>player</Text>
-                                                </GridItem>
-                                            )
-                                        }
-
-                                    </Grid>
                                 </>
-                            ))} */}
+                            )) }
+                            </Grid>
+                           
                         </GridItem>
                         <GridItem
                             colSpan={10}
