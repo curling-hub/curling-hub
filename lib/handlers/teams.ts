@@ -91,7 +91,7 @@ export async function getTeamMembers(teamId: string) {
         FROM team_members tm
         WHERE tm.team_id = ?`
     const queryArgs = [teamId]
-    const [rows, _] = await pool.promise().query(query)
+    const [rows, _] = await pool.promise().query(query,queryArgs)
     const r = rows as RowDataPacket[]
     return r.map((val) => ({
         memberName: val['member_name'],
