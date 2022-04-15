@@ -145,7 +145,7 @@ export async function getAllRankings() {
 
     const [rows, _] = await pool.promise().query(query)
     const r = rows as RowDataPacket[]
-    console.log(r)
+    
     return r.map((val) => ({
         team_id: val['ID'],
         team_name: val['Team'],
