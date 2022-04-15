@@ -11,12 +11,12 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    console.log(req.body.id == 0)
-    if (req.body && req.body.id && req.body.id == 0) {
+    if (req.body && req.body.id == 0) {
+        
          const query = `
             SELECT p.team_id as ID, p.name as Team, g.rating as Rating, group_concat(t.name) as Players
             FROM team_profile p INNER JOIN team_members t ON p.team_id = t.team_id INNER join
-            team_glicko_info g ON g.team_id = t.team_id INNER JOIN categories_rel cr ON t.team_id = cr.team_id
+            team_glicko_info g ON g.team_id = t.team_id
             GROUP BY t.team_id 
             ORDER BY g.rating DESC;
             `
@@ -24,12 +24,12 @@ export default async function handler(
             try {
                 const [rows, _] = await pool.promise().query(query)
                 const r = rows as TeamRanking[]
-                console.log(r)
+                
                 res.status(200).json({data: r, error: undefined})
             } catch(e: any) {
                 return res.status(500).json({data: undefined, error: e.code})
             }
-    } else if (req.body && req.body.id) {
+    } else if (req.body && req.body.id != 0) {
         const query = `
             SELECT p.team_id as ID, p.name as Team, g.rating as Rating, group_concat(t.name) as Players
             FROM team_profile p INNER JOIN team_members t ON p.team_id = t.team_id INNER join
@@ -45,6 +45,7 @@ export default async function handler(
                 
                 res.status(200).json({data: r, error: undefined})
             } catch(e: any) {
+                console.log(e)
                 return res.status(500).json({data: undefined, error: e.code})
             }
     }
