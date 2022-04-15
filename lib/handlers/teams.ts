@@ -76,7 +76,6 @@ export async function getTeamContactInfo(teamId: string) {
         ON usr.id = tp.team_id
         WHERE tp.team_id = ?`
     const queryArgs = [teamId]
-        // + teamId
     const [rows, _] = await pool.promise().query(query,queryArgs)
     const r = rows as RowDataPacket[]
     return r.map((val) => ({
@@ -90,8 +89,8 @@ export async function getTeamMembers(teamId: string) {
         SELECT DISTINCT
             tm.name as member_name
         FROM team_members tm
-        WHERE tm.team_id = ` + teamId
-
+        WHERE tm.team_id = ?`
+    const queryArgs = [teamId]
     const [rows, _] = await pool.promise().query(query)
     const r = rows as RowDataPacket[]
     return r.map((val) => ({
