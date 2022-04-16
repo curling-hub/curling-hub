@@ -7,7 +7,8 @@ import {
     Grid,
     GridItem,
     Divider,
-    IconButton
+    IconButton,
+    Input
 } from '@chakra-ui/react'
 import {
     AiOutlineLeft,
@@ -42,17 +43,28 @@ export default function RatingsBox(props: RatingsBoxProps) {
     } = props
 
     const [pageIndex, setPageIndex] = useState(0)
-    const [rankings, setRankings] = useState(teamRanking)
-    
+    const [displayedRankings, setDisplayedRankings] = useState(teamRanking)
+    const [fixedRankings, setFixedRankings] = useState(teamRanking)
+
     var i = 0
     var pages: Array<TeamRanking[]> = []
-    for (i; i < floor(rankings.length / tableSize); ++i) {
-        pages[i] = rankings.slice(i*tableSize, i*tableSize + tableSize)
+    for (i; i < floor(displayedRankings.length / tableSize); ++i) {
+        pages[i] = displayedRankings.slice(i*tableSize, i*tableSize + tableSize)
     } if (teamRanking.length % tableSize > 0) {
-        pages[i] = rankings.slice(i*tableSize, i*tableSize + (rankings.length % tableSize))
+        pages[i] = displayedRankings.slice(i*tableSize, i*tableSize + (displayedRankings.length % tableSize))
     }
     
     const pageCount = pages.length
+
+    function search(query: string) {
+        setDisplayedRankings(fixedRankings)
+        const tables = fixedRankings.filter((team) => {
+            return (team.Team.includes(query) || 
+            team.Rating.toString().includes(query) ||
+            team.Players.includes(query))
+        })
+        setDisplayedRankings(tables)
+    }
 
     async function getSelectedMatches(selected: number) {
         if (Number.isNaN(selected)) {
@@ -73,7 +85,8 @@ export default function RatingsBox(props: RatingsBoxProps) {
 
         if (res.status == 200 && res.body) {
             const result = await res.json()
-            setRankings(result.data)
+            setDisplayedRankings(result.data)
+            setFixedRankings(result.data)
         } else {
             const result = await res.json()
             alert("error: "+result.error)
@@ -145,11 +158,12 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                     colSpan={5}
                                     colStart={5}
                                 >
-                                    <Select
+                                    <Input
                                         borderRadius='20px'
                                         placeholder="Search table..."
+                                        onChange={(e: any) => search(e.target.value)}
                                     >
-                                    </Select>
+                                    </Input>
                                 </GridItem>
                             </Grid>
                         </GridItem>
