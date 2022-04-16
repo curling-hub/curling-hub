@@ -57,7 +57,6 @@ export default function RatingsBox(props: RatingsBoxProps) {
     const pageCount = pages.length
 
     function search(query: string) {
-        setDisplayedRankings(fixedRankings)
         const tables = fixedRankings.filter((team) => {
             return (team.Team.includes(query) || 
             team.Rating.toString().includes(query) ||
