@@ -1,3 +1,5 @@
+import { TeamGlickoInfo } from "./glicko"
+
 export interface TeamInfo {
     teamId: number
     name: string
@@ -16,4 +18,8 @@ export interface TeamCreationForm {
     name: string
     curlers: Array<Partial<TeamMember>>
     categories: Array<number>
+}
+
+export interface TeamInfoRatings extends TeamInfo {
+    teamGlickoInfo: TeamGlickoInfo
 }

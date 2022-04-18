@@ -1,3 +1,5 @@
+import { TeamInfo } from "./team"
+
 export interface MatchCreationForm {
     currentTeam: number,
     matchResult: string,
@@ -17,4 +19,8 @@ export interface MatchResult {
     sheetOfIce: string | null
     comments: string | null
     date: Date
+}
+
+export interface MatchResultDetails extends MatchResult {
+    teams: TeamInfo[],
 }
