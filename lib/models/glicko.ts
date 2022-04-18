@@ -1,5 +1,5 @@
 export interface RatingPeriod {
-    ratindPeriodId: number
+    ratingPeriodId: number
     name: string
     startDate: Date
     endDate: Date
@@ -26,5 +26,5 @@ export interface TeamGlickoInfo {
 export interface RatingHistory {
     teamId: number
     rating: number
-    ratindPeriodId: number
+    ratingPeriodId: number
 }

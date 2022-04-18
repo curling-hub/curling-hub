@@ -1,8 +1,9 @@
-import { Op } from 'sequelize'
-import { sequelize } from '../db'
+import { Op, DataTypes } from 'sequelize'
+import moment from 'moment'
 
+import { sequelize } from '../db'
 import * as DbModels from '../db_model'
-import { TeamGlickoInfo } from '../models/glicko'
+import { RatingPeriod, TeamGlickoInfo } from '../models/glicko'
 import { MatchResultDetails } from '../models/match'
 import { TeamInfoRatings } from '../models/team'
 
@@ -78,7 +79,7 @@ export async function getAllTeamRatings(): Promise<TeamInfoRatings[]> {
         currentRatingPeriodId: 2,
         version: '1.0',
         createdAt: 2022-04-15T19:08:42.000Z,
-        ratindPeriod: {
+        ratingPeriod: {
             ratingPeriodId: 2,
             name: '2022-Q2',
             startDate: 2022-04-01T00:00:00.000Z,
@@ -97,6 +98,36 @@ export async function getCurrentSettings() {
 }
 
 
+/**
+ * 
+ * @returns 
+ *  {
+        ratingPeriodId: 2,
+        name: '2022-Q2',
+        startDate: 2022-04-01T00:00:00.000Z,
+        endDate: 2022-06-30T23:59:59.000Z
+    }
+ */
+export async function getCurrentRatingPeriod(): Promise<RatingPeriod | null | undefined> {
+    const currentR = await DbModels.RatingPeriodModel.findOne({
+        where: {
+            startDate: {
+                [Op.gte]: DataTypes.NOW(),
+            },
+            endDate: {
+                [Op.lt]: DataTypes.NOW(),
+            },
+        },
+    })
+    return currentR?.toJSON()
+}
+
+
+/**
+ * 
+ * @param ratingPeriodId 
+ * @param teamRatings Computed glicko ratings
+ */
 export async function updateRatingForRatingPeriod(ratingPeriodId: number, teamRatings: TeamGlickoInfo[]) {
     await sequelize.transaction(async (t) => {
         // 1. Update team glicko ratings
@@ -119,7 +150,7 @@ export async function updateRatingForRatingPeriod(ratingPeriodId: number, teamRa
             transaction: t,
         })
         await ratingHistoryPromise
-        // ======= Testing =======
+        // ======= Testing, don't commit =======
         await t.rollback()
     })
 }
