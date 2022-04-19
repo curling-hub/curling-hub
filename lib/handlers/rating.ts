@@ -52,7 +52,6 @@ export async function getAllRatingPeriods() {
             ON glicko_variables.created_at < rating_periods.end_date
             WHERE rating_periods.rating_period_id = ?
             ORDER BY glicko_variables.id DESC
-            LIMIT 1
         `, {
             replacements: [r.getDataValue('ratingPeriodId')],
             plain: true,
