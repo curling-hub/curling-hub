@@ -43,23 +43,23 @@ export async function getMatchesBetween(from: Date, to: Date): Promise<MatchResu
  * @returns Array of all rating periods and associated glicko variables
  */
 export async function getAllRatingPeriods() {
-    const ratingPeriods = await DbModels.RatingPeriodModel.findAll({
-        /*
-        Get latest glicko_variables for rating_periods
-
-        SELECT MAX(glicko_variables.id)
-        FROM glicko_variables
-        JOIN rating_periods
-        ON glicko_variables.created_at < rating_periods.end_date
-        WHERE rating_periods.rating_period_id = ?;
-        */
-        include: [{
-            model: DbModels.GlickoVariableModel,
-            required: true,     // INNER JOIN
-            as: 'glickoVariable',
-        }],
-    })
-    const r = ratingPeriods.map((r) => r.toJSON())
+    const ratingPeriods = await DbModels.RatingPeriodModel.findAll()
+    const r = await Promise.all(ratingPeriods.map(async (r) => {
+        const glicko = await sequelize.query(`
+            SELECT glicko_variables.*
+            FROM glicko_variables
+            JOIN rating_periods
+            ON glicko_variables.created_at < rating_periods.end_date
+            WHERE rating_periods.rating_period_id = ?
+            ORDER BY glicko_variables.id DESC
+            LIMIT 1
+        `, {
+            replacements: [r.getDataValue('ratingPeriodId')],
+            plain: true,
+            model: DbModels.GlickoVariableModel
+        })
+        return [r, glicko?.toJSON()]
+    }))
     return r
 }
 
