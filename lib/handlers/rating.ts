@@ -44,6 +44,15 @@ export async function getMatchesBetween(from: Date, to: Date): Promise<MatchResu
  */
 export async function getAllRatingPeriods() {
     const ratingPeriods = await DbModels.RatingPeriodModel.findAll({
+        /*
+        Get latest glicko_variables for rating_periods
+
+        SELECT MAX(glicko_variables.id)
+        FROM glicko_variables
+        JOIN rating_periods
+        ON glicko_variables.created_at < rating_periods.end_date
+        WHERE rating_periods.rating_period_id = ?;
+        */
         include: [{
             model: DbModels.GlickoVariableModel,
             required: true,     // INNER JOIN
