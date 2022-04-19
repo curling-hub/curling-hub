@@ -26,5 +26,7 @@ export interface TeamGlickoInfo {
 export interface RatingHistory {
     teamId: number
     rating: number
+    ratingDeviation: number
+    volatility: number
     ratingPeriodId: number
 }

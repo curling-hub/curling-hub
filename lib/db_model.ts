@@ -410,13 +410,6 @@ export const GlickoVariableModel = sequelize.define('GlickoVariable', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
-    currentRatingPeriodId: {
-        type: DataTypes.BIGINT,
-        references: {
-            model: RatingPeriodModel,
-            key: 'rating_period_id',
-        },
-    },
     version: {
         type: DataTypes.STRING(255),
         allowNull: false,
@@ -429,16 +422,6 @@ export const GlickoVariableModel = sequelize.define('GlickoVariable', {
     tableName: 'glicko_variables',
     timestamps: false,
     underscored: true,
-})
-
-
-RatingPeriodModel.hasOne(GlickoVariableModel, {
-    foreignKey: 'currentRatingPeriodId',
-    as: 'glickoVariable',
-})
-GlickoVariableModel.belongsTo(RatingPeriodModel, {
-    foreignKey: 'currentRatingPeriodId',
-    as: 'ratingPeriod',
 })
 
 
@@ -499,6 +482,14 @@ export const RatingHistoryModel = sequelize.define('RatingHistory', {
     },
     rating: {
         type: DataTypes.DOUBLE,
+        allowNull: false,
+    },
+    ratingDeviation: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+    volatility: {
+        type: DataTypes.FLOAT,
         allowNull: false,
     },
 }, {

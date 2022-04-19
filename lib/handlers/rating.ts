@@ -78,22 +78,11 @@ export async function getAllTeamRatings(): Promise<TeamInfoRatings[]> {
         defaultVolatility: 0.06,
         currentRatingPeriodId: 2,
         version: '1.0',
-        createdAt: 2022-04-15T19:08:42.000Z,
-        ratingPeriod: {
-            ratingPeriodId: 2,
-            name: '2022-Q2',
-            startDate: 2022-04-01T00:00:00.000Z,
-            endDate: 2022-06-30T23:59:59.000Z
-        }
+        createdAt: 2022-04-15T19:08:42.000Z
     }
  */
 export async function getCurrentSettings() {
-    const currentR = await DbModels.GlickoVariableModel.findOne({
-        include: [{
-            model: DbModels.RatingPeriodModel,
-            as: 'ratingPeriod',
-        }],
-    })
+    const currentR = await DbModels.GlickoVariableModel.findOne()
     return currentR?.toJSON()
 }
 
@@ -108,16 +97,9 @@ export async function getCurrentSettings() {
         endDate: 2022-06-30T23:59:59.000Z
     }
  */
-export async function getCurrentRatingPeriod(): Promise<RatingPeriod | null | undefined> {
+export async function getLatestRatingPeriod(): Promise<RatingPeriod | null | undefined> {
     const currentR = await DbModels.RatingPeriodModel.findOne({
-        where: {
-            startDate: {
-                [Op.gte]: DataTypes.NOW(),
-            },
-            endDate: {
-                [Op.lt]: DataTypes.NOW(),
-            },
-        },
+        order: [['end_date', 'DESC']]
     })
     return currentR?.toJSON()
 }
