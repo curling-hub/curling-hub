@@ -428,7 +428,6 @@ export const GlickoVariableModel = sequelize.define('GlickoVariable', {
 export const TeamGlickoInfoModel = sequelize.define('TeamGlickoInfo', {
     teamId: {
         type: DataTypes.BIGINT,
-        field: 'team_id',
         primaryKey: true,
         references: {
             model: TeamInfoModel,
@@ -441,7 +440,6 @@ export const TeamGlickoInfoModel = sequelize.define('TeamGlickoInfo', {
     },
     ratingDeviation: {
         type: DataTypes.FLOAT,
-        field: 'rating_deviation',
         allowNull: false,
     },
     volatility: {
@@ -463,7 +461,6 @@ export const RatingHistoryModel = sequelize.define('RatingHistory', {
     teamId: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        field: 'team_id',
         primaryKey: true,
         references: {
             model: TeamInfoModel,
@@ -473,7 +470,6 @@ export const RatingHistoryModel = sequelize.define('RatingHistory', {
     ratingPeriodId: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        field: 'rating_period_id',
         primaryKey: true,
         references: {
             model: RatingPeriodModel,
@@ -495,4 +491,5 @@ export const RatingHistoryModel = sequelize.define('RatingHistory', {
 }, {
     tableName: 'rating_history',
     timestamps: false,
+    underscored: true,
 })
