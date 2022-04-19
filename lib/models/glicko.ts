@@ -11,7 +11,6 @@ export interface GlickoVariable {
     defaultRating: number
     defaultRatingDeviation: number
     defaultVolatility: number
-    currentRatingPeriodId: number
     version: string
     createdAt: Date
 }
