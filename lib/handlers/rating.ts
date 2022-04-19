@@ -4,7 +4,7 @@ import moment from 'moment'
 import { sequelize } from '../db'
 import * as DbModels from '../db_model'
 import { RatingPeriod, TeamGlickoInfo } from '../models/glicko'
-import { MatchResultDetails } from '../models/match'
+import { MatchResult, MatchResultDetails } from '../models/match'
 import { TeamInfoRatings } from '../models/team'
 
 /**
@@ -59,7 +59,7 @@ export async function getAllRatingPeriods() {
             model: DbModels.GlickoVariableModel,
             mapToModel: true
         })
-        return {'ratingPeriod': r, 'glickoVariable': glicko?.toJSON()}
+        return {'ratingPeriod': r.toJSON(), 'glickoVariable': glicko?.toJSON()}
     }))
     return r
 }
@@ -115,6 +115,14 @@ export async function getLatestRatingPeriod(): Promise<RatingPeriod | null | und
 }
 
 
+export async function getEarliestMatch(): Promise<MatchResult | null | undefined> {
+    const earliestMatch = await DbModels.MatchModel.findOne({
+        order: [['date', 'ASC']]
+    })
+    return earliestMatch?.toJSON()
+}
+
+
 /**
  * 
  * @param ratingPeriodId 
@@ -137,6 +145,46 @@ export async function updateRatingForRatingPeriod(ratingPeriodId: number, teamRa
             teamId: ratingInfo.teamId,
             rating: ratingInfo.rating,
             ratingPeriodId: ratingPeriodId,
+        }))
+        const ratingHistoryPromise = DbModels.RatingHistoryModel.bulkCreate(ratingHistoryUpdate, {
+            transaction: t,
+        })
+        await ratingHistoryPromise
+        // ======= Testing, don't commit =======
+        await t.rollback()
+    })
+}
+
+export async function createRatingAndPeriod(
+    ratingPeriod: Partial<RatingPeriod>,
+    teamRatings: TeamInfoRatings[],
+) {
+    if (!ratingPeriod.startDate || !ratingPeriod.endDate) {
+        throw new Error('undefined rating period start date or end date')
+    }
+    const name = `${ratingPeriod.startDate} - ${ratingPeriod.endDate}`
+    await sequelize.transaction(async (t) => {
+        // 1. Create rating period
+        const rt: RatingPeriod = await DbModels.RatingPeriodModel.create({
+            name: name,
+            startDate: ratingPeriod.startDate,
+            endDate: ratingPeriod.endDate,
+        }, { transaction: t })
+        // 2. Update team glicko ratings
+        const updatePromises = teamRatings.map((updateInfo) => (
+            DbModels.TeamGlickoInfoModel.update(updateInfo, {
+                where: {
+                    teamId: updateInfo.teamId,
+                },
+                transaction: t,
+            })
+        ))
+        await Promise.all(updatePromises)
+        // 3. Update team rating history
+        const ratingHistoryUpdate = teamRatings.map((ratingInfo) => ({
+            teamId: ratingInfo.teamId,
+            rating: ratingInfo.rating,
+            ratingPeriodId: rt.ratingPeriodId,
         }))
         const ratingHistoryPromise = DbModels.RatingHistoryModel.bulkCreate(ratingHistoryUpdate, {
             transaction: t,

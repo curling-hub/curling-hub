@@ -7,6 +7,7 @@ import type { AdapterUser } from 'next-auth/adapters'
 import { Category, HostInfoBase, TeamInfo, TeamMember } from './models'
 import { MatchResult, MatchResultDetails } from './models/match'
 import { TeamInfoRatings } from './models/team'
+import { RatingPeriod } from './models/glicko'
 
 interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember {}
 
@@ -35,6 +36,8 @@ interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, 
 interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, HostInfoBase {
     iceSheets: Array<{ hostId: string, name: string }>
 }
+
+interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod {}
 
 /**
  * Redefine next-auth's User instance
@@ -363,7 +366,7 @@ TeamInfoModel.belongsToMany(MatchModel, {
 })
 
 
-export const RatingPeriodModel = sequelize.define('RatingPeriod', {
+export const RatingPeriodModel = sequelize.define<RatingPeriodInstance>('RatingPeriod', {
     ratingPeriodId: {
         type: DataTypes.BIGINT,
         primaryKey: true,
