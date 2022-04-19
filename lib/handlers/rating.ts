@@ -56,9 +56,10 @@ export async function getAllRatingPeriods() {
         `, {
             replacements: [r.getDataValue('ratingPeriodId')],
             plain: true,
-            model: DbModels.GlickoVariableModel
+            model: DbModels.GlickoVariableModel,
+            mapToModel: true
         })
-        return [r, glicko?.toJSON()]
+        return {'ratingPeriod': r, 'glickoVariable': glicko?.toJSON()}
     }))
     return r
 }
