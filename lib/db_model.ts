@@ -363,7 +363,7 @@ TeamInfoModel.belongsToMany(MatchModel, {
 })
 
 
-export const RatingPeriodModel = sequelize.define('RatindPeriod', {
+export const RatingPeriodModel = sequelize.define('RatingPeriod', {
     ratingPeriodId: {
         type: DataTypes.BIGINT,
         primaryKey: true,
