@@ -45,6 +45,7 @@ export async function getMatchesBetween(from: Date, to: Date): Promise<MatchResu
 export async function getAllRatingPeriods() {
     const ratingPeriods = await DbModels.RatingPeriodModel.findAll()
     const r = await Promise.all(ratingPeriods.map(async (r) => {
+        // Newest glicko variables before rating period end
         const glicko = await sequelize.query(`
             SELECT glicko_variables.*
             FROM glicko_variables
