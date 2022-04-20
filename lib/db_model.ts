@@ -17,6 +17,7 @@ interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo 
 =======
 interface TeamInfoInstance
     extends Model<TeamInfo, TeamInfo>, TeamInfo { }
+<<<<<<< HEAD
 
 interface CategoryInstance extends Model<Category, Category>, Category { }
 >>>>>>> initial db query
@@ -31,12 +32,17 @@ interface CategoryInstance extends Model<Category, Category>, Category { }
 }
 
 interface CategoryInstance extends Model<Category, Partial<Category>>, Category {}
+=======
+
+interface CategoryInstance extends Model<Category, Category>, Category { }
+>>>>>>> 364f71107cefc528bd8d3d6ed70abd2a733759f9
 
 interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, MatchResult {
     // Allows `addTeam` on a match_result instance
     addTeam: BelongsToManyAddAssociationsMixin<TeamInfo, number>
 }
 
+<<<<<<< HEAD
 interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, HostInfoBase {
     iceSheets: Array<{ hostId: string, name: string }>
 }
@@ -83,6 +89,8 @@ export const AccountModel = sequelize.define<AccountInstance>("accounts", {
 
 =======
 >>>>>>> initial db query
+=======
+>>>>>>> 364f71107cefc528bd8d3d6ed70abd2a733759f9
 export const TeamInfoModel = sequelize.define<TeamInfoInstance>('TeamInfo', {
     teamId: {
         type: DataTypes.BIGINT,
@@ -331,6 +339,7 @@ export const MatchModel = sequelize.define<MatchResultInstance>('Match Info', {
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const MatchTeamRel = sequelize.define('MatchTeamRel', {
     teamId: {
         type: DataTypes.BIGINT,
@@ -372,3 +381,5 @@ TeamInfoModel.belongsToMany(MatchModel, {
 })
 =======
 >>>>>>> initial db query
+=======
+>>>>>>> 364f71107cefc528bd8d3d6ed70abd2a733759f9

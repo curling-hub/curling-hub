@@ -1,6 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import Footer from "../components/footer/footer";
 import { getSession } from 'next-auth/react'
 import { Session } from 'next-auth'
 import TeamLayout from '../components/layouts/TeamLayout'
@@ -14,7 +13,6 @@ import { getAllCategories } from '../lib/handlers/categories'
 import { Category } from '../lib/models/category'
 import { getAllRankings } from '../lib/handlers/teams'
 import { TeamRanking } from '../lib/models/teams'
-
 
 interface RatingsProps {
     user?: Session,
