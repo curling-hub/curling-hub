@@ -128,6 +128,7 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
                                     colStart={2}
                                 >
                                     <Select
+                                        name="category-dropdown"
                                         placeholder="All Teams"
                                         borderRadius='20px'
                                         variant='filled'
@@ -151,6 +152,7 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
                                     colStart={5}
                                 >
                                     <Input
+                                        name="search-bar"
                                         borderRadius='20px'
                                         placeholder="Search table..."
                                         onChange={(e: any) => search(e.target.value)}
