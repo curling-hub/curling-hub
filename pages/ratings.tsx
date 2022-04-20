@@ -13,6 +13,7 @@ import { getAllCategories } from '../lib/handlers/categories'
 import { Category } from '../lib/models/category'
 import { getAllRankings } from '../lib/handlers/teams'
 import { TeamRanking } from '../lib/models/teams'
+import { useEffect, useState } from 'react'
 
 interface RatingsProps {
     user?: Session,
@@ -22,6 +23,8 @@ interface RatingsProps {
 
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
+    const [mounted, setMounted] = useState(false)
+    useEffect(() => { setMounted(true) }, [])
     
     return (
         <>
@@ -35,7 +38,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 {
-                    !isSmallScreen && props.user &&
+                    mounted && !isSmallScreen && props.user &&
                         <TeamLayout>
                             <RatingsBox
                                 categories={props.categories}
@@ -44,7 +47,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                             />
                         </TeamLayout>
                 }        
-                {   !isSmallScreen && !props.user &&
+                {   mounted && !isSmallScreen && !props.user &&
                         <StandardLayout>
                             <RatingsBox
                                 categories={props.categories}
@@ -54,7 +57,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                         </StandardLayout>
                 }
                 {
-                    isSmallScreen && props.user &&
+                    mounted && isSmallScreen && props.user &&
                         <TeamLayout>
                             <RatingsBoxSmall
                                 categories={props.categories}
@@ -63,7 +66,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                             />
                         </TeamLayout>
                 }        
-                {   isSmallScreen && !props.user &&
+                {   mounted && isSmallScreen && !props.user &&
                         <StandardLayout>
                             <RatingsBoxSmall
                                 categories={props.categories}

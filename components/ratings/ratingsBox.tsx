@@ -202,7 +202,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                             colStart={1}
                                             colSpan={20}
                                         >
-                                            <Divider key={rank.ID} orientation='horizontal' />
+                                            <Divider key={'dividerVal'+rank.ID.toString()} orientation='horizontal' />
                                         </GridItem>
                                         <GridItem
                                             key={'size'+rank.ID.toString()}

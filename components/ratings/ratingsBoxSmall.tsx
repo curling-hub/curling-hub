@@ -187,30 +187,30 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
                                 { pages[pageIndex]?.map((rank, index) => (
                                     <>
                                         <GridItem
-                                            key={rank.ID+1}
+                                            key={'a-'+rank.ID.toString()}
                                             colStart={1}
                                             colSpan={20}
                                         >
-                                            <Divider key={rank.ID+2} orientation='horizontal' />
+                                            <Divider key={'b-'+rank.ID.toString()} orientation='horizontal' />
                                         </GridItem>
                                         <GridItem
-                                            key={rank.ID+3}
+                                            key={'c-'+rank.ID.toString()}
                                             colStart={1}
                                         >
-                                            <Text key={rank.ID+9}>{tableSize*pageIndex + index+1}</Text>
+                                            <Text key={'d-'+rank.ID.toString()}>{tableSize*pageIndex + index+1}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.ID+4}
+                                            key={'e-'+rank.ID.toString()}
                                             colStart={3}
                                             colSpan={3}
                                         >
-                                            <Text key={rank.ID+10}>{rank.Team}</Text>
+                                            <Text key={'f-'+rank.ID.toString()}>{rank.Team}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.ID+5}
+                                            key={'g-'+rank.ID.toString()}
                                             colStart={8}
                                         >
-                                            <Text key={rank.ID+11}>{rank.Rating}</Text>
+                                            <Text key={'h-'+rank.ID.toString()}>{rank.Rating}</Text>
                                         </GridItem>
                                     </>
                             )) }
