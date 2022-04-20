@@ -30,7 +30,7 @@ interface RatingsBoxProps {
     tableSize: number
 }
 
-export default function RatingsBox(props: RatingsBoxProps) {
+export default function RatingsBoxSmall(props: RatingsBoxProps) {
 
     const {
         teamRanking = [],
@@ -182,17 +182,6 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                 >
                                     <Text fontWeight='bold'>Rating</Text>
                                 </GridItem>
-                                <GridItem
-                                    colStart={10}
-                                    colSpan={3}
-                                >
-                                    <Text fontWeight='bold'>Changes</Text>
-                                </GridItem>
-                                <GridItem
-                                    colStart={13}
-                                >
-                                    <Text fontWeight='bold'>Players</Text>
-                                </GridItem>
                                 { pages[pageIndex]?.map((rank, index) => (
                                     <>
                                         <GridItem
@@ -220,75 +209,6 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                             colStart={8}
                                         >
                                             <Text key={rank.ID+11}>{rank.Rating}</Text>
-                                        </GridItem>
-                                        {
-                                            rank.Changes && rank.Changes.length >= 2 &&
-                                            (rank.Changes[0] - rank.Changes[1]) > 0 &&
-                                            <GridItem
-                                                key={rank.ID+7}
-                                                colStart={10}
-                                                colSpan={3}
-                                            >
-                                                <Flex direction='row'>
-                                                    <HStack spacing='5px'>
-                                                        <AiOutlineArrowUp style={{color: 'green'}}/>
-                                                        <Text key={rank.ID+13}>{rank.Changes[0] - rank.Changes[1]}</Text>
-                                                    </HStack>
-                                                </Flex>
-                                            </GridItem> 
-                                        }
-                                        {
-                                            rank.Changes && rank.Changes.length >= 2 &&
-                                            (rank.Changes[0] - rank.Changes[1]) < 0 &&
-                                            <GridItem
-                                                key={rank.ID+7}
-                                                colStart={10}
-                                                colSpan={3}
-                                            >
-                                                <Flex direction='row'>
-                                                    <HStack spacing='5px'>
-                                                        <AiOutlineArrowDown style={{color: 'red'}}/>
-                                                        <Text key={rank.ID+13}>{rank.Changes[0] - rank.Changes[1]}</Text>
-                                                    </HStack>
-                                                </Flex>
-                                            </GridItem> 
-                                        }
-                                        {
-                                            rank.Changes && rank.Changes.length < 2 &&
-                                            <GridItem
-                                                key={rank.ID+7}
-                                                colStart={10}
-                                                colSpan={3}
-                                            >
-                                                <Flex direction='row'>
-                                                    <HStack spacing='5px'>
-                                                        <MdHorizontalRule style={{color: 'blue'}}/>
-                                                        <Text key={rank.ID+13}>N/A</Text>
-                                                    </HStack>
-                                                </Flex>
-                                            </GridItem> 
-                                        }
-                                        {
-                                            !rank.Changes && 
-                                            <GridItem
-                                                key={rank.ID+7}
-                                                colStart={10}
-                                                colSpan={3}
-                                            >
-                                                <Flex direction='row'>
-                                                    <HStack spacing='5px'>
-                                                        <MdHorizontalRule style={{color: 'blue'}}/>
-                                                        <Text key={rank.ID+13}>Changes</Text>
-                                                    </HStack>
-                                                </Flex>
-                                            </GridItem> 
-                                        }
-                                        <GridItem
-                                            key={rank.ID+8}
-                                            colStart={13}
-                                            colSpan={6}
-                                        >
-                                            <Text key={rank.ID+14}>{rank.Players}</Text>
                                         </GridItem>
                                     </>
                             )) }
