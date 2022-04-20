@@ -6,9 +6,10 @@ import { Session } from 'next-auth'
 import TeamLayout from '../components/layouts/TeamLayout'
 import StandardLayout from '../components/layouts/StandardLayout'
 import {
-    Box
+    Box, useMediaQuery
 } from '@chakra-ui/react'
 import RatingsBox from '../components/ratings/ratingsBox'
+import RatingsBoxSmall from '../components/ratings/ratingsBoxSmall'
 import { getAllCategories } from '../lib/handlers/categories'
 import { Category } from '../lib/models/category'
 import { getAllRankings } from '../lib/handlers/teams'
@@ -22,7 +23,8 @@ interface RatingsProps {
 }
 
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
-
+    const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
+    console.log(isSmallScreen)
     return (
         <>
             <Head>
@@ -35,7 +37,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 {
-                    props.user ?
+                    !isSmallScreen && props.user &&
                         <TeamLayout>
                             <RatingsBox
                                 categories={props.categories}
@@ -43,12 +45,32 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                                 tableSize={20}
                             />
                         </TeamLayout>
-                        :
+                }        
+                {   !isSmallScreen && !props.user &&
                         <StandardLayout>
                             <RatingsBox
                                 categories={props.categories}
                                 teamRanking={props.rankings}
                                 tableSize={20}
+                            />
+                        </StandardLayout>
+                }
+                {
+                    props.user &&
+                        <TeamLayout>
+                            <RatingsBoxSmall
+                                categories={props.categories}
+                                teamRanking={props.rankings}
+                                tableSize={8}
+                            />
+                        </TeamLayout>
+                }        
+                {   !props.user &&
+                        <StandardLayout>
+                            <RatingsBoxSmall
+                                categories={props.categories}
+                                teamRanking={props.rankings}
+                                tableSize={8}
                             />
                         </StandardLayout>
                 }
