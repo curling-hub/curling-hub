@@ -163,16 +163,7 @@ export async function createTeam(form: TeamCreationForm): Promise<any> {
     })
     return result
 }
-=======
-/*
-SELECT p.name as Team, g.rating as Rating, group_concat(t.name) as Players
-FROM team_profile p INNER JOIN team_members t ON p.team_id = t.team_id INNER join
-team_glicko_info g ON g.team_id = t.team_id
-GROUP BY t.team_id 
-ORDER BY g.rating DESC;
-*/
-=======
->>>>>>> began working on select feature in "selected.ts"
+
 export async function getAllRankings() {
     const query = `
     SELECT p.team_id as ID, p.name as Team, g.rating as Rating, x.Changes, group_concat(t.name) as Players
@@ -199,4 +190,4 @@ export async function getAllRankings() {
         val['Changes'].split(',').map((num: string) => parseInt(num)) : [], 
         Players: val['Players']
     }))
-}>>>>>>> initial db query
+}
