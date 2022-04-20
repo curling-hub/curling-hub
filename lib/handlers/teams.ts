@@ -129,9 +129,15 @@ export async function getTeamById(teamId: number): Promise<TeamInfo | null> {
 
 export async function getAllRankings() {
     const query = `
-    SELECT p.team_id as ID, p.name as Team, g.rating as Rating, group_concat(t.name) as Players
+    SELECT p.team_id as ID, p.name as Team, g.rating as Rating, x.Changes, group_concat(t.name) as Players
     FROM team_profile p INNER JOIN team_members t ON p.team_id = t.team_id INNER join
-    team_glicko_info g ON g.team_id = t.team_id
+    team_glicko_info g ON g.team_id = t.team_id left outer join 
+    (
+        select rh.team_id, group_concat(rh.rating) as Changes
+        from rating_history rh INNER JOIN rating_periods rp on rp.rating_period_id = rh.rating_period_id
+        group by rh.team_id
+        order by rp.end_date
+    ) as x on x.team_id = p.team_id
     GROUP BY t.team_id 
     ORDER BY g.rating DESC;
     `
@@ -143,7 +149,8 @@ export async function getAllRankings() {
         ID: val['ID'],
         Team: val['Team'],
         Rating: val['Rating'],
-        /* changes: val[], */
+        Changes: val['Changes'] ? 
+        val['Changes'].split(',').map((num: string) => parseInt(num)) : [], 
         Players: val['Players']
     }))
 }
