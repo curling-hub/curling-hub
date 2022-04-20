@@ -198,43 +198,52 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                 { pages[pageIndex]?.map((rank, index) => (
                                     <>
                                         <GridItem
-                                            key={rank.ID+1}
+                                            key={'divider'+rank.ID.toString()}
                                             colStart={1}
                                             colSpan={20}
                                         >
-                                            <Divider key={rank.ID+2} orientation='horizontal' />
+                                            <Divider key={rank.ID} orientation='horizontal' />
                                         </GridItem>
                                         <GridItem
-                                            key={rank.ID+3}
+                                            key={'size'+rank.ID.toString()}
                                             colStart={1}
                                         >
-                                            <Text key={rank.ID+9}>{tableSize*pageIndex + index+1}</Text>
+                                            <Text key={'sizeVal'+rank.ID.toString()}>{tableSize*pageIndex + index+1}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.ID+4}
+                                            key={'team'+rank.ID.toString()}
                                             colStart={3}
                                             colSpan={3}
                                         >
-                                            <Text key={rank.ID+10}>{rank.Team}</Text>
+                                            <Text key={'teamVal'+rank.ID.toString()}>{rank.Team}</Text>
                                         </GridItem>
                                         <GridItem
-                                            key={rank.ID+5}
+                                            key={'rating'+rank.ID.toString()}
                                             colStart={8}
                                         >
-                                            <Text key={rank.ID+11}>{rank.Rating}</Text>
+                                            <Text key={'ratingVal'+rank.ID.toString()}>{rank.Rating}</Text>
                                         </GridItem>
                                         {
                                             rank.Changes && rank.Changes.length >= 2 &&
                                             (rank.Changes[0] - rank.Changes[1]) > 0 &&
                                             <GridItem
-                                                key={rank.ID+7}
+                                                key={'changes1'+rank.ID.toString()}
                                                 colStart={10}
                                                 colSpan={3}
                                             >
-                                                <Flex direction='row'>
-                                                    <HStack spacing='5px'>
-                                                        <AiOutlineArrowUp style={{color: 'green'}}/>
-                                                        <Text key={rank.ID+13}>{rank.Changes[0] - rank.Changes[1]}</Text>
+                                                <Flex 
+                                                    key={'flex'+rank.ID.toString()}
+                                                    direction='row'
+                                                >
+                                                    <HStack 
+                                                        key={'HStack'+rank.ID.toString()}
+                                                        spacing='5px'
+                                                    >
+                                                        <AiOutlineArrowUp 
+                                                            key={'arrow'+rank.ID.toString()}
+                                                            style={{color: 'green'}}
+                                                        />
+                                                        <Text key={'changesVal1'+rank.ID.toString()}>{rank.Changes[0] - rank.Changes[1]}</Text>
                                                     </HStack>
                                                 </Flex>
                                             </GridItem> 
@@ -243,54 +252,81 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                             rank.Changes && rank.Changes.length >= 2 &&
                                             (rank.Changes[0] - rank.Changes[1]) < 0 &&
                                             <GridItem
-                                                key={rank.ID+7}
+                                                key={'changes2'+rank.ID.toString()}
                                                 colStart={10}
                                                 colSpan={3}
                                             >
-                                                <Flex direction='row'>
-                                                    <HStack spacing='5px'>
-                                                        <AiOutlineArrowDown style={{color: 'red'}}/>
-                                                        <Text key={rank.ID+13}>{rank.Changes[0] - rank.Changes[1]}</Text>
+                                                <Flex 
+                                                    key={'flex'+rank.ID.toString()}
+                                                    direction='row'
+                                                >
+                                                    <HStack 
+                                                        key={'HStack'+rank.ID.toString()}
+                                                        spacing='5px'
+                                                    >
+                                                        <AiOutlineArrowDown 
+                                                            key={'arrow'+rank.ID.toString()}
+                                                            style={{color: 'red'}}
+                                                        />
+                                                        <Text key={'changesVal2'+rank.ID.toString()}>{rank.Changes[0] - rank.Changes[1]}</Text>
                                                     </HStack>
                                                 </Flex>
-                                            </GridItem> 
+                                            </GridItem>
                                         }
                                         {
                                             rank.Changes && rank.Changes.length < 2 &&
                                             <GridItem
-                                                key={rank.ID+7}
+                                                key={'changes3'+rank.ID.toString()}
                                                 colStart={10}
                                                 colSpan={3}
                                             >
-                                                <Flex direction='row'>
-                                                    <HStack spacing='5px'>
-                                                        <MdHorizontalRule style={{color: 'blue'}}/>
-                                                        <Text key={rank.ID+13}>N/A</Text>
+                                                <Flex 
+                                                    key={'flex'+rank.ID.toString()}
+                                                    direction='row'
+                                                >
+                                                    <HStack 
+                                                        key={'HStack'+rank.ID.toString()}
+                                                        spacing='5px'
+                                                    >
+                                                        <MdHorizontalRule 
+                                                            key={'arrow'+rank.ID.toString()}
+                                                            style={{color: 'blue'}}
+                                                        />
+                                                        <Text key={'changesVal3'+rank.ID.toString()}>N/A</Text>
                                                     </HStack>
                                                 </Flex>
-                                            </GridItem> 
+                                            </GridItem>
                                         }
                                         {
                                             !rank.Changes && 
                                             <GridItem
-                                                key={rank.ID+7}
+                                                key={'changes4'+rank.ID.toString()}
                                                 colStart={10}
                                                 colSpan={3}
                                             >
-                                                <Flex direction='row'>
-                                                    <HStack spacing='5px'>
-                                                        <MdHorizontalRule style={{color: 'blue'}}/>
-                                                        <Text key={rank.ID+13}>Changes</Text>
+                                                <Flex 
+                                                    key={'flex'+rank.ID.toString()}
+                                                    direction='row'
+                                                >
+                                                    <HStack 
+                                                        key={'HStack'+rank.ID.toString()}
+                                                        spacing='5px'
+                                                    >
+                                                        <AiOutlineArrowUp 
+                                                            key={'arrow'+rank.ID.toString()}
+                                                            style={{color: 'green'}}
+                                                        />
+                                                        <Text key={'changesVal4'+rank.ID.toString()}>N/A</Text>
                                                     </HStack>
                                                 </Flex>
-                                            </GridItem> 
+                                            </GridItem>
                                         }
                                         <GridItem
-                                            key={rank.ID+8}
+                                            key={'players'+rank.ID.toString()}
                                             colStart={13}
                                             colSpan={6}
                                         >
-                                            <Text key={rank.ID+14}>{rank.Players}</Text>
+                                            <Text key={'playersVal'+rank.ID.toString()}>{rank.Players}</Text>
                                         </GridItem>
                                     </>
                             )) }

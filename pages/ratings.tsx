@@ -22,7 +22,7 @@ interface RatingsProps {
 
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
-    console.log(isSmallScreen)
+    
     return (
         <>
             <Head>
@@ -54,7 +54,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                         </StandardLayout>
                 }
                 {
-                    props.user &&
+                    isSmallScreen && props.user &&
                         <TeamLayout>
                             <RatingsBoxSmall
                                 categories={props.categories}
@@ -63,7 +63,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                             />
                         </TeamLayout>
                 }        
-                {   !props.user &&
+                {   isSmallScreen && !props.user &&
                         <StandardLayout>
                             <RatingsBoxSmall
                                 categories={props.categories}
