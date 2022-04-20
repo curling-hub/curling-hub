@@ -40,7 +40,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                             <RatingsBox
                                 categories={props.categories}
                                 teamRanking={props.rankings}
-                                tableSize={5}
+                                tableSize={20}
                             />
                         </TeamLayout>
                         :
@@ -48,7 +48,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                             <RatingsBox
                                 categories={props.categories}
                                 teamRanking={props.rankings}
-                                tableSize={5}
+                                tableSize={20}
                             />
                         </StandardLayout>
                 }

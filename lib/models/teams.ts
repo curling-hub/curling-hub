@@ -30,6 +30,6 @@ export interface TeamRanking {
     ID: number
     Team: string
     Rating: number
-    /* changes: number // TODO: account for ranking change */
+    Changes: number[] | null // TODO: account for ranking change */
     Players: string[]
 }
