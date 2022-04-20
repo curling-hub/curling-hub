@@ -1,4 +1,3 @@
-
 import { RowDataPacket } from 'mysql2'
 import { pool, sequelize } from '../db'
 
@@ -154,4 +153,40 @@ export async function getAllRankings() {
         val['Changes'].split(',').map((num: string) => parseInt(num)) : [], 
         Players: val['Players']
     }))
+}
+
+export async function createTeam(form: TeamCreationForm): Promise<any> {
+    const result = await sequelize.transaction(async (t) => {
+        // 1. Update the account type to `curler`
+        await DbModels.UserModel.update({
+            account_type: 'curler',
+        }, {
+            where: { email: form.email },
+            transaction: t,
+        })
+
+        // 2. Create team
+        const team = await DbModels.TeamInfoModel.create({
+            name: form.name,
+            rating: '700',  // TODO: choose a default rating
+        }, {
+            transaction: t,
+        })
+
+        // 2. Add categories to team
+        await Promise.all(form.categories.map((categoryId) =>
+            team.addCategory(categoryId, { transaction: t })
+        ))
+
+        // 3. Add team members to team
+        await Promise.all(form.curlers.map((curlerInfo) =>
+            DbModels.TeamMemberModel.create({
+                teamId: team.teamId,
+                name: curlerInfo.name,
+            }, { transaction: t })
+        ))
+
+        return team.get()
+    })
+    return result
 }
