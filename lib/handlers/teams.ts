@@ -18,8 +18,9 @@ export async function getTeamInfo(team_Id: string) {
             tp.name,
             tp.rating
         FROM team_profile tp
-        WHERE tp.team_id = ` + team_Id
-    const [rows, _] = await pool.promise().query(query)
+        WHERE tp.team_id = ?`
+        const queryArgs = [team_Id]
+    const [rows, _] = await pool.promise().query(query,queryArgs)
     const r = rows as RowDataPacket[]
     /* console.log(r) */
     return r.map((val) => ({
@@ -47,10 +48,11 @@ export async function getTeamMatches(teamId: string) {
         ON mi.category_id = cat.category_id
         JOIN match_team_rel match_rel
         ON mi.match_id = match_rel.match_id
-        WHERE match_rel.team_id = ` + teamId + `
+        WHERE match_rel.team_id = ?`
+        + `
         ORDER BY mi.date desc`
-
-    const [rows, _] = await pool.promise().query(query)
+    const queryArgs = [teamId]
+    const [rows, _] = await pool.promise().query(query,queryArgs)
     const r = rows as RowDataPacket[]
     /* console.log(r) */
     return r.map((val) => ({
@@ -72,8 +74,9 @@ export async function getTeamContactInfo(teamId: string) {
         FROM  team_profile tp
         JOIN users usr
         ON usr.id = tp.team_id
-        WHERE tp.team_id = ` + teamId
-    const [rows, _] = await pool.promise().query(query)
+        WHERE tp.team_id = ?`
+    const queryArgs = [teamId]
+    const [rows, _] = await pool.promise().query(query,queryArgs)
     const r = rows as RowDataPacket[]
     return r.map((val) => ({
         teamName: val['name'],
@@ -86,9 +89,9 @@ export async function getTeamMembers(teamId: string) {
         SELECT DISTINCT
             tm.name as member_name
         FROM team_members tm
-        WHERE tm.team_id = ` + teamId
-
-    const [rows, _] = await pool.promise().query(query)
+        WHERE tm.team_id = ?`
+    const queryArgs = [teamId]
+    const [rows, _] = await pool.promise().query(query,queryArgs)
     const r = rows as RowDataPacket[]
     return r.map((val) => ({
         memberName: val['member_name'],
@@ -104,9 +107,9 @@ export async function getTeamCategories(teamId: string) {
         ON tm.team_id = cat_rel.team_id
         JOIN categories cat
         ON cat_rel.category_id = cat.category_id
-        WHERE tm.team_id = ` + teamId
-
-    const [rows, _] = await pool.promise().query(query)
+        WHERE tm.team_id = ?`
+    const queryArgs = [teamId]
+    const [rows, _] = await pool.promise().query(query,queryArgs)
     const r = rows as RowDataPacket[]
     return r.map((val) => ({
         categoryName: val['category_name'],
