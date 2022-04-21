@@ -53,7 +53,7 @@ const postHandler: NextApiHandler = async (req, res) => {
         // 4. Compute ratings (not async because no I/O)
         const ratings = computeRatings(matches, teamRatings, glickoVariable)
         // 5. Update rating history
-        await createRatingAndPeriod({startDate, endDate}, teamRatings)
+        await createRatingAndPeriod({startDate, endDate}, ratings)
         res.status(200).json({ data: ratings })
     } catch (error: any) {
         console.log(error)

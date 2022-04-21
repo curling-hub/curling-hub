@@ -157,7 +157,7 @@ export async function updateRatingForRatingPeriod(ratingPeriodId: number, teamRa
 
 export async function createRatingAndPeriod(
     ratingPeriod: Partial<RatingPeriod>,
-    teamRatings: TeamInfoRatings[],
+    teamRatings: TeamGlickoInfo[],
 ) {
     if (!ratingPeriod.startDate || !ratingPeriod.endDate) {
         throw new Error('undefined rating period start date or end date')
@@ -184,6 +184,8 @@ export async function createRatingAndPeriod(
         const ratingHistoryUpdate = teamRatings.map((ratingInfo) => ({
             teamId: ratingInfo.teamId,
             rating: ratingInfo.rating,
+            ratingDeviation: ratingInfo.ratingDeviation,
+            volatility: ratingInfo.volatility,
             ratingPeriodId: rt.ratingPeriodId,
         }))
         const ratingHistoryPromise = DbModels.RatingHistoryModel.bulkCreate(ratingHistoryUpdate, {
@@ -191,6 +193,6 @@ export async function createRatingAndPeriod(
         })
         await ratingHistoryPromise
         // ======= Testing, don't commit =======
-        await t.rollback()
+        //await t.rollback()
     })
 }
