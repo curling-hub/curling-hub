@@ -2,8 +2,11 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import NextLink from 'next/link'
 import { signIn } from 'next-auth/react'
+import { FaGoogle } from 'react-icons/fa'
+import { HiOutlineMail } from 'react-icons/hi'
 import { useEffect, useState } from 'react'
 import { getSession, getSessionServerSideResult } from '../lib/auth/session'
+import Footer from '../components/footer/footer'
 import {
     Box,
     Button,
@@ -30,7 +33,6 @@ import {
 import AuthLayout from '../components/layouts/AuthLayout'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
-import Footer from "../components/footer/footer";
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 
 
@@ -153,8 +155,11 @@ function SignupFields(props: SignupFieldsProps) {
     const { onOpen: onPopoverOpen, onClose: onPopoverClose, isOpen: isPopoverOpen } = hostAccountDisclosure
     const helperTextFontSize = "12"
     return (
-        <VStack alignItems="start" spacing="4">
-            <Text fontSize="3xl">Sign up</Text>
+
+        <VStack alignItems="start" spacing="4" verticalAlign="center">
+            <Text fontSize='3xl' text-align="center">
+                Sign up
+            </Text>
             <FormControl>
                 <Input
                     borderRadius="full"
@@ -166,6 +171,7 @@ function SignupFields(props: SignupFieldsProps) {
                 />
             </FormControl>
             <Button
+                leftIcon={<HiOutlineMail />}
                 isFullWidth
                 bg="primary.green"
                 borderRadius="full"
@@ -179,6 +185,7 @@ function SignupFields(props: SignupFieldsProps) {
             </Button>
             <Divider orientation="horizontal" mt={2} width="100%" />
             <Button
+                leftIcon={<FaGoogle />}
                 isFullWidth
                 bg="primary.green"
                 borderRadius="full"
@@ -194,15 +201,15 @@ function SignupFields(props: SignupFieldsProps) {
                 <Text fontSize={helperTextFontSize}>
                     Already have an account?{" "}
                     <NextLink href="/login" passHref>
-                        <ChakraLink color="blue.500">Login</ChakraLink>
+                        <ChakraLink color="primary.black"><b>Login</b></ChakraLink>
                     </NextLink>
                 </Text>
                 <Text fontSize={helperTextFontSize}>
-                    <Button variant="link" color="blue.500" size={helperTextFontSize} onClick={onOpenTermsOfService}>
+                    <Button variant="link" color="primary.black" size={helperTextFontSize} onClick={onOpenTermsOfService}>
                         Terms of Service
                     </Button>
                     {" "}and{" "}
-                    <Button variant="link" color="blue.500" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
+                    <Button variant="link" color="primary.black" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
                         Privacy Policy
                     </Button>
                 </Text>

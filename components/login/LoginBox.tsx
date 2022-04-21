@@ -36,7 +36,6 @@ export default function LoginFields(props: LoginFieldsProps) {
     return (
 
         <VStack alignItems="start" spacing="4" verticalAlign="center">
-
             <Text fontSize='3xl' text-align="center">
                 Log In
             </Text>
@@ -55,24 +54,25 @@ export default function LoginFields(props: LoginFieldsProps) {
             <Button
                 leftIcon={<HiOutlineMail />}
                 isFullWidth
-                bg="primary.gray"
+                bg="primary.white"
                 borderRadius="full"
                 boxShadow="md"
-                _hover={{ bg: "gray.400" }}
-                _active={{ bg: "gray.600" }}
+                _hover={{ bg: "gray.200" }}
+                _active={{ bg: "gray.300" }}
                 _focus={{ boxShadow: "lg" }}
                 onClick={() => signIn("email", { email })}//TODO this needs to be changed
             >
                 Login with Email
             </Button>
+            <Divider orientation="horizontal" mt={2} width="100%" />
             <Button
                 leftIcon={<FaGoogle />}
                 isFullWidth
-                bg="primary.gray"
+                bg="primary.white"
                 borderRadius="full"
                 boxShadow="md"
-                _hover={{ bg: "gray.400" }}
-                _active={{ bg: "gray.600" }}
+                _hover={{ bg: "gray.200" }}
+                _active={{ bg: "gray.300" }}
                 _focus={{ boxShadow: "lg" }}
                 onClick={() => signIn("google")}//TODO this needs to be changed
             >
@@ -83,8 +83,8 @@ export default function LoginFields(props: LoginFieldsProps) {
 
                 <Text fontSize={helperTextFontSize}>
                     Don't have an account?{" "}
-                    <NextLink href="/newuser" passHref>
-                        <ChakraLink textColor="primary.black" >Sign Up</ChakraLink>
+                    <NextLink href="/signup" passHref>
+                        <ChakraLink textColor="primary.black"><b>Sign Up</b></ChakraLink>
                     </NextLink>
                 </Text>
                 <Text fontSize={helperTextFontSize}>
