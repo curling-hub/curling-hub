@@ -27,6 +27,7 @@ import {
     PopoverContent,
     PopoverHeader,
     VStack,
+    Stack,
     useDisclosure,
 } from '@chakra-ui/react'
 
@@ -161,14 +162,16 @@ function SignupFields(props: SignupFieldsProps) {
                 Sign up
             </Text>
             <FormControl>
-                <Input
-                    borderRadius="full"
-                    focusBorderColor="green.400"
-                    shadow="sm"
-                    placeholder="Email address"
-                    value={email}
-                    onChange={(e) => onEmailChange(e.target.value)}
-                />
+                <Stack>
+                    <Input
+                        borderRadius="full"
+                        focusBorderColor="green.400"
+                        shadow="sm"
+                        placeholder="Email address"
+                        value={email}
+                        onChange={(e) => onEmailChange(e.target.value)}
+                    />
+                </Stack>
             </FormControl>
             <Button
                 leftIcon={<HiOutlineMail />}
