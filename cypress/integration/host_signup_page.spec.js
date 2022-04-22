@@ -1,12 +1,12 @@
 describe('Host sign up page rendering and navigation', () => {
     const port = Cypress.env('PORT') || '3000'
     const baseUrl = `http://localhost:${port}`
-    it('should navigate to the login page', () => {
+    /*it('should navigate to the login page', () => {
         cy.visit(`${baseUrl}/new-host`)
         cy.get('a').contains('Login').click()
         cy.url().should('include', '/login')
     })
-    /*
+    
     it('should navigate to the request account page', () => {
         cy.visit(`${baseUrl}/host-signup`)
         cy.get('button').contains('Request Account').click()
