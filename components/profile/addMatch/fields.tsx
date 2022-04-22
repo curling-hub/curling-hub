@@ -31,7 +31,7 @@ import type { HostInfo, TeamInfo } from '../../../lib/models'
 const getInitialValues = (otherFields: any = {}) => ({
     matchResult: 'Win',
     date: '',
-    opponent: '',
+    team2: '',
     location: '',
     sheetOfIce: '',
     comments: '',
@@ -81,7 +81,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
 
     return (
         <Formik
-            initialValues={getInitialValues({ currentTeam: currentTeam.teamId })}
+            initialValues={getInitialValues({ team1: currentTeam.teamId })}
             validationSchema={schema}
             onSubmit={onSubmit}
         >
@@ -157,15 +157,15 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             w="100%"
                         >
                             <Box w="100%">
-                                <Field name="opponent">
+                                <Field name="team2">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
-                                            <FormLabel htmlFor="opponent" srOnly>Opponent</FormLabel>
+                                            <FormLabel htmlFor="team2" srOnly>Opponent</FormLabel>
                                             <Select
                                                 borderRadius="full"
                                                 placeholder="Opponent"
                                                 {...field}
-                                                id="opponent"
+                                                id="team2"
                                             >
                                                 {teams.map((val) => (
                                                     <option key={`${val.teamId}`} value={val.teamId}>

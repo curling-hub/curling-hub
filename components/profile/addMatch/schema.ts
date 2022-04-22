@@ -2,10 +2,10 @@ import * as yup from 'yup'
 
 
 const addMatchSchema = yup.object({
-    currentTeam: yup.number().required(),
+    team1: yup.number().required(),
+    team2: yup.number().required(),
     matchResult: yup.string().required(),
     date: yup.date().required(),
-    opponent: yup.number().required(),
     location: yup.string().required(),
     sheetOfIce: yup.string().required(),
     comments: yup.string().optional(),

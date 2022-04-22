@@ -18,8 +18,8 @@ export async function create(form: AddMatchSchema): Promise<MatchResult> {
         // 1. Create match result
         const matchResult = await DbModels.MatchModel.create({
             hostId: form.location,
-            teamId1: form.currentTeam,
-            teamId2: form.opponent,
+            teamId1: form.team1,
+            teamId2: form.team2,
             winner: winner,
             sheetOfIce: form.sheetOfIce || null,
             comments: form.comments || null,

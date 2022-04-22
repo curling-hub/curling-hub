@@ -15,7 +15,6 @@ import { getSession, getSessionServerSideResult } from '../../../lib/auth/sessio
 
 
 interface TeamAddMatchProps {
-    categories?: Category[]
     hosts?: HostInfo[]
     teams?: TeamInfo[]
     currentTeam: TeamInfo
@@ -25,14 +24,13 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
     const router = useRouter()
     const {
         currentTeam,
-        categories = [],
         hosts = [],
         teams = [],
     } = props
     const [ submissionError, setSubmissionError ] = useState('')
     const formOnSubmit = async (values: any) => {
         console.log(values)
-        const res = await fetch('/api/match/add', {
+        const res = await fetch('/api/team/match/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: (new URLSearchParams(values)).toString(),
@@ -92,7 +90,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!signedIn || !signedUp) {
         return getSessionServerSideResult(sessionWrapper)
     }
-    // Obtain team id and get team categories
+    // Obtain team id 
     const { query } = context
     const { id: _tidString } = query
     const teamId = Number.parseInt(Array.isArray(_tidString) ? '' : (_tidString || ''))
@@ -106,7 +104,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         if (team === null) {
             return { notFound: true }
         }
-        //console.log({ categories, hosts })
+        //console.log({ hosts })
         return {
             props: {
                 hosts,

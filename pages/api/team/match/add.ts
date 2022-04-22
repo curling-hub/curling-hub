@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 
-import addMatchSchema from '../../../components/profile/addMatch/schema'
-import { create } from '../../../lib/handlers/matches'
+import addMatchSchema from '../../../../components/profile/addMatch/schema'
+import { create } from '../../../../lib/handlers/matches'
 
 
 type Data = {
