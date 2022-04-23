@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Box, Center, Text } from '@chakra-ui/react'
 
-import TeamLayout from '../../components/layouts/TeamLayout'
+import HostLayout from '../../components/layouts/HostLayout'
 import AddMatch from '../../components/host/addMatch'
 import AddMatchFields from '../../components/host/addMatch/fields'
 import AddMatchTitle from '../../components/host/addMatch/title'
@@ -38,7 +38,7 @@ const HostAddMatchPage: NextPage<HostAddMatchProps> = (props): JSX.Element => {
             setSubmissionError(error)
             return
         }
-        router.push('/hosts')
+        router.push('/hosts/profile')
     }
 
     return (
@@ -52,7 +52,7 @@ const HostAddMatchPage: NextPage<HostAddMatchProps> = (props): JSX.Element => {
                 h="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <TeamLayout>
+                <HostLayout>
                     <AddMatch>
                         <AddMatchTitle />
                         <AddMatchFields
@@ -66,7 +66,7 @@ const HostAddMatchPage: NextPage<HostAddMatchProps> = (props): JSX.Element => {
                             </Center>
                         )}
                     </AddMatch>
-                </TeamLayout>
+                </HostLayout>
             </Box>
         </>
     )
