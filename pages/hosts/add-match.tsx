@@ -80,6 +80,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return getSessionServerSideResult(sessionWrapper)
     }
     if (session.user.account_type !== 'host') {
+        // TODO: uncomment next line for real checking
         //return { notFound: true }
     }
     const hostId = session.user.id
