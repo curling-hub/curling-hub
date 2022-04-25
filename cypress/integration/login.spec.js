@@ -3,7 +3,7 @@ describe('Login page rendering and navigation', () => {
     const baseUrl = `http://localhost:${port}`
     it('should navigate to the signup page', () => {
         cy.visit(`${baseUrl}/login`)
-        cy.get('a').contains('Sign Up').click()
+        cy.get('a').contains('Sign up').click()
         cy.url().should('include', '/newuser')
     })
     it('should contain a Login with Email button', () => {
