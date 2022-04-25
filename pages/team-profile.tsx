@@ -133,7 +133,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // Redirect if not authentiated
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    if (!signedIn || !signedUp) {
+    if (signedIn || signedUp) {
         return getSessionServerSideResult(sessionWrapper)
     }
     try {

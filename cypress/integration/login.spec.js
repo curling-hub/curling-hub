@@ -4,7 +4,7 @@ describe('Login page rendering and navigation', () => {
     it('should navigate to the signup page', () => {
         cy.visit(`${baseUrl}/login`)
         cy.get('a').contains('Sign Up').click()
-        cy.url().should('include', '/newuser')
+        cy.url().should('include', '/signup')
     })
     it('should contain a Login with Email button', () => {
         cy.visit(`${baseUrl}/login`)
