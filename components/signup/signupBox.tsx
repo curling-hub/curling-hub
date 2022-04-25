@@ -12,33 +12,46 @@ import {
     Input,
     Text,
     Stack,
-    VStack,
     Select,
-    Center
+    Center,
+    Popover,
+    PopoverAnchor,
+    PopoverArrow,
+    PopoverBody,
+    PopoverCloseButton,
+    PopoverContent,
+    PopoverHeader,
+    VStack,
+    useDisclosure
 } from '@chakra-ui/react'
 
-interface LoginFieldsProps {
+interface SignupFieldsProps {
     email: string;
     onEmailChange: (email: string) => void;
+    isHost: boolean;
+    onIsHostChange: () => void;
+    hostAccountDisclosure: ReturnType<typeof useDisclosure>;
     onOpenPrivacyPolicy: () => void;
     onOpenTermsOfService: () => void;
 }
 
-export default function LoginFields(props: LoginFieldsProps) {
+export default function SignupFields(props: SignupFieldsProps) {
     const {
         email,
         onEmailChange,
+        isHost,
+        onIsHostChange,
         onOpenPrivacyPolicy,
         onOpenTermsOfService,
+        hostAccountDisclosure,
     } = props
-
+    const { onOpen: onPopoverOpen, onClose: onPopoverClose, isOpen: isPopoverOpen } = hostAccountDisclosure
     const helperTextFontSize = "12"
     return (
 
         <VStack alignItems="start" spacing="4" verticalAlign="center">
-
             <Text fontSize='3xl' text-align="center">
-                Log In
+                Sign up
             </Text>
             <FormControl>
                 <Stack>
@@ -55,37 +68,37 @@ export default function LoginFields(props: LoginFieldsProps) {
             <Button
                 leftIcon={<HiOutlineMail />}
                 isFullWidth
-                bg="primary.white"
+                bg="primary.green"
                 borderRadius="full"
                 boxShadow="md"
-                _hover={{ bg: "gray.200" }}
-                _active={{ bg: "gray.300" }}
+                _hover={{ bg: "green.200" }}
+                _active={{ bg: "green.300" }}
                 _focus={{ boxShadow: "lg" }}
                 onClick={() => signIn("email", { email })}//TODO this needs to be changed
             >
-                Login with Email
+                Sign up with Email
             </Button>
             <Divider orientation="horizontal" mt={2} width="100%" />
             <Button
                 leftIcon={<FaGoogle />}
                 isFullWidth
-                bg="primary.white"
+                bg="primary.green"
                 borderRadius="full"
                 boxShadow="md"
-                _hover={{ bg: "gray.200" }}
-                _active={{ bg: "gray.300" }}
+                _hover={{ bg: "green.200" }}
+                _active={{ bg: "green.300" }}
                 _focus={{ boxShadow: "lg" }}
                 onClick={() => signIn("google")}//TODO this needs to be changed
             >
-                Login with Google
+                Sign up with Google
             </Button>
 
             <VStack w="100%" spacing="1">
 
                 <Text fontSize={helperTextFontSize}>
-                    Don't have an account?{" "}
-                    <NextLink href="/signup" passHref>
-                        <ChakraLink textColor="primary.black" ><b>Sign Up</b></ChakraLink>
+                    Already have an account?{" "}
+                    <NextLink href="/login" passHref>
+                        <ChakraLink textColor="primary.black" ><b>Login</b></ChakraLink>
                     </NextLink>
                 </Text>
                 <Text fontSize={helperTextFontSize}>
@@ -99,6 +112,46 @@ export default function LoginFields(props: LoginFieldsProps) {
                 </Text>
             </VStack>
         </VStack>
+    )
+}
+
+interface HostAccountPopoverProps {
+    h?: number | string
+    isOpen?: boolean
+    onOpen?: () => void
+    onClose?: () => void
+}
+
+function HostAccountPopover(props: HostAccountPopoverProps) {
+    const { h, isOpen = false, onOpen = (() => { }), onClose = (() => { }) } = props
+    return (
+        <Popover
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+        >
+            <PopoverAnchor>
+                <Text>{" "}</Text>
+            </PopoverAnchor>
+            <PopoverContent w="sm" borderRadius={16} border="none" h={h} bg="primary.green">
+                <PopoverHeader>
+                    Host Account
+                </PopoverHeader>
+                <PopoverCloseButton my={1} />
+                <PopoverBody>
+                    <HostAccountHint />
+                </PopoverBody>
+            </PopoverContent>
+        </Popover>
+    )
+}
+
+function HostAccountHint() {
+    return (
+        <Text textColor="black" textAlign="center">
+            Host accounts are for curling locations.
+            If you want to join a curling team, uncheck to create a regular account.
+        </Text>
     )
 }
 

@@ -32,8 +32,8 @@ const NewHost: NextPage = () => {
         onOpen: termsOfServiceOnOpen,
         onClose: termsOfServiceOnClose,
     } = useDisclosure()
-    const signupContainerHeight = "330"
-    const popoverHeight = "450"
+    const signupContainerHeight = "380"
+    const popoverHeight = "300"
 
     useEffect(() => { setMounted(true) }, [])
 
@@ -51,7 +51,7 @@ const NewHost: NextPage = () => {
             >
                 <AuthLayout />
                 <Box paddingBottom="4rem">
-                    <Container maxW="xl" centerContent paddingBottom="4rem">
+                    <Container maxW="2xl" centerContent paddingBottom="4rem">
                         {/* Outer box */}
                         <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
                             <Flex flexDirection="row" h="100%">
@@ -100,4 +100,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return serverSideRedirectTo('/team-profile')
 }
 
-export default NewHost 
+export default NewHost
