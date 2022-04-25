@@ -51,7 +51,7 @@ const NewHost: NextPage = () => {
             >
                 <AuthLayout />
                 <Box paddingBottom="4rem">
-                    <Container maxW="2xl" centerContent h="100vh" >
+                    <Container maxW="2xl" centerContent paddingBottom="4rem">
                         {/* Outer box */}
                         <Box minW="sm" maxW={{ base: "sm", md: "none" }} w="100%" h={signupContainerHeight} my="4" borderRadius="20" bg="white" shadow="md">
                             <Flex flexDirection="row" h="100%">
@@ -100,4 +100,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return serverSideRedirectTo('/team-profile')
 }
 
-export default NewHost 
+export default NewHost
