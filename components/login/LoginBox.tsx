@@ -85,7 +85,7 @@ export default function LoginFields(props: LoginFieldsProps) {
                 <Text fontSize={helperTextFontSize}>
                     Don't have an account?{" "}
                     <NextLink href="/signup" passHref>
-                        <ChakraLink textColor="primary.black" ><b>Sign up</b></ChakraLink>
+                        <ChakraLink textColor="primary.black" ><b>Sign Up</b></ChakraLink>
                     </NextLink>
                 </Text>
                 <Text fontSize={helperTextFontSize}>

@@ -41,7 +41,7 @@ const Signup: NextPage = () => {
     return (
         <>
             <Head>
-                <title> Sign up | Curlo</title>
+                <title> Sign Up | Curlo</title>
             </Head>
             <Box
                 position="relative"
