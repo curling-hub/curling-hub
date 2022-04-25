@@ -71,8 +71,8 @@ export default function SignupFields(props: SignupFieldsProps) {
                 bg="primary.green"
                 borderRadius="full"
                 boxShadow="md"
-                _hover={{ bg: "green.400" }}
-                _active={{ bg: "green.600" }}
+                _hover={{ bg: "green.200" }}
+                _active={{ bg: "green.300" }}
                 _focus={{ boxShadow: "lg" }}
                 onClick={() => signIn("email", { email })}//TODO this needs to be changed
             >
