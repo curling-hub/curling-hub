@@ -18,3 +18,8 @@ export interface MatchResult {
     comments: string | null
     date: Date
 }
+
+export interface Filter {
+    filter_id: number
+    value: string
+}

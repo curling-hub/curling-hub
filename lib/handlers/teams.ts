@@ -29,6 +29,43 @@ export async function getTeamInfo(team_Id: string) {
     }))
 }
 
+export async function populateTeamMatchesPage(teamId: string) {
+    const query = `
+        SELECT 
+            team_1.name as team_id_1,
+            team_2.name as team_id_2,
+            winner,
+            cat.name as category,
+            mi.comments,
+            mi.sheet_of_ice,
+            mi.date
+        FROM match_info mi
+        JOIN team_profile team_1 
+        ON mi.team_id_1 = team_1.team_id
+        JOIN team_profile team_2
+        ON mi.team_id_2 = team_2.team_id
+        JOIN categories cat
+        ON mi.category_id = cat.category_id
+        JOIN match_team_rel match_rel
+        ON mi.match_id = match_rel.match_id
+        WHERE match_rel.team_id = = ?`
+        + `
+        ORDER BY mi.date desc`
+    const queryArgs = [teamId]
+    const [rows, _] = await pool.promise().query(query,queryArgs)
+    const r = rows as RowDataPacket[]
+    /* console.log(r) */
+    return r.map((val) => ({
+        date: `${val['date']}`,
+        team_1_name: val['team_id_1'],
+        team_2_name: val['team_id_2'],
+        winner: val[val['winner']] || null, // winner is literally 'team_id_1'
+        location: 'null',
+        sheetOfIce: val['sheet_of_ice'],
+        comment: val['comments']
+    }))
+}
+
 export async function getTeamMatches(teamId: string) {
     const query = `
         SELECT 
