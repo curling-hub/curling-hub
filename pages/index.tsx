@@ -4,8 +4,13 @@ import { REG_BUTTON_FONT_SIZE, CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from "../components/layouts/StandardLayout";
 import { Box, Button, Text, Flex, Spacer, Link } from "@chakra-ui/react";
 import Footer from "../components/footer/footer";
+import { getSession } from '../lib/auth/session'
+import { serverSideRedirectTo } from '../lib/auth/redirect'
+import type { GetServerSideProps } from 'next'
+import TeamLayout from '../components/layouts/TeamLayout'
 
-const Home: NextPage = () => {
+
+const Home: NextPage<loggedInProps> = (isLoggedIn: loggedInProps) => {
   return (
     <>
       <Head>
@@ -17,7 +22,7 @@ const Home: NextPage = () => {
         minH="100vh"
         bgGradient="linear-gradient(primary.purple, primary.white)"
       >
-        <StandardLayout />
+        {isLoggedIn ? (<StandardLayout />) : (<TeamLayout />)}
         <Box paddingBottom="4rem">
 
           {/*Card Container Box*/}
@@ -120,4 +125,19 @@ const Home: NextPage = () => {
     </>
   );
 };
+export interface loggedInProps {
+  isLoggedIn: boolean
+}
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context)
+  if (!session) {// not signed in 
+
+    return {
+      props: { isLoggedIn: false }
+    }
+  }
+  return {
+    props: { isLoggedIn: true }
+  }
+}
 export default Home;
