@@ -4,33 +4,31 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Box, Center, Text } from '@chakra-ui/react'
 
-import TeamLayout from '../../../components/layouts/TeamLayout'
-import AddMatch from '../../../components/profile/addMatch'
-import AddMatchFields from '../../../components/profile/addMatch/fields'
-import AddMatchTitle from '../../../components/profile/addMatch/title'
-import type { Category, HostInfo, TeamInfo } from '../../../lib/models'
-import { getAllHosts } from '../../../lib/handlers/hosts'
-import { getAllTeams, getTeamById } from '../../../lib/handlers/teams'
-import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import HostLayout from '../../components/layouts/HostLayout'
+import AddMatch from '../../components/host/addMatch'
+import AddMatchFields from '../../components/host/addMatch/fields'
+import AddMatchTitle from '../../components/host/addMatch/title'
+import type { HostInfo, TeamInfo } from '../../lib/models'
+import { getHostInfoById } from '../../lib/handlers/hosts'
+import { getAllTeams } from '../../lib/handlers/teams'
+import { getSession, getSessionServerSideResult } from '../../lib/auth/session'
 
 
-interface TeamAddMatchProps {
-    hosts?: HostInfo[]
+interface HostAddMatchProps {
+    hostInfo?: HostInfo
     teams?: TeamInfo[]
-    currentTeam: TeamInfo
 }
 
-const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => {
+const HostAddMatchPage: NextPage<HostAddMatchProps> = (props): JSX.Element => {
     const router = useRouter()
     const {
-        currentTeam,
-        hosts = [],
+        hostInfo,
         teams = [],
     } = props
     const [ submissionError, setSubmissionError ] = useState('')
     const formOnSubmit = async (values: any) => {
         console.log(values)
-        const res = await fetch('/api/team/match/add', {
+        const res = await fetch('/api/host/match/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: (new URLSearchParams(values)).toString(),
@@ -40,15 +38,7 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
             setSubmissionError(error)
             return
         }
-        router.push('/team-profile')
-    }
-    const fetchIceSheetsByHostId = async (hostId: string): Promise<any[]> => {
-        const res = await fetch(`/api/location/${hostId}/info`)
-        if (res.status === 200) {
-            const hostInfo = await res.json()
-            return hostInfo.data.iceSheets || []
-        }
-        return []
+        router.push('/hosts/profile')
     }
 
     return (
@@ -62,15 +52,13 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
                 h="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <TeamLayout>
+                <HostLayout>
                     <AddMatch>
                         <AddMatchTitle />
                         <AddMatchFields
-                            hosts={hosts}
+                            host={hostInfo}
                             teams={teams}
-                            currentTeam={currentTeam}
                             onSubmit={formOnSubmit}
-                            fetchIceSheetsByHostId={fetchIceSheetsByHostId}
                         />
                         {submissionError !== '' && (
                             <Center>
@@ -78,38 +66,35 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
                             </Center>
                         )}
                     </AddMatch>
-                </TeamLayout>
+                </HostLayout>
             </Box>
         </>
     )
 }
 
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    if (!signedIn || !signedUp) {
+    if (!signedIn || !signedUp || !session) {
         return getSessionServerSideResult(sessionWrapper)
     }
-    // Obtain team id 
-    const { query } = context
-    const { id: _tidString } = query
-    const teamId = Number.parseInt(Array.isArray(_tidString) ? '' : (_tidString || ''))
+    if (session.user.account_type !== 'host') {
+        // TODO: uncomment next line for real checking
+        //return { notFound: true }
+    }
+    const hostId = session.user.id
     // TODO: redirect on error?
     try {
-        const [ hosts, teams, team ] = await Promise.all([
-            getAllHosts(),
+        const [ teams, hostInfo ] = await Promise.all([
             getAllTeams(),
-            getTeamById(teamId),
+            getHostInfoById(hostId),
         ])
-        if (team === null) {
-            return { notFound: true }
-        }
-        //console.log({ hosts })
+        //console.log({ teams, hostInfo })
         return {
             props: {
-                hosts,
                 teams,
-                currentTeam: team,
+                hostInfo,
             },
         }
     } catch (error) {
@@ -118,4 +103,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { props: {} }
 }
 
-export default TeamAddMatch
+
+export default HostAddMatchPage

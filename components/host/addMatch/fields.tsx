@@ -28,9 +28,10 @@ import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
 
 
-const getInitialValues = (otherFields: any = {}) => ({
+const getInitialValues = (otherFields: {[key: string]: any} = {}) => ({
     matchResult: 'Win',
     date: '',
+    team1: '',
     team2: '',
     location: '',
     sheetOfIce: '',
@@ -40,36 +41,20 @@ const getInitialValues = (otherFields: any = {}) => ({
 
 
 interface FieldsProps {
-    currentTeam?: TeamInfo
-    hosts?: HostInfo[]
+    host?: HostInfo
     teams?: TeamInfo[]
     onSubmit?: (values: ReturnType<typeof getInitialValues>) => Promise<void>
-    fetchIceSheetsByHostId?: (hostId: string) => Promise<any[]>
 }
 
 
 const Fields = (props: FieldsProps): JSX.Element => {
     const {
-        currentTeam = {} as TeamInfo,
-        fetchIceSheetsByHostId = async (_) => [],
-        hosts = [],
+        host = null,
         teams = [],
         onSubmit = async () => {},
     } = props
 
-    const [ fetchingIceSheets, setFetchingIceSheets ] = useState(false)
-    const [ iceSheets, setIceSheets ] = useState<any[]>([])
-    const onLocationChange = async (hostId: string) => {
-        setFetchingIceSheets(true)
-        try {
-            const iceSheets = await fetchIceSheetsByHostId(hostId)
-            setIceSheets(iceSheets)
-        } catch (error: any) {
-            console.log(error)
-        } finally {
-            setFetchingIceSheets(false)
-        }
-    }
+    const iceSheets = host?.iceSheets || []
 
     const resultOptions = [ 'Win', 'Loss', 'Tie' ]
     const { getRootProps, getRadioProps } = useRadioGroup({
@@ -81,7 +66,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
 
     return (
         <Formik
-            initialValues={getInitialValues({ team1: currentTeam.teamId })}
+            initialValues={getInitialValues({ location: host?.hostId })}
             validationSchema={schema}
             onSubmit={onSubmit}
         >
@@ -151,19 +136,44 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             </Box>
                         </Grid>
                         <Grid
-                            templateColumns="repeat(1, 1fr)"
+                            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
                             rowGap={4}
                             columnGap={12}
                             w="100%"
                         >
                             <Box w="100%">
+                                <Field name="team1">
+                                    {({field, form}: FieldProps) => (
+                                        <FormControl>
+                                            <FormLabel htmlFor="team1" srOnly>Team 1</FormLabel>
+                                            <Select
+                                                borderRadius="full"
+                                                placeholder="Team 1"
+                                                {...field}
+                                                id="team1"
+                                            >
+                                                {teams.map((val) => (
+                                                    <option key={`${val.teamId}`} value={val.teamId}>
+                                                        {val.name}
+                                                    </option>
+                                                ))}
+                                                <option key="other" value="other">Other</option>
+                                            </Select>
+                                        </FormControl>
+                                    )}
+                                </Field>
+                                <Box textColor="red.500" px={2}>
+                                    <ErrorMessage name="team1" />
+                                </Box>
+                            </Box>
+                            <Box w="100%">
                                 <Field name="team2">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
-                                            <FormLabel htmlFor="team2" srOnly>Opponent</FormLabel>
+                                            <FormLabel htmlFor="team2" srOnly>Team 2</FormLabel>
                                             <Select
                                                 borderRadius="full"
-                                                placeholder="Opponent"
+                                                placeholder="Team 2"
                                                 {...field}
                                                 id="team2"
                                             >
@@ -178,7 +188,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     )}
                                 </Field>
                                 <Box textColor="red.500" px={2}>
-                                    <ErrorMessage name="opponent" />
+                                    <ErrorMessage name="team2" />
                                 </Box>
                             </Box>
                         </Grid>
@@ -197,18 +207,12 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 borderRadius="full"
                                                 placeholder="Location"
                                                 {...field}
-                                                onChange={(e) => {
-                                                    onLocationChange(e.target.value)
-                                                    field.onChange(e)
-                                                }}
+                                                value={host?.hostId}
                                                 id="location"
                                             >
-                                                {hosts.map((val) => (
-                                                    <option key={`${val.hostId}`} value={val.hostId}>
-                                                        {val.organization}
-                                                    </option>
-                                                ))}
-                                                <option key="other" value="other">Other</option>
+                                                <option key={`${host?.hostId}`} value={host?.hostId}>
+                                                    {host?.organization}
+                                                </option>
                                             </Select>
                                         </FormControl>
                                     )}
@@ -223,7 +227,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                         <FormControl>
                                             <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
                                             <Select
-                                                disabled={!values.location || values.location === 'other' || fetchingIceSheets}
+                                                disabled={!values.location}
                                                 borderRadius="full"
                                                 placeholder="Sheet of Ice"
                                                 {...field}

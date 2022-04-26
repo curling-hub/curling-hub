@@ -4,22 +4,16 @@ import { ChakraProvider } from '@chakra-ui/react'
 import AddMatchFields from '../fields'
 
 
-const currentTeam = {
-    teamId: 0, name: 'My Team', rating: '900'
-}
-
 const teams = [
     { teamId: 1, name: 'Team A', rating: '700' },
     { teamId: 2, name: 'Team B', rating: '660' },
 ]
 
-const hosts = [
-    { hostId: 'host 1', organization: 'Curly Inc', website: null },
-]
-
-const fetchIceSheets = async (_hostId) => {
+const fetchIceSheets = (_hostId) => {
     return [ 'Left', 'Right', 'Middle' ]
 }
+
+const host = { hostId: 'host 1', organization: 'Curly Inc', website: null, iceSheets: fetchIceSheets() }
 
 
 it('Renders add match fields that are selectable', () => {
@@ -27,22 +21,20 @@ it('Renders add match fields that are selectable', () => {
     mount(
         <ChakraProvider>
             <AddMatchFields
-                currentTeam={currentTeam}
-                hosts={hosts}
+                host={host}
                 teams={teams}
                 onSubmit={(values) => {
                     clicked = true
                     expect(values).toStrictEqual({
                         team1: '0',
+                        team2: '1',
                         matchResult: 'Win',
                         date: '2022-04-07',
-                        team2: '1',
                         location: 'host 1',
                         sheetOfIce: 'Right',
                         comments: 'Coming from cypress test',
                     })
                 }}
-                fetchIceSheetsByHostId={fetchIceSheets}
             />
         </ChakraProvider>
     )
@@ -51,8 +43,8 @@ it('Renders add match fields that are selectable', () => {
     cy.contains('Loss')
     cy.contains('Tie')
     cy.get('#date').type('2022-04-07')
-    cy.get('#location').select('Curly Inc')
-    cy.get('#team2').select('Team A')
+    cy.get('#team1').select('Team A')
+    cy.get('#team2').select('Team B')
     cy.get('#sheet-of-ice').select('Right')
     cy.get('#comment').type('Coming from cypress test')
     cy.get('button').contains('Add Match').click().then(() => {
