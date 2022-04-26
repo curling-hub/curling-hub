@@ -8,11 +8,8 @@ import {
     Box, useMediaQuery
 } from '@chakra-ui/react'
 import TeamRatingsBox from '../../../components/teamRatings/teamRatingsBox'
-import RatingsBoxSmall from '../../../components/ratings/ratingsBoxSmall'
-import { getAllCategories } from '../../../lib/handlers/categories'
-import { Category } from '../../../lib/models/category'
-import { getAllRankings } from '../../../lib/handlers/teams'
-import { TeamRanking } from '../../../lib/models/teams'
+import { populateTeamMatchesPage } from '../../../lib/handlers/teams'
+import { TeamMatch } from '../../../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { Filter } from '../../../lib/models/match'
 
@@ -27,7 +24,7 @@ const filters = [
 interface TeamRatingsProps {
     user?: Session,
     filters: Filter[],
-    rankings: TeamRanking[]
+    matches: TeamMatch[]
 }
 
 const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
@@ -50,7 +47,7 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                     mounted && !isSmallScreen &&
                         <TeamLayout>
                             <TeamRatingsBox
-                                teamRanking={null}
+                                teamMatches={props.matches}
                                 filters={filters}
                                 tableSize={20}
                             />
@@ -63,14 +60,14 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context)
-    const rankings = await getAllRankings()
-
+    const matches = await populateTeamMatchesPage('61')
+    
     if (!session || !session["user"]) {
         // not signed in / signed up
         return {
             props: {
                 user: null,
-                rankings: rankings
+                matches: matches
             }
         }
     }
@@ -81,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 user: null,
-                rankings: rankings
+                matches: matches
             },
         }
     }
@@ -90,7 +87,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             user: session,
-            rankings: rankings
+            rankings: null
         },
     }
 }

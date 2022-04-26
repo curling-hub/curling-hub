@@ -32,6 +32,8 @@ export async function getTeamInfo(team_Id: string) {
 export async function populateTeamMatchesPage(teamId: string) {
     const query = `
         SELECT 
+            team_1.team_id as t1_id,
+            team_2.team_id as t2_id,
             team_1.name as team_id_1,
             team_2.name as team_id_2,
             winner,
@@ -48,18 +50,27 @@ export async function populateTeamMatchesPage(teamId: string) {
         ON mi.category_id = cat.category_id
         JOIN match_team_rel match_rel
         ON mi.match_id = match_rel.match_id
-        WHERE match_rel.team_id = = ?`
+        WHERE match_rel.team_id = ?`
         + `
         ORDER BY mi.date desc`
     const queryArgs = [teamId]
     const [rows, _] = await pool.promise().query(query,queryArgs)
     const r = rows as RowDataPacket[]
-    /* console.log(r) */
+    console.log(r) 
+    
     return r.map((val) => ({
-        date: `${val['date']}`,
-        team_1_name: val['team_id_1'],
-        team_2_name: val['team_id_2'],
-        winner: val[val['winner']] || null, // winner is literally 'team_id_1'
+        date: val['date'].getMonth().toString()+
+            '/'+
+            val['date'].getDay().toString()+
+            '/'+
+            val['date'].getFullYear().toString()
+            ,
+        outcome: val['t1_id'] == teamId && val['winner'] == 'team_id_1' ? 'Win' : 
+                 val['t1_id'] == teamId && val['winner'] == 'team_id_2' ? 'Loss' : 
+                 val['t2_id'] == teamId && val['winner'] == 'team_id_2' ? 'Win' :
+                 val['t2_id'] == teamId && val['winner'] == 'team_id_1' ? 'Loss' :
+                 'Tie',
+        opponent: val['t1_id'] == teamId ? val['team_id_2'] : val['team_id_1'],
         location: 'null',
         sheetOfIce: val['sheet_of_ice'],
         comment: val['comments']
