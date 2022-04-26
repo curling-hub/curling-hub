@@ -1,16 +1,18 @@
-import { DataTypes, Model, HasManyAddAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin } from 'sequelize'
+import { DataTypes, Model, HasManyAddAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, NonAttribute } from 'sequelize'
 import { sequelize } from './db'
 import { models } from "@next-auth/sequelize-adapter"
 import type { Account as AdapterAccount } from 'next-auth'
 import type { AdapterUser } from 'next-auth/adapters'
 
 import { Category, HostInfoBase, TeamInfo, TeamMember } from './models'
-import { MatchResult } from './models/match'
+import { MatchResult, MatchResultDetails } from './models/match'
+import { TeamInfoRatings } from './models/team'
+import { RatingPeriod } from './models/glicko'
 
 interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember {}
 
 interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo {
-    members: Array<TeamMember>
+    members: NonAttribute<TeamMember[]>
     // Allows `addMember` on a team instance
     addMember: HasManyAddAssociationMixin<TeamMemberInstance, number>
 
@@ -18,14 +20,15 @@ interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo 
     // Allows `addCategory` on a team instance
     addCategory: BelongsToManyAddAssociationMixin<Category, number>
 
-    matches: Array<MatchResult>
+    matches: NonAttribute<MatchResult[]>
     // Allows `addMatch` on a team instance
     addMatch: BelongsToManyAddAssociationMixin<MatchResult, number>
 }
 
 interface CategoryInstance extends Model<Category, Partial<Category>>, Category {}
 
-interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, MatchResult {
+interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, MatchResultDetails {
+    teams: NonAttribute<TeamInfoRatings[]>
     // Allows `addTeam` on a match_result instance
     addTeam: BelongsToManyAddAssociationsMixin<TeamInfo, number>
 }
@@ -33,6 +36,8 @@ interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, 
 interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, HostInfoBase {
     iceSheets: Array<{ hostId: string, name: string }>
 }
+
+interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod {}
 
 /**
  * Redefine next-auth's User instance
@@ -345,17 +350,149 @@ export const MatchTeamRel = sequelize.define('MatchTeamRel', {
 
 MatchModel.belongsToMany(TeamInfoModel, {
     through: MatchTeamRel,
-    foreignKey: 'match_id',
+    foreignKey: 'matchId',
     as: {
-        singular: 'Team',
-        plural: 'Teams',
+        singular: 'team',
+        plural: 'teams',
     },
 })
 TeamInfoModel.belongsToMany(MatchModel, {
     through: MatchTeamRel,
-    foreignKey: 'team_id',
+    foreignKey: 'teamId',
     as: {
         singular: 'Match',
         plural: 'Matches',
     },
+})
+
+
+export const RatingPeriodModel = sequelize.define<RatingPeriodInstance>('RatingPeriod', {
+    ratingPeriodId: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    name: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+    },
+    startDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    endDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+}, {
+    tableName: 'rating_periods',
+    timestamps: false,
+    underscored: true,
+})
+
+
+export const GlickoVariableModel = sequelize.define('GlickoVariable', {
+    id: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    systemConstant: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+    defaultRating: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+    },
+    defaultRatingDeviation: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+    defaultVolatility: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+    version: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+    },
+}, {
+    tableName: 'glicko_variables',
+    timestamps: false,
+    underscored: true,
+})
+
+
+export const TeamGlickoInfoModel = sequelize.define('TeamGlickoInfo', {
+    teamId: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        references: {
+            model: TeamInfoModel,
+            key: 'teamId',
+        },
+    },
+    rating: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+    },
+    ratingDeviation: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+    volatility: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+}, {
+    tableName: 'team_glicko_info',
+    timestamps: false,
+    underscored: true,
+})
+
+
+TeamInfoModel.hasOne(TeamGlickoInfoModel, { foreignKey: 'teamId', as: 'teamGlickoInfo' })
+TeamGlickoInfoModel.belongsTo(TeamInfoModel, { foreignKey: 'teamId' })
+
+
+export const RatingHistoryModel = sequelize.define('RatingHistory', {
+    teamId: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        primaryKey: true,
+        references: {
+            model: TeamInfoModel,
+            key: 'team_id',
+        },
+    },
+    ratingPeriodId: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        primaryKey: true,
+        references: {
+            model: RatingPeriodModel,
+            key: 'rating_period_id',
+        },
+    },
+    rating: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+    },
+    ratingDeviation: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+    volatility: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+}, {
+    tableName: 'rating_history',
+    timestamps: false,
+    underscored: true,
 })
