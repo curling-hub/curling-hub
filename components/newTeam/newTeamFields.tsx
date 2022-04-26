@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Link from 'next/link'
 import {
     Link as ChakraLink,
     Input,
@@ -371,15 +372,17 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         >
                             Create Account
                         </Button>
-                        <Button
-                            type="button"
-                            variant="link"
-                            size="xs"
-                        >
-                            <a href="/new-host">
-                                Not a team? Host sign up
+                        <Link href="/new-host" passHref>
+                            <a>
+                                <Button
+                                    type="button"
+                                    variant="link"
+                                    size="xs"
+                                >
+                                    Not a team? Host sign up
+                                </Button>
                             </a>
-                        </Button>
+                        </Link>
                     </VStack>
                 </Form>
             )}

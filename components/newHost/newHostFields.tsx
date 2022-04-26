@@ -1,5 +1,6 @@
 import NextLink from 'next/link'
 import StateDropdown from './StateDropdown'
+import Link from 'next/link'
 import { object, string, boolean } from 'yup';
 import { Field, Form, Formik, FieldProps } from 'formik';
 
@@ -329,15 +330,17 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                             Request Account
                         </Button>
                         <VStack w="100%">
-                            <Button
-                                type="button"
-                                variant="link"
-                                size="xs"
-                            >
-                                <a href="/new-team">
-                                    Not a host? Team sign up
+                            <Link href="/new-host" passHref>
+                                <a>
+                                    <Button
+                                        type="button"
+                                        variant="link"
+                                        size="xs"
+                                    >
+                                        Not a host? Team sign up
+                                    </Button>
                                 </a>
-                            </Button>
+                            </Link>
                         </VStack>
                         <Divider orientation="horizontal" mt={2} width="100%" />
 
