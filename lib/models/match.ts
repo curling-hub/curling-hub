@@ -1,3 +1,5 @@
+import { TeamInfo } from "./team"
+
 export interface MatchCreationForm {
     currentTeam: number,
     matchResult: string,
