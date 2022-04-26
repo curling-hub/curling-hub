@@ -8,7 +8,7 @@ interface StandardLayoutProps {
 export default function StandardLayout({ children }: StandardLayoutProps) {
     return (
         <>
-            <Header navItems={[]} navAnchor={{ label: 'Log In', link: '/login' }} />
+            <Header navAnchor={{ label: 'Log In', link: '/login' }} />
             <main>{children || <></>}</main>
         </>
     )
