@@ -328,6 +328,17 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                         >
                             Request Account
                         </Button>
+                        <VStack w="100%">
+                            <Button
+                                type="button"
+                                variant="link"
+                                size="xs"
+                            >
+                                <a href="/new-team">
+                                    Not a host? Team sign up
+                                </a>
+                            </Button>
+                        </VStack>
                         <Divider orientation="horizontal" mt={2} width="100%" />
 
                         <VStack w="100%" spacing="1">

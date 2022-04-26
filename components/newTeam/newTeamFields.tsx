@@ -371,6 +371,15 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         >
                             Create Account
                         </Button>
+                        <Button
+                            type="button"
+                            variant="link"
+                            size="xs"
+                        >
+                            <a href="/new-host">
+                                Not a team? Host sign up
+                            </a>
+                        </Button>
                     </VStack>
                 </Form>
             )}
