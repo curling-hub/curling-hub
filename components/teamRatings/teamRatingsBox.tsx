@@ -54,8 +54,11 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     // Search function
     function search(query: string) {
         const tables = fixedRankings.filter((team) => {
-            return (team.outcome.toString().includes(query) || 
-            team.location.includes(query) ||
+            return (team.outcome.toString()?.includes(query) || 
+            team.location?.includes(query) ||
+            team.comment?.includes(query) ||
+            team.date?.includes(query) ||
+            team.sheetOfIce?.includes(query) ||
             team.comment?.includes(query))
         })
         setDisplayedRankings(tables)
@@ -156,35 +159,41 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                     <Text fontWeight='bold'>Date</Text>
                                 </GridItem>
                                 <GridItem
-                                    colStart={4}
+                                    colStart={3}
                                 >
                                     <Text fontWeight='bold'>Outcome</Text>
                                 </GridItem>
                                 <GridItem
-                                    colStart={6}
+                                    colStart={5}
                                 >
                                     <Text fontWeight='bold'>Opponent</Text>
                                 </GridItem>
                                 <GridItem
-                                    colStart={8}
+                                    colStart={7}
                                     colSpan={3}
                                 >
                                     <Text fontWeight='bold'>Location</Text>
                                 </GridItem>
                                 <GridItem
                                     colStart={12}
-                                    colSpan={3}
+                                    colSpan={4}
                                 >
                                     <Text fontWeight='bold'>Sheet of ice</Text>
                                 </GridItem>
                                 <GridItem
                                     colStart={16}
-                                    colSpan={3}
+                                    colSpan={4}
                                 >
                                     <Text fontWeight='bold'>Comment</Text>
                                 </GridItem>
                                 { pages[pageIndex]?.map((match, index) => (
                                     <>
+                                        <GridItem
+                                            colStart={1}
+                                            colSpan={20}
+                                        >
+                                            <Divider orientation='horizontal' />
+                                        </GridItem>
                                         <GridItem
                                             colStart={1}
                                         >
@@ -193,7 +202,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                         {
                                             match.outcome == 'Win' && 
                                             <GridItem
-                                                colStart={4}
+                                                colStart={3}
                                             >
                                                 <Flex 
                                                     direction='row'
@@ -213,7 +222,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                         {
                                             match.outcome == 'Loss' && 
                                             <GridItem
-                                                colStart={4}
+                                                colStart={3}
                                             >
                                                 <Flex 
                                                     direction='row'
@@ -233,7 +242,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                         {
                                             match.outcome == 'Win' && 
                                             <GridItem
-                                                colStart={4}
+                                                colStart={3}
                                             >
                                                 <Flex 
                                                     direction='row'
@@ -251,13 +260,13 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                             </GridItem>
                                         }
                                         <GridItem
-                                            colStart={6}
+                                            colStart={5}
                                         >
                                             <Text>{match.opponent}</Text>
                                         </GridItem>
                                         <GridItem
-                                            colStart={8}
-                                            colSpan={3}
+                                            colStart={7}
+                                            colSpan={5}
                                         >
                                             <Text>{match.location}</Text>
                                         </GridItem>
@@ -269,7 +278,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                         </GridItem>
                                         <GridItem
                                             colStart={16}
-                                            colSpan={3}
+                                            colSpan={4}
                                         >
                                             <Text>{match.comment}</Text>
                                         </GridItem>

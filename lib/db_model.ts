@@ -318,7 +318,7 @@ export const MatchModel = sequelize.define<MatchResultInstance>('Match Info', {
     date: {
         type: DataTypes.DATE,
         allowNull: false,
-    },
+    }
 }, {
     tableName: 'match_info',
     timestamps: false,
