@@ -33,3 +33,12 @@ export interface TeamRanking {
     Changes: number[] | null 
     Players: string[]
 }
+
+export interface TeamMatch {
+    date: string
+    outcome: string
+    opponent: string
+    location: string
+    sheetOfIce: string
+    comment: string
+}
