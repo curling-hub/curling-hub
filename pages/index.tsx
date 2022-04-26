@@ -22,7 +22,8 @@ const Home: NextPage<loggedInProps> = (isLoggedIn: loggedInProps) => {
         minH="100vh"
         bgGradient="linear-gradient(primary.purple, primary.white)"
       >
-        {isLoggedIn ? (<StandardLayout />) : (<TeamLayout />)}
+
+        {isLoggedIn ? <TeamLayout /> : <StandardLayout />}
         <Box paddingBottom="4rem">
 
           {/*Card Container Box*/}
@@ -130,8 +131,8 @@ export interface loggedInProps {
 }
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context)
-  if (!session) {// not signed in 
-
+  const { signedIn } = session
+  if (!signedIn) {// not signed in 
     return {
       props: { isLoggedIn: false }
     }
