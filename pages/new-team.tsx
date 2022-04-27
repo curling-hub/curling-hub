@@ -10,14 +10,11 @@ import {
     Flex,
     Image,
     useDisclosure,
-    Stack,
-    VStack
 } from '@chakra-ui/react'
 import NewTeamFields from '../components/newTeam/newTeamFields'
-import { useState } from 'react'
 import { categories } from '../lib/handlers/categories'
 import { RowDataPacket } from 'mysql2'
-import handler from './api/team/create'
+
 
 function NewTeam({ data }: RowDataPacket) {
     const {
