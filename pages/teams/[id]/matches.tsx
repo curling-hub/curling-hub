@@ -8,6 +8,7 @@ import {
     Box, useMediaQuery
 } from '@chakra-ui/react'
 import TeamRatingsBox from '../../../components/teamRatings/teamRatingsBox'
+import TeamRatingsBoxSmall from '../../../components/teamRatings/teamRatingsBoxSmall'
 import { populateTeamMatchesPage } from '../../../lib/handlers/teams'
 import { TeamMatch } from '../../../lib/models/teams'
 import { useEffect, useState } from 'react'
@@ -47,6 +48,16 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                     mounted && !isSmallScreen &&
                         <TeamLayout>
                             <TeamRatingsBox
+                                teamMatches={props.matches}
+                                filters={filters}
+                                tableSize={20}
+                            />
+                        </TeamLayout>
+                }
+                {
+                    mounted && isSmallScreen &&
+                        <TeamLayout>
+                            <TeamRatingsBoxSmall
                                 teamMatches={props.matches}
                                 filters={filters}
                                 tableSize={20}
