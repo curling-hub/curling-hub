@@ -127,8 +127,9 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                             >
                                 <Text
                                     fontSize="4xl"
+                                    fontWeight='bold'
                                 >
-                                    Ratings
+                                    Matches
                                 </Text>
                             </Flex>
                         </GridItem>
