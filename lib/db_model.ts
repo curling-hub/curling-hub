@@ -203,7 +203,6 @@ TeamInfoModel.belongsToMany(CategoryModel, {
 export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
     hostId: {
         type: DataTypes.UUIDV4,
-        field: 'host_id',
         primaryKey: true,
     },
     organization: {
@@ -215,13 +214,14 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
     },
     phoneNumber: {
         type: DataTypes.STRING(255),
-        field: 'phone_number',
         allowNull: false,
     },
     streetAddress: {
         type: DataTypes.STRING(255),
-        field: 'street_address',
         allowNull: false,
+    },
+    addressExtras: {
+        type: DataTypes.STRING(255),
     },
     city: {
         type: DataTypes.STRING(255),
@@ -239,9 +239,17 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
         type: DataTypes.STRING(255),
         allowNull: false,
     },
+    status: {
+        type: DataTypes.ENUM('pending', 'accepted', 'rejected'),
+    },
+    updatedAt: {
+        type: DataTypes.DATE(),
+        defaultValue: DataTypes.NOW(),
+    },
 }, {
     tableName: 'host_profile',
     timestamps: false,
+    underscored: true,
 })
 
 export const IceSheetModel = sequelize.define('Ice Sheet', {
