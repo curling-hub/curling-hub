@@ -271,7 +271,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                             </GridItem>
                                         }
                                         {
-                                            match.outcome == 'Win' && 
+                                            match.outcome == 'Tie' && 
                                             <GridItem
                                                 colStart={3}
                                             >

@@ -3,7 +3,6 @@ import Head from 'next/head'
 import { getSession } from 'next-auth/react'
 import { Session } from 'next-auth'
 import TeamLayout from '../../../components/layouts/TeamLayout'
-import StandardLayout from '../../../components/layouts/StandardLayout'
 import {
     Box, useMediaQuery
 } from '@chakra-ui/react'
@@ -13,6 +12,7 @@ import { populateTeamMatchesPage } from '../../../lib/handlers/teams'
 import { TeamMatch } from '../../../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { Filter } from '../../../lib/models/match'
+import { useRouter } from 'next/router'
 
 const filters = [
     {filter_id: 1, value: "Most Recent"},
@@ -36,7 +36,7 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
     return (
         <>
             <Head>
-                <title>Ratings | curlo</title>
+                <title>Matches | curlo</title>
             </Head>
             <Box
                 position="absolute"
@@ -70,8 +70,9 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const id = context.params?.id ? context.params.id : 1
     const session = await getSession(context)
-    const matches = await populateTeamMatchesPage('61')
+    const matches = await populateTeamMatchesPage(id.toString())
     
     if (!session || !session["user"]) {
         // not signed in / signed up
