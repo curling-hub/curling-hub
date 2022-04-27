@@ -65,8 +65,39 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     }
 
     // use this to filter
-    async function filterMatches(selected: number) {
-        alert('filtering')
+    function filterMatches(selected: number) {  
+        console.log(selected) 
+       if (selected == 1) {
+           const dates = fixedRankings.sort((m1, m2) => {
+               return new Date(m1.date).getTime() - new Date(m2.date).getTime()
+           })
+           setDisplayedRankings(dates)
+       } 
+       else if (selected == 2) {
+           const dates = fixedRankings.sort((m1, m2) => {
+               return new Date(m1.date).getTime() + new Date(m2.date).getTime()
+           })
+           setDisplayedRankings(dates)
+       } 
+       else if (selected == 3) {
+           const wins = fixedRankings.filter((match) => {
+               return match.outcome == 'Win'
+           })
+           setDisplayedRankings(wins)
+       } 
+       else if (selected == 4) {
+            const losses = fixedRankings.filter((match) => {
+                return match.outcome == 'Loss'
+            })
+            console.log(losses)
+            setDisplayedRankings(losses)
+       }
+       else {
+            const ties = fixedRankings.filter((match) => {
+                return match.outcome == 'Tie'
+            })
+            setDisplayedRankings(ties)
+       }
     }
 
     return (
@@ -113,19 +144,18 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                 >
                                     <Select
                                         name='category-dropdown'
-                                        placeholder="All Teams"
                                         borderRadius='20px'
                                         variant='filled'
                                         color='black'
                                         bg='gray.300'
-                                        onChange={async (e) => {
-                                            await filterMatches(parseInt(e.target.value))
+                                        onChange={(e) => {
+                                            filterMatches(parseInt(e.target.value))
                                         }}
                                     >
                                         {
                                             filters.map((filter) => {
                                                 return (
-                                                    <option key={filter.filter_id} value={filter.value}>{filter.value}</option>
+                                                    <option key={filter.filter_id} value={filter.filter_id}>{filter.value}</option>
                                                 )
                                             })
                                         }
