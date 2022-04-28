@@ -75,7 +75,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
             console.error(error)
             return
         }
-        router.push('/hosts/pending')
+        router.push('/hosts/request')
     }
 
     const helperTextFontSize = "12";

@@ -9,11 +9,18 @@ import {
 } from '@chakra-ui/react'
 
 import HostLayout from '../../components/layouts/HostLayout'
+import { HostPending, HostRejected } from '../../components/host/status'
 import { getSession } from '../../lib/auth/session'
 import { serverSideRedirectTo } from '../../lib/auth/redirect'
 import { getHostInfoById } from '../../lib/handlers/hosts'
 
-const HostPendingPage: NextPage = (): JSX.Element => {
+
+interface HostRequestStatusProps {
+    status: string
+}
+
+const HostRequestStatusPage: NextPage<HostRequestStatusProps> = (props): JSX.Element => {
+    const { status } = props
     return (
         <>
             <Head>
@@ -26,24 +33,22 @@ const HostPendingPage: NextPage = (): JSX.Element => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 <HostLayout>
-                    <Container
-                        maxW="md"
-                        borderRadius={12}
-                        bgColor="white"
-                        px={8}
-                        py={4}
-                    >
-                        <VStack>
-                            <Text fontSize={24} fontWeight="bold" textAlign="center">
-                                Your account application is pending. Please check back later!
-                            </Text>
-                            <Image src="/curloLogo2.svg" alt="Curlo Logo" width="100%" height="100%" />
-                        </VStack>
-                    </Container>
+                    {getBoxByStatus(status)}
                 </HostLayout>
             </Box>
         </>
     )
+}
+
+function getBoxByStatus(status: string): JSX.Element {
+    switch (status) {
+        case 'pending':
+            return (<HostPending />)
+        case 'rejected':
+            return (<HostRejected />)
+    }
+    // shouldn't happen
+    return (<></>)
 }
 
 export async function getServerSideProps(context: NextPageContext) {
@@ -67,14 +72,14 @@ export async function getServerSideProps(context: NextPageContext) {
             return serverSideRedirectTo('/new-host')
     }
     const hostInfo = await getHostInfoById(session.user.id)
-    const status = hostInfo?.status
+    let status = hostInfo?.status
     // not pending status
     if (status === 'accepted') {
         return serverSideRedirectTo('/hosts/profile')
-    } else if (status === 'rejected') {
-        return serverSideRedirectTo('/hosts/rejected')
+    } else if (status !== 'rejected' && status !== 'pending') {
+        status = 'pending'
     }
-    return { props: {} }
+    return { props: { status } }
 }
 
-export default HostPendingPage
+export default HostRequestStatusPage

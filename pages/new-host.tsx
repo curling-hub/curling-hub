@@ -112,14 +112,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             case 'host':
                 const hostInfo = await getHostInfoById(session.user.id)
                 const status = hostInfo?.status
-                if (status === 'pending') {
-                    return serverSideRedirectTo('/hosts/pending')
-                } else if (status === 'accepted') {
+                if (status === 'accepted') {
                     return serverSideRedirectTo('/hosts/profile')
-                } else if (status === 'rejected') {
-                    return serverSideRedirectTo('/hosts/rejected')
+                } else {
+                    return serverSideRedirectTo('/hosts/request')
                 }
-                break
         }
     }
     return {
