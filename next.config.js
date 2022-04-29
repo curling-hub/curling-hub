@@ -11,7 +11,7 @@ const nextConfig = {
     google_client_secret: process.env.GOOGLE_CLIENT_SECRET,
   },
   future: {
-    webpacks: true,
+    webpack5: true,
   },
 }
 
