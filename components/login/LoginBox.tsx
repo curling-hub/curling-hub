@@ -7,6 +7,7 @@ import {
     Checkbox,
     Divider,
     FormControl,
+    FormLabel,
     HStack,
     Link as ChakraLink,
     Input,
@@ -42,6 +43,7 @@ export default function LoginFields(props: LoginFieldsProps) {
             </Text>
             <FormControl>
                 <Stack>
+                    <FormLabel htmlFor="email" srOnly>Email Address</FormLabel>
                     <Input
                         borderRadius="full"
                         focusBorderColor="green.400"
@@ -49,6 +51,7 @@ export default function LoginFields(props: LoginFieldsProps) {
                         placeholder="Email Address"
                         value={email}
                         onChange={(e) => onEmailChange(e.target.value)}
+                        id="email"
                     />
                 </Stack>
             </FormControl>
@@ -60,7 +63,7 @@ export default function LoginFields(props: LoginFieldsProps) {
                 boxShadow="md"
                 _hover={{ bg: "gray.200" }}
                 _active={{ bg: "gray.300" }}
-                _focus={{ boxShadow: "lg" }}
+                _focus={{ boxShadow: "dark-lg" }}
                 onClick={() => signIn("email", { email })}//TODO this needs to be changed
             >
                 Login with Email
@@ -74,7 +77,7 @@ export default function LoginFields(props: LoginFieldsProps) {
                 boxShadow="md"
                 _hover={{ bg: "gray.200" }}
                 _active={{ bg: "gray.300" }}
-                _focus={{ boxShadow: "lg" }}
+                _focus={{ boxShadow: "dark-lg" }}
                 onClick={() => signIn("google")}//TODO this needs to be changed
             >
                 Login with Google

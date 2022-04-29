@@ -7,6 +7,7 @@ import {
     Checkbox,
     Divider,
     FormControl,
+    FormLabel,
     HStack,
     Link as ChakraLink,
     Input,
@@ -55,6 +56,7 @@ export default function SignupFields(props: SignupFieldsProps) {
             </Text>
             <FormControl>
                 <Stack>
+                    <FormLabel htmlFor="email" srOnly>Email Address</FormLabel>
                     <Input
                         borderRadius="full"
                         focusBorderColor="green.400"
@@ -62,6 +64,7 @@ export default function SignupFields(props: SignupFieldsProps) {
                         placeholder="Email Address"
                         value={email}
                         onChange={(e) => onEmailChange(e.target.value)}
+                        id="email"
                     />
                 </Stack>
             </FormControl>
@@ -73,7 +76,7 @@ export default function SignupFields(props: SignupFieldsProps) {
                 boxShadow="md"
                 _hover={{ bg: "green.200" }}
                 _active={{ bg: "green.300" }}
-                _focus={{ boxShadow: "lg" }}
+                _focus={{ boxShadow: "dark-lg" }}
                 onClick={() => signIn("email", { email })}//TODO this needs to be changed
             >
                 Sign up with Email
@@ -87,7 +90,7 @@ export default function SignupFields(props: SignupFieldsProps) {
                 boxShadow="md"
                 _hover={{ bg: "green.200" }}
                 _active={{ bg: "green.300" }}
-                _focus={{ boxShadow: "lg" }}
+                _focus={{ boxShadow: "dark-lg" }}
                 onClick={() => signIn("google")}//TODO this needs to be changed
             >
                 Sign up with Google
