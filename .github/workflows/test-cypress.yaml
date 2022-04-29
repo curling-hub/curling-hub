@@ -26,8 +26,9 @@ jobs:
       env:
         NEXTAUTH_SECRET: gitactions-test
         NEXTAUTH_URL: "http://localhost:3000"
+        NODE_ENV: test
       with:
         # already installed in the previous step
         install: false
         config: video=false,screenshotOnRunFailure=false
-        start: npm start
+        start: npm run dev
