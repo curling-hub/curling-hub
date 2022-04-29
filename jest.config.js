@@ -5,5 +5,6 @@ const createJestConfig = nextJest({
 })
 
 module.exports = createJestConfig({
+    setupFilesAfterEnv: ['./jest.setup.js'],
     testRegex: '(/__tests__/.*)\\.[jt]sx?$',
 })

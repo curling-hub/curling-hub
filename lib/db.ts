@@ -11,13 +11,20 @@ const {
     mysql_database,
 } = serverRuntimeConfig
 
+export function getSequelize() {
+    if (process.env.NODE_ENV === 'test') {
+        return new Sequelize('sqlite::memory:')
+    }
+    return new Sequelize(mysql_database, mysql_user, mysql_password, {
+        host: mysql_host,
+        port: mysql_port,
+        dialect: 'mysql',
+        logging: process.env.NODE_ENV === 'development' && console.log,
+    })
+}
+
 // Use sequelize to avoid formatting between db rows and js objects
-export const sequelize = new Sequelize(mysql_database, mysql_user, mysql_password, {
-    host: mysql_host,
-    port: mysql_port,
-    dialect: 'mysql',
-    logging: process.env.NODE_ENV === 'development' && console.log,
-})
+export const sequelize = getSequelize()
 
 export const pool = mysql.createPool({
     host: mysql_host,

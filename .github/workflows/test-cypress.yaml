@@ -17,6 +17,8 @@ jobs:
       uses: cypress-io/github-action@v2
       with:
         command: npx cypress run-ct --config video=false,screenshotOnRunFailure=false
+    - name: Jest tests
+      run: npm run test
     - name: Build nextjs
       run: npm run build
     - name: Cypress run
