@@ -15,7 +15,7 @@ export async function getAllHosts(): Promise<HostInfo[]> {
     if (!hostInfoList) {
         return []
     }
-    return hostInfoList.map((hostInfo) => hostInfo.get())
+    return hostInfoList.map((hostInfo) => hostInfo.toJSON())
 }
 
 export async function getIceSheetsByHostId(hostId: string) {
@@ -39,7 +39,7 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
         }],
         nest: true,
     })
-    return Object.assign({}, hostInfo?.get(), {
+    return Object.assign({}, hostInfo?.toJSON(), {
         iceSheets: hostInfo?.iceSheets.map((iceSheet) => iceSheet.name)
     }) as HostInfo
 }

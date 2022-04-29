@@ -22,7 +22,7 @@ export async function getAllCategories(): Promise<Category[]> {
     if (!categories) {
         return []
     }
-    return categories.map((category) => (category.get()))
+    return categories.map((category) => (category.toJSON()))
 }
 
 export async function getCategoriesByTeamId(teamId: number): Promise<Category[]> {
@@ -39,6 +39,6 @@ export async function getCategoriesByTeamId(teamId: number): Promise<Category[]>
     if (!categories) {
         return []
     } 
-    return categories.map((category) => category.get())
+    return categories.map((category) => category.toJSON())
 }
 
