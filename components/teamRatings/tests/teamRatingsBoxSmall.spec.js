@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { mount } from '@cypress/react'
 import { ChakraProvider } from '@chakra-ui/react'
-import TeamRatingsBox from '../teamRatingsBox'
+import TeamRatingsBoxSmall from '../teamRatingsBoxSmall'
 
 const filters = [
     {filter_id: 1, value: "Most Recent"},
@@ -25,7 +25,7 @@ const matches = [
 it('New Team Page', () => {
     mount(
         <ChakraProvider>
-            <TeamRatingsBox
+            <TeamRatingsBoxSmall
                 teamMatches={matches}
                 filters={filters}
                 tableSize={20}

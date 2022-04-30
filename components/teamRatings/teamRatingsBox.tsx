@@ -22,8 +22,7 @@ import {
 } from 'react-icons/md'
 import { TeamMatch } from '../../lib/models/teams'
 import { Filter } from '../../lib/models/match'
-import { useState } from 'react'
-
+import { useState, Children } from 'react'
 
 interface teamRatingsBoxProps {
     teamMatches: TeamMatch[]
@@ -42,7 +41,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     const [pageIndex, setPageIndex] = useState(0)
     const [displayedRankings, setDisplayedRankings] = useState(teamMatches)
     const [fixedRankings, setFixedRankings] = useState(teamMatches)
-
+    console.log('rerender')
     var i = 0
     var pages: Array<TeamMatch[]> = []
     for (i; i < Math.ceil(displayedRankings.length / tableSize); ++i) {
@@ -54,28 +53,27 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     // Search function
     function search(query: string) {
         const tables = fixedRankings.filter((team) => {
-            return (team.outcome.toString()?.includes(query) || 
-            team.location?.includes(query) ||
-            team.comment?.includes(query) ||
-            team.date?.includes(query) ||
-            team.sheetOfIce?.includes(query) ||
-            team.comment?.includes(query))
+            return (team.outcome.toString()?.toLowerCase().includes(query) || 
+            team.location?.toLowerCase().includes(query) ||
+            team.comment?.toLowerCase().includes(query) ||
+            team.date?.toLowerCase().includes(query) ||
+            team.sheetOfIce?.toLowerCase().includes(query) ||
+            team.comment?.toLowerCase().includes(query))
         })
         setDisplayedRankings(tables)
     }
 
     // use this to filter
     function filterMatches(selected: number) {  
-        console.log(selected) 
        if (selected == 1) {
-           const dates = fixedRankings.sort((m1, m2) => {
-               return new Date(m1.date).getTime() - new Date(m2.date).getTime()
+           const dates = [...fixedRankings].sort((m1, m2) => {
+               return (new Date(m1.date).getTime() + new Date(m2.date).getTime())
            })
            setDisplayedRankings(dates)
        } 
        else if (selected == 2) {
-           const dates = fixedRankings.sort((m1, m2) => {
-               return new Date(m1.date).getTime() + new Date(m2.date).getTime()
+           const dates = [...fixedRankings].sort((m1, m2) => {
+               return (new Date(m1.date).getTime() - new Date(m2.date).getTime())
            })
            setDisplayedRankings(dates)
        } 
@@ -217,7 +215,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                 >
                                     <Text fontWeight='bold'>Comment</Text>
                                 </GridItem>
-                                { pages[pageIndex]?.map((match, index) => (
+                                { Children.toArray(pages[pageIndex]?.map((match, index) => (
                                     <>
                                         <GridItem
                                             colStart={1}
@@ -242,7 +240,6 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                         spacing='5px'
                                                     >
                                                         <AiOutlineCheck
-                                                            key={'arrow'}
                                                             style={{color: 'green'}}
                                                         />
                                                         <Text>{match.outcome}</Text>
@@ -262,7 +259,6 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                         spacing='5px'
                                                     >
                                                         <AiOutlineClose
-                                                            key={'arrow'}
                                                             style={{color: 'red'}}
                                                         />
                                                         <Text>{match.outcome}</Text>
@@ -282,7 +278,6 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                         spacing='5px'
                                                     >
                                                         <MdHorizontalRule
-                                                            key={'arrow'}
                                                             style={{color: 'blue'}}
                                                         />
                                                         <Text>{match.outcome}</Text>
@@ -314,7 +309,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                             <Text>{match.comment}</Text>
                                         </GridItem>
                                     </>
-                            )) }
+                            ))) }
                             </Grid>
                            
                         </GridItem>
