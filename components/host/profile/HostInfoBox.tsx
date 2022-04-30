@@ -5,45 +5,94 @@ import SideBySideContainer from '../../profile/SideBySideContainer';
 
 
 interface HostInfoBoxProps {
-    // query arrays passed here
+    // hostInfo?: HostInfo
 }
 
 export default function HostInfoBox(props: HostInfoBoxProps) {
 
     const {
-
+        // hostInfo
     } = props
 
     return (
         <>
+            <Flex
+                align="center"
+                minW="110px"
+                direction="column"
+                h="60%"
+                marginTop="31px"
+            >
+                <Text
+                    fontSize="2.5em"
+                    fontWeight="bold"
+                >
+                    Host Name
+                </Text>
+                <Spacer />
+                <Flex align="start" w="75%" maxW="388px" minW="302px">
+                    <VStack align="start" spacing="-4px">
+                        <Text
+                            fontSize="1.5em"
+                            fontWeight="bold"
+                            paddingBottom="3px"
+                        >
+                            Address
+                        </Text>
+                        <Text>
+                            AddressString[0]
+                        </Text>
+                        <Text>
+                            AddressString[1]
+                        </Text>
+                        <Text>
+                            AddressString[2]
+                        </Text>
+                        <Text>
+                            AddressString[3]
+                        </Text>
+                    </VStack>
+                    <Spacer />
+                    <VStack spacing="-4px">
+                        <Text
+                            fontSize="1.5em"
+                            fontWeight="bold"
+                            paddingBottom="3px"
+                        >
+                            Sheets of Ice
+                        </Text>
+                        <Text>
+                            IceSheetString
+                        </Text>
+                    </VStack>
 
-            <Flex align="start" w="100%">
+                </Flex>
                 <Spacer />
-                <VStack align="center" minW="110px" spacing="4px">
-                    <Text
-                        fontSize="1.5em"
-                        fontWeight="bold"
-                    >Address</Text>
-                    {/* {teamMembers.map((member, i) => (
-                        <Text key={`${i}`}>
-                            {member.memberName}
-                        </Text>
-                    ))} */}
-                </VStack>
+                <Text
+                    fontSize="1.5em"
+                    fontWeight="bold"
+                >
+                    Contact
+                </Text>
+                <Text>
+                    Email
+                </Text>
+                <Text>
+                    Phone Number
+                </Text>
                 <Spacer />
-                <VStack align="center" spacing="4px">
-                    <Text
-                        fontSize="1.5em"
-                        fontWeight="bold"
-                    >Sheets of Ice</Text>
-                    {/*{teamCategories.map((category, i) => (
-                        <Text key={`${i}`}>
-                            {category.categoryName}
-                        </Text>
-                    ))} */}
-                </VStack>
+                <Text
+                    fontSize="1.5em"
+                    fontWeight="bold"
+                >
+                    Website
+                </Text>
+                <Text>
+                    The Website
+                </Text>
                 <Spacer />
             </Flex>
+
         </>
     )
 }

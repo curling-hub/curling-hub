@@ -8,11 +8,12 @@ import {
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
-import SideBySideContainer from '../../../components/profile/SideBySideContainer'
+import ProfileBox from '../../../components/host/profile/ProfileBox'
 
 
 interface HostProfileProps {
-
+    // hostInfo?: HostInfo[]
+    // hostMatches?: HostMatches[]
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -21,7 +22,8 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
     useEffect(() => { setMounted(true) }, [])
 
     const {
-
+        // hostInfo = [],
+        // hostMatches = [],
     } = props
 
     return (
@@ -36,10 +38,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 <HostLayout>
-                    <Box paddingBottom={"4rem"}>
-
-
-                    </Box>
+                    <ProfileBox /* TODO: pass in hostMatches*/ /* TODO: pass in hostMatches*/ />
                 </HostLayout>
                 <Footer />
             </Box >

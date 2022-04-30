@@ -1,28 +1,35 @@
 import { Box, Flex, Spacer, } from "@chakra-ui/react"
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
+import ProfileButton from "../../profile/ProfileButton";
+import HostInfoBox from "./HostInfoBox";
+import HostMatchesBox from './HostMatchesBox'
 
 interface ProfileBoxProps {
-    // query arrays passed here
+    // hostInfo?: HostInfo
+    // hostMatches?: HostMatches[]
 }
 
 export default function ProfileBox(props: ProfileBoxProps) {
 
     const {
-
+        // hostInfo,
+        // hostMatches = [],
     } = props
 
     return (
         <>
             <Box paddingBottom={"4rem"}>
-                <Flex direction={{ base: 'column', md: 'row' }}>
+                <Flex alignItems={{ base: "center", md: "start" }} direction={{ base: 'column', md: 'row' }}>
                     <Spacer />
-                    <SideBySideContainer>
-
+                    <SideBySideContainer height="877px" color="primary.white" minW="374px">
+                        <HostInfoBox /* TODO: pass in hostInfo*/ />
+                        <ProfileButton buttonText='Edit' color='primary.gray' />
                     </SideBySideContainer>
                     <Spacer />
-                    <SideBySideContainer>
-
+                    <SideBySideContainer height="877px" color="primary.white" minW="374px">
+                        <HostMatchesBox  /* TODO: pass in hostMatches*/ />
+                        <ProfileButton buttonText='Edit Matches' color='primary.green' />
                     </SideBySideContainer>
                     <Spacer />
                 </Flex>
