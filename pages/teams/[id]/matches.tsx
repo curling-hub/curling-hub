@@ -50,7 +50,7 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                             <TeamRatingsBox
                                 teamMatches={props.matches}
                                 filters={filters}
-                                tableSize={20}
+                                tableSize={10}
                             />
                         </TeamLayout>
                 }

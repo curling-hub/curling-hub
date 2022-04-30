@@ -22,7 +22,7 @@ import {
 } from 'react-icons/md'
 import { TeamMatch } from '../../lib/models/teams'
 import { Filter } from '../../lib/models/match'
-import { useState } from 'react'
+import { useState, Children } from 'react'
 
 
 interface teamRatingsBoxProps {
@@ -199,7 +199,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                 >
                                     <Text fontWeight='bold'>Opponent</Text>
                                 </GridItem>
-                                { pages[pageIndex]?.map((match, index) => (
+                                { Children.toArray(pages[pageIndex]?.map((match, index) => (
                                     <>
                                         <GridItem
                                             colStart={1}
@@ -253,7 +253,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                             </GridItem>
                                         }
                                         {
-                                            match.outcome == 'Win' && 
+                                            match.outcome == 'Tie' && 
                                             <GridItem
                                                 colStart={4}
                                             >
@@ -278,7 +278,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                             <Text>{match.opponent}</Text>
                                         </GridItem>
                                     </>
-                            )) }
+                            ))) }
                             </Grid>
                            
                         </GridItem>

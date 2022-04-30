@@ -51,11 +51,10 @@ export async function populateTeamMatchesPage(teamId: string) {
     })
     const matches = matchInfo.map((match) => match.get())
     
-    
     return matches.map((match) => ({
-        date: match.date.getMonth().toString()+
+        date: (1+match.date.getMonth()).toString()+
             '/'+
-            match.date.getDay().toString()+
+            match.date.getDate().toString()+
             '/'+
             match.date.getFullYear().toString()
             ,
