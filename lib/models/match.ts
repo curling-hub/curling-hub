@@ -28,3 +28,7 @@ export interface Filter {
     filter_id: number
     value: string
 }
+export interface Filter {
+    filter_id: number
+    value: string
+}
