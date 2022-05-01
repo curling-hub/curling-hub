@@ -22,6 +22,8 @@ import {
     TableCaption,
     TableContainer,
     Container,
+    Button,
+    HStack,
 } from '@chakra-ui/react'
 import LeftHandBox from "../components/profile/LeftHandBox"
 import SideBySideContainer from '../components/profile/SideBySideContainer';
@@ -61,7 +63,6 @@ const adminRequests: NextPage = () => {
        
        if (res.status == 200 && res.body) {
            const result = await res.json()
-           console.log(result.data)
            const hosts = result.data.map((host: HostInfo) => { return ({    
                organization: host.organization,
                email: host.user?.email,
@@ -146,6 +147,7 @@ const adminRequests: NextPage = () => {
                                         <Td fontWeight="bold">Phone Number</Td>
                                         <Td fontWeight="bold">Email</Td>
                                         <Td fontWeight="bold">Website</Td>
+                                        <Td></Td>
                                     </Tr>
                                     { Children.toArray(hosts?.map((host: hosts) => 
                                         <Tr>
@@ -153,6 +155,28 @@ const adminRequests: NextPage = () => {
                                             <Td fontWeight="bold">{host.phoneNumber}</Td>
                                             <Td fontWeight="bold">{host.email}</Td>
                                             <Td fontWeight="bold">{host.website}</Td>
+                                            <Td>
+                                                <HStack
+                                                    spacing={4}
+                                                >
+                                                    <Button
+                                                        colorScheme='green'
+                                                        borderRadius='30px'
+                                                        size='sm'
+                                                        color='black'
+                                                    >
+                                                        Accept
+                                                    </Button>
+                                                    <Button
+                                                        colorScheme='red'
+                                                        borderRadius='30px'
+                                                        size='sm'
+                                                        color='black'
+                                                    >
+                                                        Reject
+                                                    </Button>
+                                                </HStack>
+                                            </Td>
                                         </Tr>
                                     ))}
                                 </Thead>
