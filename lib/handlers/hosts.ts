@@ -1,5 +1,4 @@
 import * as DbModels from '../db_model'
-
 import { HostInfo } from '../models'
 
 
@@ -41,4 +40,50 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
     return Object.assign({}, hostInfo?.get(), {
         iceSheets: hostInfo?.iceSheets.map((iceSheet) => iceSheet.name)
     }) as HostInfo
+}
+
+export async function getPendingHosts(): Promise<HostInfo[] | null> {
+    const hosts = await DbModels.HostInfoModel.findAll({
+        where: {
+            status: 'pending'
+        },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'user',
+            required: false,
+            attributes: ['email']
+        }],
+        nest: true
+    })
+    return hosts?.map((host) => host.get() as HostInfo) 
+}
+
+export async function getAcceptedHosts(): Promise<HostInfo[] | null> {
+    const hosts = await DbModels.HostInfoModel.findAll({
+        where: {
+            status: 'accepted'
+        },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'user',
+            required: false,
+            attributes: ['email']
+        }],
+    })
+    return hosts?.map((host) => host.get() as HostInfo) 
+}
+
+export async function getRejectedHosts(): Promise<HostInfo[] | null> {
+    const hosts = await DbModels.HostInfoModel.findAll({
+        where: {
+            status: 'rejected'
+        },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'user',
+            required: false,
+            attributes: ['email']
+        }],
+    })
+    return hosts?.map((host) => host.get() as HostInfo)
 }

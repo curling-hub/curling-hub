@@ -1,3 +1,5 @@
+import { EnumDataType } from "sequelize/types"
+
 export interface HostInfoBase {
     hostId: string
     organization: string
@@ -9,10 +11,13 @@ export interface HostInfoBase {
     state: string
     zip: string
     country: string
+    status: EnumDataType<string>
     updatedAt?: Date
 }
 
 export interface HostInfo extends HostInfoBase {
     iceSheets?: string[]
+    user?: {email: string}
 }
+
 
