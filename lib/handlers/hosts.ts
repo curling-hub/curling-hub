@@ -44,32 +44,48 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
     }) as HostInfo
 }
 
-
-export async function createHost(form: HostCreationForm): Promise<HostInfo> {
-    const hostInfo = await sequelize.transaction(async (t) => {
-        // 1. Update `account_type`
-        await DbModels.UserModel.update({
-            account_type: 'host',
-        }, {
-            where: { id: form.hostId },
-            transaction: t,
-        })
-
-        // 2. Create host entry
-        const hostInfo = await DbModels.HostInfoModel.create({
-            hostId: form.hostId,
-            organization: form.organization,
-            website: form.website || undefined,
-            phoneNumber: form.phoneNumber,
-            streetAddress: form.streetAddress,
-            addressExtras: form.addressExtras || undefined,
-            city: form.city,
-            state: form.state,
-            zip: form.zip,
-            country: form.country,
-            status: 'pending',
-        }, { transaction: t })
-        return hostInfo.toJSON()
+export async function getPendingHosts(): Promise<HostInfo[] | null> {
+    const hosts = await DbModels.HostInfoModel.findAll({
+        where: {
+            status: 'pending'
+        },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'user',
+            required: false,
+            attributes: ['email']
+        }],
+        nest: true
     })
-    return hostInfo
+    return hosts?.map((host) => host.get() as HostInfo) 
+}
+
+export async function getAcceptedHosts(): Promise<HostInfo[] | null> {
+    const hosts = await DbModels.HostInfoModel.findAll({
+        where: {
+            status: 'accepted'
+        },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'user',
+            required: false,
+            attributes: ['email']
+        }],
+    })
+    return hosts?.map((host) => host.get() as HostInfo) 
+}
+
+export async function getRejectedHosts(): Promise<HostInfo[] | null> {
+    const hosts = await DbModels.HostInfoModel.findAll({
+        where: {
+            status: 'rejected'
+        },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'user',
+            required: false,
+            attributes: ['email']
+        }],
+    })
+    return hosts?.map((host) => host.get() as HostInfo)
 }
