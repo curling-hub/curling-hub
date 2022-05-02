@@ -82,7 +82,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                     Website
                 </Text>
                 <Text>
-                    {currentHost.website && currentHost.website}
+                    {currentHost.website ? currentHost.website : "N/A"}
                 </Text>
                 <Spacer />
             </Flex>
