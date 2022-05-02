@@ -1,5 +1,6 @@
 import { RowDataPacket } from 'mysql2'
 import { Op } from 'sequelize'
+import { Includeable, WhereOptions } from 'sequelize/types'
 import { pool, sequelize } from '../db'
 
 import * as DbModels from '../db_model'
@@ -172,9 +173,30 @@ export async function getTeamById(teamId: number): Promise<TeamInfo | null> {
     })
 }
 
-export async function getAllRankings(): Promise<Array<TeamInfo & TeamWithMembersAndRatings>> {
+
+interface RankingOptions {
+    categoryId?: number
+}
+
+export async function getAllRankings(options?: RankingOptions): Promise<Array<TeamInfo & TeamWithMembersAndRatings>> {
+    const includeOptions = []
+    let includeCategory: Includeable | undefined = undefined
+    if (options && options.categoryId) {
+        includeCategory = {
+            model: DbModels.CategoryModel,
+            required: true,
+            attributes: [],
+            where: {
+                categoryId: options.categoryId,
+            },
+        }
+    }
+    if (includeCategory) {
+        includeOptions.push(includeCategory)
+    }
     const teams = await DbModels.TeamInfoModel.findAll({
         include: [
+            ...includeOptions,
             {
                 model: DbModels.TeamMemberModel,
                 as: 'members',
@@ -190,6 +212,7 @@ export async function getAllRankings(): Promise<Array<TeamInfo & TeamWithMembers
                 order: ['endDate', 'ASC'],
             },
         ],
+        order: [ ['teamGlickoInfo', 'rating', 'DESC'] ],
     })
     return teams.map((t) => t.toJSON())
 }
@@ -206,6 +229,11 @@ function toTeamRanking(teamInfoList: TeamWithMembersAndRatings[]): TeamRanking[]
 
 export async function getAllRankingsSimple(): Promise<TeamRanking[]> {
     const rankings = await getAllRankings()
+    return toTeamRanking(rankings)
+}
+
+export async function getRankingsByCategorySimple(categoryId: number): Promise<TeamRanking[]> {
+    const rankings = await getAllRankings({ categoryId })
     return toTeamRanking(rankings)
 }
 
