@@ -12,8 +12,9 @@ const {
 } = serverRuntimeConfig
 
 export function getSequelize() {
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === 'test' || process.env.TEST !== undefined) {
         const db = new Sequelize('sqlite::memory:')
+        db.sync()
         return db
     }
     return new Sequelize(mysql_database, mysql_user, mysql_password, {
