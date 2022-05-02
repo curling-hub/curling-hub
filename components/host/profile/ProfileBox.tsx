@@ -4,17 +4,19 @@ import SideBySideContainer from '../../profile/SideBySideContainer';
 import ProfileButton from "../../profile/ProfileButton";
 import HostInfoBox from "./HostInfoBox";
 import HostMatchesBox from './HostMatchesBox'
+import type { HostInfo } from '../../../lib/models/host'
+import type { MatchResult } from '../../../lib/models/match'
 
 interface ProfileBoxProps {
-    // hostInfo?: HostInfo
-    // hostMatches?: HostMatches[]
+    currentHost: HostInfo
+    currentMatches?: MatchResult[]
 }
 
 export default function ProfileBox(props: ProfileBoxProps) {
 
     const {
-        // hostInfo,
-        // hostMatches = [],
+        currentHost = props.currentHost,
+        currentMatches = props.currentMatches,
     } = props
 
     return (
@@ -23,7 +25,7 @@ export default function ProfileBox(props: ProfileBoxProps) {
                 <Flex alignItems={{ base: "center", md: "start" }} direction={{ base: 'column', md: 'row' }}>
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px">
-                        <HostInfoBox /* TODO: pass in hostInfo*/ />
+                        <HostInfoBox currentHost={props.currentHost} />
                         <ProfileButton buttonText='Edit' color='primary.gray' />
                     </SideBySideContainer>
                     <Spacer />

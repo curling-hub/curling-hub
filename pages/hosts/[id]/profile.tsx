@@ -11,11 +11,12 @@ import { getSession, getSessionServerSideResult } from '../../../lib/auth/sessio
 import ProfileBox from '../../../components/host/profile/ProfileBox'
 import type { HostInfo } from '../../../lib/models/host'
 import type { MatchResult } from '../../../lib/models/match'
+import { getHostInfoById } from '../../../lib/handlers/hosts';
 
 
 interface HostProfileProps {
-    hosts?: HostInfo[]
-    matches?: MatchResult[]
+    currentHost: HostInfo
+    currentMatches?: MatchResult[]
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -24,8 +25,8 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
     useEffect(() => { setMounted(true) }, [])
 
     const {
-        hosts = [],
-        matches = [],
+        currentHost,
+        currentMatches = [],
     } = props
 
     return (
@@ -40,7 +41,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 <HostLayout>
-                    <ProfileBox /* TODO: pass in hostMatches*/ /* TODO: pass in hostMatches*/ />
+                    <ProfileBox currentHost={props.currentHost} currentMatches={props.currentMatches} />
                 </HostLayout>
                 <Footer />
             </Box >
@@ -57,7 +58,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 user: null,
-
+                // TODO: Placeholder hostid
+                currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8")
             }
         }
     }
@@ -68,7 +70,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 user: null,
-
+                // TODO: Placeholder hostid
+                currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8")
             },
         }
     }
@@ -77,6 +80,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             user: session,
+            // TODO: Placeholder hostid
+            currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8")
 
         },
     }

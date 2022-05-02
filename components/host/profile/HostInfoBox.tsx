@@ -1,17 +1,17 @@
 import { Box, Flex, Spacer, VStack, Text } from "@chakra-ui/react"
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
+import type { HostInfo } from '../../../lib/models/host'
 
 
 
 interface HostInfoBoxProps {
-    // hostInfo?: HostInfo
+    currentHost: HostInfo
 }
 
 export default function HostInfoBox(props: HostInfoBoxProps) {
-
     const {
-        // hostInfo
+        currentHost = props.currentHost
     } = props
 
     return (
@@ -39,17 +39,11 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                         >
                             Address
                         </Text>
-                        <Text>
-                            AddressString[0]
-                        </Text>
-                        <Text>
-                            AddressString[1]
-                        </Text>
-                        <Text>
-                            AddressString[2]
-                        </Text>
-                        <Text>
-                            AddressString[3]
+                        <Text align="left">
+                            {currentHost.streetAddress}<br />
+                            {currentHost.addressExtras && currentHost.addressExtras + <br />}
+                            {currentHost.city}, {currentHost.state} {currentHost.zip}<br />
+                            {currentHost.country}
                         </Text>
                     </VStack>
                     <Spacer />
@@ -62,7 +56,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                             Sheets of Ice
                         </Text>
                         <Text>
-                            IceSheetString
+                            {currentHost.iceSheets && currentHost.iceSheets}
                         </Text>
                     </VStack>
 
@@ -75,10 +69,10 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                     Contact
                 </Text>
                 <Text>
-                    Email
+                    currentHost doesn't have email, should I infer from session?
                 </Text>
                 <Text>
-                    Phone Number
+                    {currentHost.phoneNumber}
                 </Text>
                 <Spacer />
                 <Text
@@ -88,7 +82,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                     Website
                 </Text>
                 <Text>
-                    The Website
+                    {currentHost.website && currentHost.website}
                 </Text>
                 <Spacer />
             </Flex>
