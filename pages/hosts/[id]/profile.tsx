@@ -9,7 +9,8 @@ import {
 import { useEffect, useState } from 'react'
 import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 import ProfileBox from '../../../components/host/profile/ProfileBox'
-import type { HostInfo, MatchResult } from '../../../lib/models'
+import type { HostInfo } from '../../../lib/models/host'
+import type { MatchResult } from '../../../lib/models/match'
 
 
 interface HostProfileProps {
