@@ -59,7 +59,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             props: {
                 user: null,
                 // TODO: Placeholder hostid
-                currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8")
+                currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8"),
             }
         }
     }
@@ -71,7 +71,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             props: {
                 user: null,
                 // TODO: Placeholder hostid
-                currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8")
+                currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8"),
             },
         }
     }
@@ -81,7 +81,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: {
             user: session,
             // TODO: Placeholder hostid
-            currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8")
+            currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8"),
 
         },
     }
