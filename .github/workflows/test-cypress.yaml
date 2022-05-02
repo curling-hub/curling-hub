@@ -27,6 +27,7 @@ jobs:
         NEXTAUTH_SECRET: gitactions-test
         NEXTAUTH_URL: "http://localhost:3000"
         NODE_ENV: test
+        TEST: 1
       with:
         # already installed in the previous step
         install: false

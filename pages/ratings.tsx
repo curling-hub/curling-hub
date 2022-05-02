@@ -14,6 +14,7 @@ import { Category } from '../lib/models/category'
 import { getAllRankingsSimple } from '../lib/handlers/teams'
 import { TeamRanking } from '../lib/models/teams'
 import { useEffect, useState } from 'react'
+import { sequelize } from '../lib/db'
 
 interface RatingsProps {
     user?: Session,
@@ -81,6 +82,9 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    if (process.env.NODE_ENV === 'test' || process.env.TEST !== undefined) {
+        await sequelize.sync()
+    }
     const { signedUp, signedIn, session } = await getSession(context)
     const categories = await getAllCategories()
     const rankings = await getAllRankingsSimple()
