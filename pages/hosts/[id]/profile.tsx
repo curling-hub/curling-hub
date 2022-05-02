@@ -9,11 +9,12 @@ import {
 import { useEffect, useState } from 'react'
 import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 import ProfileBox from '../../../components/host/profile/ProfileBox'
+import type { HostInfo, MatchResult } from '../../../lib/models'
 
 
 interface HostProfileProps {
-    // hostInfo?: HostInfo[]
-    // hostMatches?: HostMatches[]
+    hosts?: HostInfo[]
+    matches?: MatchResult[]
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -22,8 +23,8 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
     useEffect(() => { setMounted(true) }, [])
 
     const {
-        // hostInfo = [],
-        // hostMatches = [],
+        hosts = [],
+        matches = [],
     } = props
 
     return (
