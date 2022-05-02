@@ -6,6 +6,7 @@ import * as DbModels from '../db_model'
 
 import type { TeamInfo } from '../models'
 import { TeamCreationForm } from '../models/team'
+import { TeamRanking, TeamWithMembersAndRatings } from '../models/teams'
 
 export async function teams() {
     return 0
@@ -171,32 +172,41 @@ export async function getTeamById(teamId: number): Promise<TeamInfo | null> {
     })
 }
 
-export async function getAllRankings() {
-    const query = `
-    SELECT p.team_id as ID, p.name as Team, g.rating as Rating, x.Changes, group_concat(t.name) as Players
-    FROM team_profile p INNER JOIN team_members t ON p.team_id = t.team_id INNER join
-    team_glicko_info g ON g.team_id = t.team_id left outer join 
-    (
-        select rh.team_id, group_concat(rh.rating) as Changes
-        from rating_history rh INNER JOIN rating_periods rp on rp.rating_period_id = rh.rating_period_id
-        group by rh.team_id
-        order by rp.end_date
-    ) as x on x.team_id = p.team_id
-    GROUP BY t.team_id 
-    ORDER BY g.rating DESC;
-    `
+export async function getAllRankings(): Promise<Array<TeamInfo & TeamWithMembersAndRatings>> {
+    const teams = await DbModels.TeamInfoModel.findAll({
+        include: [
+            {
+                model: DbModels.TeamMemberModel,
+                as: 'members',
+            },
+            {
+                model: DbModels.TeamGlickoInfoModel,
+                as: 'teamGlickoInfo',
+                required: true,
+            },
+            {
+                model: DbModels.RatingPeriodModel,
+                as: 'ratingPeriods',
+                order: ['endDate', 'ASC'],
+            },
+        ],
+    })
+    return teams.map((t) => t.toJSON())
+}
 
-    const [rows, _] = await pool.promise().query(query)
-    const r = rows as RowDataPacket[]
-    
-    return r.map((val) => ({
-        ID: val['ID'],
-        Team: val['Team'],
-        Rating: val['Rating'],
-        Changes: val['Changes'] ? 
-        val['Changes'].split(',').map((num: string) => parseInt(num)) : [], 
-        Players: val['Players']
+function toTeamRanking(teamInfoList: TeamWithMembersAndRatings[]): TeamRanking[] {
+    return teamInfoList.map((t) => ({
+        ID: t.teamId,
+        Team: t.name,
+        Rating: t.teamGlickoInfo.rating,
+        Changes: t.ratingPeriods.map((rt) => rt.RatingHistory.rating),
+        Players: t.members.map((m) => m.name),
     }))
+}
+
+export async function getAllRankingsSimple(): Promise<TeamRanking[]> {
+    const rankings = await getAllRankings()
+    return toTeamRanking(rankings)
 }
 
 export async function createTeam(form: TeamCreationForm): Promise<any> {
