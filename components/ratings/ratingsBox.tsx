@@ -60,7 +60,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
 
     async function getSelectedMatches(selected: number) {
         if (Number.isNaN(selected)) {
-             selected = 0
+            selected = 0
         }
         
         const req = {
@@ -68,11 +68,11 @@ export default function RatingsBox(props: RatingsBoxProps) {
         }
         
         const res = await fetch('/api/team/selected', {
-            body: JSON.stringify(req),
+            method: 'POST',
+            body: new URLSearchParams(req as any).toString(),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
-            method: 'POST'
         })
 
         if (res.status == 200 && res.body) {

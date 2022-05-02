@@ -68,11 +68,11 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
         }
         
         const res = await fetch('/api/team/selected', {
-            body: JSON.stringify(req),
+            method: 'POST',
+            body: new URLSearchParams(req as any).toString(),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
-            method: 'POST'
         })
 
         if (res.status == 200 && res.body) {
