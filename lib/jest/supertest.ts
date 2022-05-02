@@ -7,7 +7,7 @@ import { apiResolver } from 'next/dist/server/api-utils/node'
  * @param apiHandler Next API handler
  * @returns 
  */
-export default function(apiHandler: Function) {
+export default function mockServer(apiHandler: Function) {
     const apiPreviewPropsMock = {
         previewModeId: 'id',
         previewModeEncryptionKey: 'key',
