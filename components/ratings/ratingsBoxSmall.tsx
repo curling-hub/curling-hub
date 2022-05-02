@@ -185,34 +185,13 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
                                     <Text fontWeight='bold'>Rating</Text>
                                 </GridItem>
                                 { pages[pageIndex]?.map((rank, index) => (
-                                    <>
-                                        <GridItem
-                                            key={'a-'+rank.ID.toString()}
-                                            colStart={1}
-                                            colSpan={20}
-                                        >
-                                            <Divider key={'b-'+rank.ID.toString()} orientation='horizontal' />
-                                        </GridItem>
-                                        <GridItem
-                                            key={'c-'+rank.ID.toString()}
-                                            colStart={1}
-                                        >
-                                            <Text key={'d-'+rank.ID.toString()}>{tableSize*pageIndex + index+1}</Text>
-                                        </GridItem>
-                                        <GridItem
-                                            key={'e-'+rank.ID.toString()}
-                                            colStart={3}
-                                            colSpan={3}
-                                        >
-                                            <Text key={'f-'+rank.ID.toString()}>{rank.Team}</Text>
-                                        </GridItem>
-                                        <GridItem
-                                            key={'g-'+rank.ID.toString()}
-                                            colStart={8}
-                                        >
-                                            <Text key={'h-'+rank.ID.toString()}>{rank.Rating}</Text>
-                                        </GridItem>
-                                    </>
+                                    <RatingPaging
+                                        rank={rank}
+                                        tableSize={tableSize}
+                                        pageIndex={pageIndex}
+                                        index={index}
+                                        key={`${rank.ID}`}
+                                    />
                             )) }
                             </Grid>
                            
@@ -272,6 +251,48 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
                     </Grid>
                 </Box>
             </Container>
+        </>
+    )
+}
+
+
+interface RatingPagingProps {
+    rank: TeamRanking
+    tableSize: number
+    pageIndex: number
+    index: number
+}
+
+const RatingPaging = (props: RatingPagingProps): JSX.Element => {
+    const { rank, tableSize, pageIndex, index } = props
+    return (
+        <>
+            <GridItem
+                key={'a-' + rank.ID.toString()}
+                colStart={1}
+                colSpan={20}
+            >
+                <Divider key={'b-' + rank.ID.toString()} orientation='horizontal' />
+            </GridItem>
+            <GridItem
+                key={'c-' + rank.ID.toString()}
+                colStart={1}
+            >
+                <Text key={'d-' + rank.ID.toString()}>{tableSize * pageIndex + index + 1}</Text>
+            </GridItem>
+            <GridItem
+                key={'e-' + rank.ID.toString()}
+                colStart={3}
+                colSpan={3}
+            >
+                <Text key={'f-' + rank.ID.toString()}>{rank.Team}</Text>
+            </GridItem>
+            <GridItem
+                key={'g-' + rank.ID.toString()}
+                colStart={8}
+            >
+                <Text key={'h-' + rank.ID.toString()}>{rank.Rating}</Text>
+            </GridItem>
         </>
     )
 }
