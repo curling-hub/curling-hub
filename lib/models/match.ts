@@ -1,13 +1,13 @@
 import { TeamInfo } from "./team"
 
 export interface MatchCreationForm {
-    currentTeam: number
-    matchResult: string
-    date: Date
-    opponent: number
-    location: string
-    sheetOfIce: string | null
-    comments?: string | null
+    currentTeam: number,
+    matchResult: string,
+    date: Date,
+    opponent: number,
+    location: string,
+    sheetOfIce: string | null,
+    comments?: string | null,
 }
 
 export interface MatchResult {
