@@ -35,8 +35,8 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                         <Thead>
                             <Tr>
                                 <Td fontWeight="bold">Date</Td>
-                                <Td fontWeight="bold">Team 1</Td>
-                                <Td fontWeight="bold">Team 2</Td>
+                                <Td fontWeight="bold">Team One</Td>
+                                <Td fontWeight="bold">Team Two</Td>
                             </Tr>
                         </Thead>
                         <Tbody>

@@ -12,7 +12,7 @@ import ProfileBox from '../../../components/host/profile/ProfileBox'
 import type { HostInfo } from '../../../lib/models/host'
 import type { MatchResult } from '../../../lib/models/match'
 import { getHostInfoById } from '../../../lib/handlers/hosts';
-
+import { getHostMatchesById } from '../../../lib/handlers/matches'
 
 interface HostProfileProps {
     currentHost: HostInfo
@@ -41,7 +41,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 <HostLayout>
-                    <ProfileBox currentHost={props.currentHost} currentMatches={props.currentMatches} />
+                    <ProfileBox currentHost={currentHost} currentMatches={currentMatches} />
                 </HostLayout>
                 <Footer />
             </Box >
@@ -51,15 +51,21 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     // Redirect if not authentiated
+    const id = context.params?.id ? context.params.id : 1
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
+    const currentHost = await getHostInfoById(id.toString())
+    const currentMatches = await getHostMatchesById(id.toString())
+    /* console.log('``````````````````````````````````````````````````````````')
+    console.log(currentMatches)
+    console.log('``````````````````````````````````````````````````````````') */
     if (!session || !session["user"]) {
         // not signed in / signed up
         return {
             props: {
                 user: null,
                 // TODO: Placeholder hostid
-                currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8"),
+                currentHost: currentHost
             }
         }
     }
@@ -71,7 +77,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             props: {
                 user: null,
                 // TODO: Placeholder hostid
-                currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8"),
+                currentHost: currentHost
             },
         }
     }
@@ -81,7 +87,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: {
             user: session,
             // TODO: Placeholder hostid
-            currentHost: await getHostInfoById("c0a14fcb-0911-4bbc-99b5-cbd2068899a8"),
+            currentHost: currentHost
 
         },
     }

@@ -15,8 +15,8 @@ interface ProfileBoxProps {
 export default function ProfileBox(props: ProfileBoxProps) {
 
     const {
-        currentHost = props.currentHost,
-        currentMatches = props.currentMatches,
+        currentHost,
+        currentMatches
     } = props
 
     return (
@@ -25,7 +25,7 @@ export default function ProfileBox(props: ProfileBoxProps) {
                 <Flex alignItems={{ base: "center", md: "start" }} direction={{ base: 'column', md: 'row' }}>
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px">
-                        <HostInfoBox currentHost={props.currentHost} />
+                        <HostInfoBox currentHost={currentHost} />
                         <ProfileButton buttonText='Edit' color='primary.gray' />
                     </SideBySideContainer>
                     <Spacer />

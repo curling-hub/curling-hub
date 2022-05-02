@@ -11,7 +11,7 @@ interface HostInfoBoxProps {
 
 export default function HostInfoBox(props: HostInfoBoxProps) {
     const {
-        currentHost = props.currentHost
+        currentHost
     } = props
 
     return (
@@ -27,7 +27,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                     fontSize="2.5em"
                     fontWeight="bold"
                 >
-                    Host Name
+                    {currentHost.organization}
                 </Text>
                 <Spacer />
                 <Flex align="start" w="75%" maxW="388px" minW="302px">
@@ -41,7 +41,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                         </Text>
                         <Text align="left">
                             {currentHost.streetAddress}<br />
-                            {currentHost.addressExtras && currentHost.addressExtras + <br />}
+                            {currentHost.addressExtras && <>{currentHost.addressExtras} <br /></>}
                             {currentHost.city}, {currentHost.state} {currentHost.zip}<br />
                             {currentHost.country}
                         </Text>
