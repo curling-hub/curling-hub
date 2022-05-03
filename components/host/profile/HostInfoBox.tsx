@@ -1,12 +1,12 @@
 import { Box, Flex, Spacer, VStack, Text } from "@chakra-ui/react"
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
-import type { HostInfo } from '../../../lib/models/host'
+import type { CurrentHostInfo } from '../../../lib/models/host'
 
 
 
 interface HostInfoBoxProps {
-    currentHost: HostInfo
+    currentHost: CurrentHostInfo
 }
 
 export default function HostInfoBox(props: HostInfoBoxProps) {

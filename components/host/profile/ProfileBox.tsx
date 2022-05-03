@@ -4,11 +4,11 @@ import SideBySideContainer from '../../profile/SideBySideContainer';
 import ProfileButton from "../../profile/ProfileButton";
 import HostInfoBox from "./HostInfoBox";
 import HostMatchesBox from './HostMatchesBox'
-import type { HostInfo } from '../../../lib/models/host'
+import type { CurrentHostInfo } from '../../../lib/models/host'
 import type { HostMatchResult } from '../../../lib/models/match'
 
 interface ProfileBoxProps {
-    currentHost: HostInfo
+    currentHost: CurrentHostInfo
     hostMatches: HostMatchResult[]
 }
 

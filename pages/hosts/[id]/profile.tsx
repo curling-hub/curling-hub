@@ -9,14 +9,14 @@ import {
 import { useEffect, useState } from 'react'
 import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 import ProfileBox from '../../../components/host/profile/ProfileBox'
-import type { HostInfo } from '../../../lib/models/host'
+import type { CurrentHostInfo } from '../../../lib/models/host'
 import type { HostMatchResult } from '../../../lib/models/match'
 import { getHostInfoById } from '../../../lib/handlers/hosts';
 import { getHostMatchesById } from '../../../lib/handlers/matches'
 import { getTeamById } from '../../../lib/handlers/teams';
 
 interface HostProfileProps {
-    currentHost: HostInfo
+    currentHost: CurrentHostInfo
     hostMatches: HostMatchResult[]
 }
 
@@ -60,10 +60,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const id = context.params?.id ? context.params.id : 1
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    const currentHost = await getHostInfoById(id.toString())
-    const hostMatches = await getHostMatchesById(id.toString())
+    const tempHost = await getHostInfoById(id.toString())
+    if (!tempHost) {
+        return {
+            props: {}
+        }
+    }
+    const currentHost: CurrentHostInfo = {
+        organization: tempHost.organization,
+        website: tempHost.website,
+        phoneNumber: tempHost.phoneNumber,
+        streetAddress: tempHost.streetAddress,
+        addressExtras: tempHost.addressExtras,
+        city: tempHost.city,
+        state: tempHost.state,
+        zip: tempHost.zip,
+        country: tempHost.country,
+        iceSheets: tempHost.iceSheets,
+    }
+    const tempMatches = await getHostMatchesById(id.toString())
     // Format hosts for page and serialization
-    const serialMatches = await Promise.all(hostMatches.map(async (match) => {
+    const hostMatches = await Promise.all(tempMatches.map(async (match) => {
         const convert: HostMatchResult = {
             team1: (await getTeamById(match.teamId1))?.name || match.teamId1.toString(),
             team2: (await getTeamById(match.teamId2))?.name || match.teamId2.toString(),
@@ -80,7 +97,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 user: null,
                 // TODO: Remove props when not signed in
                 currentHost: currentHost,
-                hostMatches: serialMatches,
+                hostMatches: hostMatches,
             }
         }
     }
@@ -93,7 +110,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 user: null,
                 // TODO: Remove props when not signed in
                 currentHost: currentHost,
-                hostMatches: serialMatches,
+                hostMatches: hostMatches,
             },
         }
     }
@@ -103,7 +120,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: {
             user: session,
             currentHost: currentHost,
-            hostMatches: serialMatches,
+            hostMatches: hostMatches,
         },
     }
 }
