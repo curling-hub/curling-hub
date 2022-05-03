@@ -11,7 +11,7 @@ interface HostInfoBoxProps {
 
 export default function HostInfoBox(props: HostInfoBoxProps) {
     const {
-        currentHost
+        currentHost,
     } = props
 
     return (

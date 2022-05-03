@@ -16,7 +16,7 @@ import { getHostMatchesById } from '../../../lib/handlers/matches'
 
 interface HostProfileProps {
     currentHost: HostInfo
-    currentMatches?: MatchResult[]
+    currentMatches: MatchResult[]
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -64,8 +64,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 user: null,
-                // TODO: Placeholder hostid
-                currentHost: currentHost
+                // TODO: Remove props when not signed in
+                currentHost: currentHost,
+                // TODO: null for serialize error
+                currentMatches: null,
             }
         }
     }
@@ -76,8 +78,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 user: null,
-                // TODO: Placeholder hostid
-                currentHost: currentHost
+                // TODO: Remove props when not signed in
+                currentHost: currentHost,
+                currentMatches: currentMatches,
             },
         }
     }
@@ -86,9 +89,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             user: session,
-            // TODO: Placeholder hostid
-            currentHost: currentHost
-
+            currentHost: currentHost,
+            currentMatches: currentMatches,
         },
     }
 }

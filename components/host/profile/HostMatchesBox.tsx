@@ -1,17 +1,18 @@
 import { Box, Flex, Text, TableContainer, Table, Thead, Tr, Td, Tbody } from "@chakra-ui/react"
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
+import type { MatchResult } from '../../../lib/models/match'
 
 
 
 interface HostInfoBoxProps {
-    // hostMatches?: HostMatches[]
+    currentMatches: MatchResult[]
 }
 
 export default function HostInfoBox(props: HostInfoBoxProps) {
 
     const {
-        // hostMatches = [],
+        currentMatches,
     } = props
 
     return (
