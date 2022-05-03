@@ -60,11 +60,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
     const currentHost = await getHostInfoById(id.toString())
-    const currentMatches = await getHostMatchesById(id.toString())
-    const serialMatches = currentMatches.map((match) => matchResultSerialize(match))
-    /* console.log('``````````````````````````````````````````````````````````')
-    console.log(currentMatches)
-    console.log('``````````````````````````````````````````````````````````') */
+    const hostMatches = await getHostMatchesById(id.toString())
+    const serialMatches = hostMatches.map((match) => matchResultSerialize(match))
     if (!session || !session["user"]) {
         // not signed in / signed up
         return {
@@ -73,7 +70,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 // TODO: Remove props when not signed in
                 currentHost: currentHost,
                 // TODO: null for serialize error
-                currentMatches: serialMatches,
+                hostMatches: serialMatches,
             }
         }
     }
@@ -86,7 +83,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 user: null,
                 // TODO: Remove props when not signed in
                 currentHost: currentHost,
-                currentMatches: serialMatches,
+                hostMatches: serialMatches,
             },
         }
     }
@@ -96,7 +93,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: {
             user: session,
             currentHost: currentHost,
-            currentMatches: serialMatches,
+            hostMatches: serialMatches,
         },
     }
 }
