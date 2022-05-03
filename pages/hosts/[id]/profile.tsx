@@ -10,13 +10,13 @@ import { useEffect, useState } from 'react'
 import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 import ProfileBox from '../../../components/host/profile/ProfileBox'
 import type { HostInfo } from '../../../lib/models/host'
-import type { MatchResult } from '../../../lib/models/match'
+import type { MatchResultSerial } from '../../../lib/models/match'
 import { getHostInfoById } from '../../../lib/handlers/hosts';
-import { getHostMatchesById } from '../../../lib/handlers/matches'
+import { getHostMatchesById, matchResultSerialize } from '../../../lib/handlers/matches'
 
 interface HostProfileProps {
     currentHost: HostInfo
-    currentMatches: MatchResult[]
+    currentMatches: MatchResultSerial[]
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -61,6 +61,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { signedIn, signedUp, session } = sessionWrapper
     const currentHost = await getHostInfoById(id.toString())
     const currentMatches = await getHostMatchesById(id.toString())
+    const serialMatches = currentMatches.map((match) => matchResultSerialize(match))
     /* console.log('``````````````````````````````````````````````````````````')
     console.log(currentMatches)
     console.log('``````````````````````````````````````````````````````````') */
@@ -72,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 // TODO: Remove props when not signed in
                 currentHost: currentHost,
                 // TODO: null for serialize error
-                currentMatches: null,
+                currentMatches: serialMatches,
             }
         }
     }
@@ -85,7 +86,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 user: null,
                 // TODO: Remove props when not signed in
                 currentHost: currentHost,
-                currentMatches: currentMatches,
+                currentMatches: serialMatches,
             },
         }
     }
@@ -95,7 +96,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: {
             user: session,
             currentHost: currentHost,
-            currentMatches: currentMatches,
+            currentMatches: serialMatches,
         },
     }
 }

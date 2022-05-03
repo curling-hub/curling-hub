@@ -3,7 +3,7 @@ import * as yup from 'yup'
 import addMatchSchema from '../../components/profile/addMatch/schema'
 import { sequelize } from '../db'
 import * as DbModels from '../db_model'
-import { MatchResult } from '../models/match'
+import { MatchResult, MatchResultSerial } from '../models/match'
 
 type AddMatchSchema = yup.InferType<typeof addMatchSchema>
 
@@ -58,4 +58,20 @@ export async function getHostMatchesById(hostId: string): Promise<MatchResult[]>
         return []
     }
     return hostMatchesList.map((matchResults) => matchResults.get())
+}
+
+export function matchResultSerialize(src: MatchResult): MatchResultSerial {
+    const convert: MatchResultSerial = {
+        matchId: src.matchId,
+        hostId: src.hostId,
+        teamId1: src.teamId1,
+        teamId2: src.teamId2,
+        winner: src.winner,
+        sheetOfIce: src.sheetOfIce,
+        comments: src.comments,
+        date: src.date.getMonth().toString() + "/" +
+            src.date.getDate().toString() + "/" +
+            src.date.getFullYear().toString()
+    }
+    return convert;
 }
