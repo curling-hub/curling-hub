@@ -1,4 +1,4 @@
-import { Box, Flex, Text, TableContainer, Table, Thead, Tr, Td, Tbody } from "@chakra-ui/react"
+import { Box, Flex, Text, TableContainer, Table, Thead, Tr, Td, Tbody, FormLabel } from "@chakra-ui/react"
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
 import type { HostMatchResult } from '../../../lib/models/match'
@@ -47,7 +47,10 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                     <td>{match.date}</td>
                                     <td>{match.team1}</td>
                                     <td>{match.team2}</td>
-                                    <td><GrFormEdit aria-labelledby="Edit" /></td>
+                                    <td>
+                                        <FormLabel id={`edit-${match.matchId}`} srOnly>Edit</FormLabel>
+                                        <GrFormEdit aria-labelledby={`edit-${match.matchId}`} />
+                                    </td>
                                 </Tr>
                             })}
                         </Tbody>
