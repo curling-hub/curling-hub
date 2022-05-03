@@ -6,6 +6,7 @@ interface SideBySideContainerProps {
     minW?: string;
     height?: string;
     color?: string;
+    shadow?: string;
 }
 
 export default function SideBySideContainer(props: SideBySideContainerProps) {
@@ -22,6 +23,7 @@ export default function SideBySideContainer(props: SideBySideContainerProps) {
                 height={props.height}
                 textAlign="center"
                 top="0"
+                shadow={props.shadow}
             >
                 {props.children || <></>}
             </Box>

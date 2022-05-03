@@ -24,12 +24,12 @@ export default function ProfileBox(props: ProfileBoxProps) {
             <Box paddingBottom={"4rem"}>
                 <Flex alignItems={{ base: "center", md: "start" }} direction={{ base: 'column', md: 'row' }}>
                     <Spacer />
-                    <SideBySideContainer height="877px" color="primary.white" minW="374px">
+                    <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
                         <HostInfoBox currentHost={currentHost} />
                         <ProfileButton buttonText='Edit' color='primary.gray' />
                     </SideBySideContainer>
                     <Spacer />
-                    <SideBySideContainer height="877px" color="primary.white" minW="374px">
+                    <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
                         <HostMatchesBox currentMatches={currentMatches} />
                         <ProfileButton buttonText='Edit Matches' color='primary.green' />
                     </SideBySideContainer>
