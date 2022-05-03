@@ -57,7 +57,23 @@ export async function getPendingHosts(): Promise<HostInfo[] | null> {
         }],
         nest: true
     })
-    return hosts?.map((host) => host.get() as HostInfo) 
+    
+    var prtlHosts = hosts?.map((host) => host.get() as HostInfo) 
+    var finalHosts = prtlHosts.map((host) => {
+        return ({
+            email: host.user?.email,
+            hostId: host.hostId,
+            organization: host.organization,
+            website: host.website,
+            phoneNumber: host.phoneNumber,
+            streetAddress: host.streetAddress,
+            city: host.city,
+            state: host.state,
+            zip: host.zip,
+            country: host.country,
+            status: host.status,
+    })})
+    return finalHosts
 }
 
 export async function getAcceptedHosts(): Promise<HostInfo[] | null> {
@@ -72,7 +88,22 @@ export async function getAcceptedHosts(): Promise<HostInfo[] | null> {
             attributes: ['email']
         }],
     })
-    return hosts?.map((host) => host.get() as HostInfo) 
+    var prtlHosts = hosts?.map((host) => host.get() as HostInfo) 
+    var finalHosts = prtlHosts.map((host) => {
+        return ({
+            email: host.user?.email,
+            hostId: host.hostId,
+            organization: host.organization,
+            website: host.website,
+            phoneNumber: host.phoneNumber,
+            streetAddress: host.streetAddress,
+            city: host.city,
+            state: host.state,
+            zip: host.zip,
+            country: host.country,
+            status: host.status,
+    })})
+    return finalHosts
 }
 
 export async function getRejectedHosts(): Promise<HostInfo[] | null> {
@@ -87,5 +118,29 @@ export async function getRejectedHosts(): Promise<HostInfo[] | null> {
             attributes: ['email']
         }],
     })
-    return hosts?.map((host) => host.get() as HostInfo)
+    var prtlHosts = hosts?.map((host) => host.get() as HostInfo) 
+    var finalHosts = prtlHosts.map((host) => {
+        return ({
+            email: host.user?.email,
+            hostId: host.hostId,
+            organization: host.organization,
+            website: host.website,
+            phoneNumber: host.phoneNumber,
+            streetAddress: host.streetAddress,
+            city: host.city,
+            state: host.state,
+            zip: host.zip,
+            country: host.country,
+            status: host.status,
+    })})
+    return finalHosts
+}
+
+export async function updateHost(hostId: string, newStatus: string): Promise<number[]> {
+    const rows = await DbModels.HostInfoModel.update({status: sequelize.literal(`'${newStatus}'`)}, {
+        where: {
+            hostId: hostId
+        }    
+    })
+    return rows
 }

@@ -5,78 +5,78 @@ import Footer from "../components/footer/footer";
 import {
     Tabs, 
     TabList, 
-    TabPanels, 
     Tab,
-    TabPanel,
     Box,
     Text,
-    Flex,
-    Spacer,
-    Link,
-    VStack,
     Table,
     Thead,
     Tbody,
     Tr,
     Td,
-    TableCaption,
     TableContainer,
-    Container,
     Button,
     HStack,
+    IconButton,
 } from '@chakra-ui/react'
-import LeftHandBox from "../components/profile/LeftHandBox"
-import SideBySideContainer from '../components/profile/SideBySideContainer';
-import ProfileButton from '../components/profile/ProfileButton';
-import MatchesBox from '../components/profile/MatchesBox';
-import MatchesTable from '../components/profile/MatchesTable'
-import MembersTable from '../components/profile/MembersTable'
-import { TeamInfo, TeamMatches, TeamCategories, TeamMembers } from '../lib/models/teams'
-import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo } from '../lib/handlers/teams'
+import { getPendingHosts } from '../lib/handlers/hosts'
 import { getSession, getSessionServerSideResult } from '../lib/auth/session'
-import { useState, Children } from 'react';
+import { useState, Children, useEffect } from 'react';
 import { HostInfo } from '../lib/models';
-import { string } from 'yup';
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 
-interface hosts {
-    email: string,
-    organization: string,
-    website: string,
-    phoneNumber: string
+interface ReqProps {
+    hosts: HostInfo[]
 }
 
-const adminRequests: NextPage = () => {
-    const [hosts, setHosts] = useState([])
-    console.log(hosts)
-    async function getHosts(index: number) {
+const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
+    const [hosts, setHosts] = useState(props.hosts)
+    const [pageIndex, setPageIndex] = useState(0)
+    const [tabIndex, setTabIndex] = useState(0)
+    const [refreshKey, setRefreshKey] = useState(0)
+
+    const tableSize = 13
+
+    var pages: Array<HostInfo[]> =  []
+    for (let i=0;i < Math.ceil(hosts.length / tableSize); ++i) {
+        pages[i] = hosts.slice(i*tableSize, i*tableSize+tableSize)
+    }
+    const pageCount = pages.length
+
+    async function updateHostStatus(id: string, newStatus: string) {
+        const req = {
+            hostId: id,
+            newStatus: newStatus
+        }
+        
+        await fetch('/api/host/update', {
+            body: JSON.stringify(req),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        })
+
+        setRefreshKey(refreshKey+1)
+    }
+
+    useEffect(() => {
+       console.log('refresh')
        const req = {
-           id: index
+           id: tabIndex
        }
        
-       const res = await fetch('/api/host/info', {
+       fetch('/api/host/info', {
            body: JSON.stringify(req),
            headers: {
                'Content-Type': 'application/json'
            },
            method: 'POST'
-       })
-       
-       if (res.status == 200 && res.body) {
-           const result = await res.json()
-           const hosts = result.data.map((host: HostInfo) => { return ({    
-               organization: host.organization,
-               email: host.user?.email,
-               website: host.website,
-               phoneNumber: host.phoneNumber
-           })})
-           console.log(hosts)
-           setHosts(hosts)
-       } else {
-           const result = await res.json()
-           alert("error: "+result.error)
-           setHosts([])
-       } 
-    }
+       }).then((res) => {
+            if (res.status == 200) {
+                res.json().then((result) => setHosts(result.data))
+            }
+       }).catch((e: any) => console.log(e))
+    }, [tabIndex, refreshKey])
     
     return (
         <>
@@ -93,12 +93,14 @@ const adminRequests: NextPage = () => {
                 <Box paddingBottom={"4rem"}>
                     <Box
                         backgroundColor="primary.white"
+                        display='flex'
+                        flexDirection='column'
                         boxShadow='lg'
                         alignItems="center"
                         padding="1rem"
                         borderRadius="35px"
-                        maxH="100%"
-                        w="100%"
+                        h="80vh"
+                        maxW="100%"
                         textAlign="center"
                         top="0"
                     >
@@ -109,7 +111,7 @@ const adminRequests: NextPage = () => {
                             marginTop="5px" 
                             variant='soft-rounded' 
                             align='center'
-                            onChange={async (index) => {await getHosts(index)}}
+                            onChange={(index) => setTabIndex(index)}
                         >
                             <TabList>
                                 <Tab 
@@ -138,9 +140,12 @@ const adminRequests: NextPage = () => {
                                 >Rejected</Tab>
                             </TabList>
                         </Tabs>
-                        <TableContainer marginTop="5px"/* padding=" 0 5px" */>
+                        <TableContainer 
+                            marginTop="5px"
+                            width='80%'
+                            height='80%'
+                        >
                             <Table variant='simple' size="sm">
-                                <TableCaption>Most recent admin requests</TableCaption>
                                 <Thead textAlign="center">
                                     <Tr>
                                         <Td fontWeight="bold">Name</Td>
@@ -149,12 +154,12 @@ const adminRequests: NextPage = () => {
                                         <Td fontWeight="bold">Website</Td>
                                         <Td></Td>
                                     </Tr>
-                                    { Children.toArray(hosts?.map((host: hosts) => 
+                                    { Children.toArray(hosts?.map((host: HostInfo) => 
                                         <Tr>
-                                            <Td fontWeight="bold">{host.organization}</Td>
-                                            <Td fontWeight="bold">{host.phoneNumber}</Td>
-                                            <Td fontWeight="bold">{host.email}</Td>
-                                            <Td fontWeight="bold">{host.website}</Td>
+                                            <Td>{host.organization}</Td>
+                                            <Td>{host.phoneNumber}</Td>
+                                            <Td>{host.email}</Td>
+                                            <Td>{host.website}</Td>
                                             <Td>
                                                 <HStack
                                                     spacing={4}
@@ -164,6 +169,7 @@ const adminRequests: NextPage = () => {
                                                         borderRadius='30px'
                                                         size='sm'
                                                         color='black'
+                                                        onClick={async () => {await updateHostStatus(host.hostId, 'accepted')}}
                                                     >
                                                         Accept
                                                     </Button>
@@ -172,6 +178,7 @@ const adminRequests: NextPage = () => {
                                                         borderRadius='30px'
                                                         size='sm'
                                                         color='black'
+                                                        onClick={async () => {await updateHostStatus(host.hostId, 'rejected')}}
                                                     >
                                                         Reject
                                                     </Button>
@@ -183,20 +190,42 @@ const adminRequests: NextPage = () => {
                                 <Tbody>
 
                                 </Tbody>
-                            </Table>
-
+                            </Table>    
                         </TableContainer>
-
-                        <Container aria-label="Page navigation " pos="fixed" bottom="0" right="0`">
-                            <ul >
-                                <li >
-                                    <a href="#">{'<'}</a>
-                                </li>
-                                <li >
-                                    <a href="#">{'>'}</a>
-                                </li>
-                            </ul>
-                        </Container>
+                        {pages.length > 1 && 
+                            <Box
+                                aria-label="Page navigation " 
+                                display='flex'
+                                flexDirection='row'
+                                justifyContent='center'
+                                w='100%'
+                            >
+                                    <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
+                                    <Box w='80%'/>
+                                    <HStack
+                                        spacing={2}
+                                    >   
+                                        <IconButton
+                                                aria-label='page-left'
+                                                icon={<AiOutlineLeft />}
+                                                onClick={() => {
+                                                    if (pageIndex + 1 > 1) {
+                                                        setPageIndex(pageIndex-1)
+                                                    }
+                                                }}
+                                        />
+                                        <IconButton
+                                                aria-label='page-right'
+                                                icon={<AiOutlineRight />}
+                                                onClick={() => {
+                                                    if (pageIndex + 1 < pageCount) {
+                                                        setPageIndex(pageIndex+1)
+                                                    }
+                                                }}
+                                        />
+                                    </HStack>
+                            </Box>
+                        }    
                     </Box>
                 </Box>
                 <Footer />
@@ -204,4 +233,19 @@ const adminRequests: NextPage = () => {
         </>
     );
 };
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    var hosts: HostInfo[] | null = []
+    try {
+    hosts = await getPendingHosts()
+    } catch (e: any) {
+        console.log(e)
+    }
+    return {
+        props: {
+            hosts: hosts
+        }
+    }
+}
+
 export default adminRequests
