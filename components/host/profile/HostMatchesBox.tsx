@@ -41,7 +41,13 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                             </Tr>
                         </Thead>
                         <Tbody>
-
+                            {currentMatches.map((match) => {
+                                return <Tr>
+                                    <td>{match.date}</td>
+                                    <td>{match.teamId1}</td>
+                                    <td>{match.teamId2}</td>
+                                </Tr>
+                            })}
                         </Tbody>
                     </Table>
                 </TableContainer>
