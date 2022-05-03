@@ -1,11 +1,8 @@
 import NextLink from 'next/link'
 import StateDropdown from './StateDropdown'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { object, string, boolean } from 'yup';
 import { Field, Form, Formik, FieldProps } from 'formik';
-import hostSignupSchema from '../host/create/schema';
-
+import {useState} from 'react'
 const MyInput = ({ ...props }) => {
 
     return <input {...props} />;
@@ -25,6 +22,8 @@ import {
     VStack,
     Select,
     FormErrorMessage,
+    Radio,
+    RadioGroup,
 } from '@chakra-ui/react'
 
 interface NewHostFieldsProps {
@@ -45,11 +44,30 @@ export default function NewHostFields(props: NewHostFieldsProps) {
         onOpenPrivacyPolicy,
         onOpenTermsOfService
     } = props
-    const router = useRouter()
 
-    // TODO: `submit` function should be passed in as props
+    // REs used to identify valid phone number and zip code. pulled randomly from internet.
+    const phoneRE = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/g;
+    const zipRE = /^\d{5}(?:[- ]?\d{4})?$/
+
+    // Defines a valid form state
+    let hostSignupSchema = object({
+        organization: string().required(), 
+        website: string().required().url().nullable(),
+        phone: string().matches(phoneRE, 'invalid phone number').required(),
+        phoneType: string().required("phone type is a required field"),
+        address: string().required(), 
+        address2: string().optional(), 
+        city: string().required(), 
+        state: string().required(),
+        zip: string().matches(zipRE, 'invalid zip code').required(), 
+        country: string().required(), 
+        sheetofice: string().required('Sheet(s) of Ice is required'),
+        namingschema: string().required('Naming Schema must be declared'),
+        agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
+    });
+
     // Eventually we will call the auth signup method here
-    const submit = async (values: {
+    const submit = (values: {
             organization: string;
             website: string;
             phone: string;
@@ -60,23 +78,18 @@ export default function NewHostFields(props: NewHostFieldsProps) {
             state: string;
             zip: string;
             country: string;
+            sheetofice: string;
+            namingschema: string;
             agreed: boolean;
-    }) => {
-        console.log(values)
-        const urlparams = new URLSearchParams(values as any)
-        const res = await fetch('/api/host/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: urlparams.toString(),
-        })
-        if (res.status !== 200) {
-            const { error } = await res.json()
-            // TODO: set error message
-            console.error(error)
-            return
-        }
-        router.push('/hosts/request')
+        }) => {
+            alert(JSON.stringify(values))
     }
+
+    const [schema,setSchema] = useState(true)
+    const schemaMap = new Map<boolean,string>([
+        [true, "ABC"],
+        [false, "123"]
+    ])
 
     const helperTextFontSize = "12";
     return (
@@ -92,7 +105,9 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                 state: '',
                 zip: '',
                 country: '',
-                agreed: false
+                sheetofice:'',
+                namingschema: 'ABC', 
+                agreed: false,
             }}
             validationSchema={hostSignupSchema}
             onSubmit={(values) => submit(values)} // Eventually do auth stuff here
@@ -220,7 +235,6 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                                 {...field}
                                                 borderRadius="full"
                                                 placeholder='State'>
-                                                {/* TODO: refactor the state name and code into an array and place it somewhere in lib/ */}
                                                 <option value='AL'>Alabama</option>
                                                 <option value='AK'>Alaska</option>
                                                 <option value='AS'>American Samoa</option>
@@ -316,6 +330,45 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                 </Field>
                             </HStack>
                         </Stack>
+                        <Field name='sheetofice'>
+                          {({field, form}: FieldProps<string>) => (
+                            <FormControl isInvalid={form.errors.sheetofice != undefined && form.touched.sheetofice != true}>
+                            <Select placeholder = 'Sheets of Ice'
+                                borderRadius="full">
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='3'>3</option>
+                                <option value='4'>4</option>
+                                <option value='5'>5</option>
+                                <option value='6'>6</option>
+                                <option value='7'>7</option>
+                                <option value='8'>8</option>
+                                <option value='9'>9</option>
+                                <option value='10'>10</option> 
+                            </Select>
+                            <FormErrorMessage>{form.errors.sheetofice}</FormErrorMessage>
+                         </FormControl>
+                          )}
+                        </Field>
+                        <Field name="namingschema">
+                            {({field, form}: FieldProps<string>) => (
+                                <FormControl isInvalid={form.errors.namingschema != undefined && form.touched.namingschema != undefined}>
+                                <RadioGroup
+                                    {...field}
+                                    onChange={
+                                        () => setSchema(!schema)
+                                    }
+                                    value={schemaMap.get(schema)}>
+                                    <Stack {...field} direction="row" alignItems="right">
+                                        <Text>Naming Schema: </Text>
+                                        <Radio {...field} colorScheme="blue" value="ABC">ABC...</Radio>
+                                        <Radio {...field} colorScheme="blue" value="123">123...</Radio> 
+                                    </Stack>
+                                </RadioGroup>
+                                <FormErrorMessage>{form.errors.namingschema}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>          
                         <Button
                             type='submit'
                             isFullWidth
@@ -328,19 +381,6 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                         >
                             Request Account
                         </Button>
-                        <VStack w="100%">
-                            <Link href="/new-host" passHref>
-                                <a>
-                                    <Button
-                                        type="button"
-                                        variant="link"
-                                        size="xs"
-                                    >
-                                        Not a host? Team sign up
-                                    </Button>
-                                </a>
-                            </Link>
-                        </VStack>
                         <Divider orientation="horizontal" mt={2} width="100%" />
 
                         <VStack w="100%" spacing="1">
