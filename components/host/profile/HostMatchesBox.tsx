@@ -43,7 +43,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                         </Thead>
                         <Tbody>
                             {hostMatches.map((match) => {
-                                return <Tr>
+                                return <Tr key={`${match.matchId}`}>
                                     <td>{match.date}</td>
                                     <td>{match.team1}</td>
                                     <td>{match.team2}</td>

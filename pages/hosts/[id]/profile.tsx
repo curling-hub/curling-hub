@@ -82,6 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // Format hosts for page and serialization
     const hostMatches = await Promise.all(tempMatches.map(async (match) => {
         const convert: HostMatchResult = {
+            matchId: match.matchId,
             team1: (await getTeamById(match.teamId1))?.name || match.teamId1.toString(),
             team2: (await getTeamById(match.teamId2))?.name || match.teamId2.toString(),
             date: match.date.getMonth().toString() + "/" +
