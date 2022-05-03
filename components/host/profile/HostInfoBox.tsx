@@ -69,7 +69,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                     Contact
                 </Text>
                 <Text>
-                    I am a placeholder, nice to meet you!
+                    ^_^ I am a placeholder, nice to meet you! ^_^
                 </Text>
                 <Text>
                     {currentHost.phoneNumber}
