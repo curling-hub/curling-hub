@@ -2,6 +2,7 @@ import { Box, Flex, Text, TableContainer, Table, Thead, Tr, Td, Tbody } from "@c
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
 import type { HostMatchResult } from '../../../lib/models/match'
+import { GrFormEdit } from 'react-icons/gr'
 
 
 
@@ -46,6 +47,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                     <td>{match.date}</td>
                                     <td>{match.team1}</td>
                                     <td>{match.team2}</td>
+                                    <td><GrFormEdit /></td>
                                 </Tr>
                             })}
                         </Tbody>
