@@ -1,35 +1,34 @@
 import { RowDataPacket } from 'mysql2'
 import { Op } from 'sequelize'
+import { UserInstance } from 'next-auth'
 import { Includeable, WhereOptions } from 'sequelize/types'
 import { pool, sequelize } from '../db'
 
 import * as DbModels from '../db_model'
 
-import type { TeamInfo } from '../models'
-import { TeamCreationForm } from '../models/team'
+import type { Category, TeamInfo } from '../models'
+import { TeamCreationForm, TeamMember } from '../models/team'
 import { TeamRanking, TeamWithMembersAndRatings } from '../models/teams'
 
 export async function teams() {
     return 0
 }
 
-export async function getTeamInfo(team_Id: string) {
-    const query = `
-        SELECT DISTINCT
-            tp.team_id,
-            tp.name,
-            tp.rating
-        FROM team_profile tp
-        WHERE tp.team_id = ?`
-        const queryArgs = [team_Id]
-    const [rows, _] = await pool.promise().query(query,queryArgs)
-    const r = rows as RowDataPacket[]
-    /* console.log(r) */
-    return r.map((val) => ({
-        teamId: val['team_id'],
-        name: val['name'],
-        rating: val['rating']
-    }))
+export async function getTeamInfo(teamId: number): Promise<TeamInfo & TeamWithMembersAndRatings | null> {
+    const result = await DbModels.TeamInfoModel.findOne({
+        where: { teamId },
+        include: [
+            {
+                model: DbModels.TeamGlickoInfoModel,
+                as: 'teamGlickoInfo',
+            },
+            {
+                model: DbModels.TeamMemberModel,
+                as: 'members',
+            },
+        ],
+    })
+    return result?.toJSON<TeamInfo & TeamWithMembersAndRatings>() || null
 }
 
 export async function populateTeamMatchesPage(teamId: string) {
@@ -107,55 +106,42 @@ export async function getTeamMatches(teamId: string) {
     }))
 }
 
-export async function getTeamContactInfo(teamId: string) {
+export async function getTeamContactInfo(teamId: number): Promise<Array<{teamName: string, teamEmail: string}>> {
     // TODO: SQL query and data format
-    const query = `
-        SELECT 
-            tp.name,
-            usr.email as email
-        FROM  team_profile tp
-        JOIN users usr
-        ON usr.id = tp.team_id
-        WHERE tp.team_id = ?`
-    const queryArgs = [teamId]
-    const [rows, _] = await pool.promise().query(query,queryArgs)
-    const r = rows as RowDataPacket[]
-    return r.map((val) => ({
-        teamName: val['name'],
-        teamEmail: val['email'],
+    const team = await DbModels.TeamInfoModel.findOne({
+        where: { teamId },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'admins',
+        }],
+    })
+    if (!team) {
+        return []
+    }
+    return team.admins.map((u) => ({
+        teamName: team.name,
+        teamEmail: u.email || '',
     }))
 }
 
-export async function getTeamMembers(teamId: string) {
-    const query = `
-        SELECT DISTINCT
-            tm.name as member_name
-        FROM team_members tm
-        WHERE tm.team_id = ?`
-    const queryArgs = [teamId]
-    const [rows, _] = await pool.promise().query(query,queryArgs)
-    const r = rows as RowDataPacket[]
-    return r.map((val) => ({
-        memberName: val['member_name'],
-    }))
+export async function getTeamMembers(teamId: number): Promise<TeamMember[]> {
+    const members = await DbModels.TeamMemberModel.findAll({
+        where: { teamId },
+    })
+    return members.map((m) => m.toJSON())
 }
 
-export async function getTeamCategories(teamId: string) {
-    const query = `
-        SELECT DISTINCT
-            cat.name as category_name
-        FROM team_members tm
-        JOIN categories_rel cat_rel
-        ON tm.team_id = cat_rel.team_id
-        JOIN categories cat
-        ON cat_rel.category_id = cat.category_id
-        WHERE tm.team_id = ?`
-    const queryArgs = [teamId]
-    const [rows, _] = await pool.promise().query(query,queryArgs)
-    const r = rows as RowDataPacket[]
-    return r.map((val) => ({
-        categoryName: val['category_name'],
-    }))
+export async function getTeamCategories(teamId: number): Promise<Category[]> {
+    const categories = await DbModels.CategoryModel.findAll({
+        include: [{
+            model: DbModels.TeamInfoModel,
+            where: { teamId },
+            required: true,
+            as: 'Teams',
+            attributes: [],
+        }],
+    })
+    return categories.map((c) => c.toJSON())
 }
 
 export async function getAllTeams(): Promise<TeamInfo[]> {

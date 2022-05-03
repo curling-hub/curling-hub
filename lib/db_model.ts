@@ -1,6 +1,6 @@
 import { DataTypes, Model, HasManyAddAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, NonAttribute } from 'sequelize'
 import { sequelize } from './db'
-import { models } from "@next-auth/sequelize-adapter"
+import SequelizeAdapter, { models } from "@next-auth/sequelize-adapter"
 import type { Account as AdapterAccount } from 'next-auth'
 import type { AdapterUser } from 'next-auth/adapters'
 
@@ -9,40 +9,6 @@ import { MatchResult, MatchResultDetails } from './models/match'
 import { TeamInfoRatings } from './models/team'
 import { RatingPeriod, TeamGlickoInfo } from './models/glicko'
 import { RatingPeriodExt } from './models/teams'
-
-interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember {}
-
-interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo {
-    members: NonAttribute<TeamMember[]>
-    // Allows `addMember` on a team instance
-    addMember: HasManyAddAssociationMixin<TeamMemberInstance, number>
-
-    ratingPeriods: NonAttribute<RatingPeriodExt>
-
-    teamGlickoInfo: NonAttribute<TeamGlickoInfo>
-
-    categories: Array<Category>
-    // Allows `addCategory` on a team instance
-    addCategory: BelongsToManyAddAssociationMixin<Category, number>
-
-    matches: NonAttribute<MatchResult[]>
-    // Allows `addMatch` on a team instance
-    addMatch: BelongsToManyAddAssociationMixin<MatchResult, number>
-}
-
-interface CategoryInstance extends Model<Category, Partial<Category>>, Category {}
-
-interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, MatchResultDetails {
-    teams: NonAttribute<TeamInfoRatings[]>
-    // Allows `addTeam` on a match_result instance
-    addTeam: BelongsToManyAddAssociationsMixin<TeamInfo, number>
-}
-
-interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, HostInfoBase {
-    iceSheets: Array<{ hostId: string, name: string }>
-}
-
-interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod {}
 
 /**
  * Redefine next-auth's User instance
@@ -62,13 +28,49 @@ declare module 'next-auth' {
     }
 }
 
+interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember {}
+
+interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo {
+    members: NonAttribute<TeamMember[]>
+    // Allows `addMember` on a team instance
+    addMember: HasManyAddAssociationMixin<TeamMemberInstance, number>
+
+    ratingPeriods: NonAttribute<RatingPeriodExt>
+
+    teamGlickoInfo: NonAttribute<TeamGlickoInfo>
+
+    categories: Array<Category>
+    // Allows `addCategory` on a team instance
+    addCategory: BelongsToManyAddAssociationMixin<Category, number>
+
+    matches: NonAttribute<MatchResult[]>
+    // Allows `addMatch` on a team instance
+    addMatch: BelongsToManyAddAssociationMixin<MatchResult, number>
+
+    admins: NonAttribute<UserInstance[]>
+}
+
+interface CategoryInstance extends Model<Category, Partial<Category>>, Category {}
+
+interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, MatchResultDetails {
+    teams: NonAttribute<TeamInfoRatings[]>
+    // Allows `addTeam` on a match_result instance
+    addTeam: BelongsToManyAddAssociationsMixin<TeamInfo, number>
+}
+
+interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, HostInfoBase {
+    iceSheets: Array<{ hostId: string, name: string }>
+}
+
+interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod {}
+
 
 /**
  * Managed by NextAuth, extends the default User model to include `account_type`
  */ 
 export const UserModel = sequelize.define<UserInstance>('users', {
     ...models.User,
-    // account_type is one of: ['curler', 'club', 'admin']
+    // account_type is one of: ['curler', 'team', 'admin']
     account_type: DataTypes.STRING(256),
 })
 
@@ -80,6 +82,14 @@ export const AccountModel = sequelize.define<AccountInstance>("accounts", {
     ...models.Account,
     // overwrite default `id_token` data type because VARCHAR(255) is too short
     id_token: DataTypes.STRING(8192),
+})
+
+
+export const nextauthSequelizeAdaptor = SequelizeAdapter(sequelize, {
+    models: {
+        User: UserModel,
+        Account: AccountModel,
+    },
 })
 
 
@@ -100,6 +110,48 @@ export const TeamInfoModel = sequelize.define<TeamInfoInstance>('TeamInfo', {
 }, {
     tableName: 'team_profile',
     timestamps: false,
+})
+
+
+export const TeamAdminModel = sequelize.define('TeamAdmin', {
+    teamId: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        references: {
+            model: TeamInfoModel,
+            key: 'team_id',
+        },
+    },
+    userId: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        references: {
+            model: UserModel,
+            key: 'id',
+        },
+    },
+}, {
+    tableName: 'team_admin',
+    underscored: true,
+    timestamps: false,
+})
+
+
+UserModel.belongsToMany(TeamInfoModel, {
+    through: TeamAdminModel,
+    foreignKey: {
+        name: 'userId',
+        field: 'user_id',
+    },
+    as: 'teams',
+})
+TeamInfoModel.belongsToMany(UserModel, {
+    through: TeamAdminModel,
+    foreignKey: {
+        name: 'teamId',
+        field: 'team_id',
+    },
+    as: 'admins',
 })
 
 
@@ -218,7 +270,8 @@ TeamInfoModel.belongsToMany(CategoryModel, {
 
 export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
     hostId: {
-        type: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
+        field: 'host_id',
         primaryKey: true,
     },
     organization: {
@@ -270,7 +323,7 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
 
 export const IceSheetModel = sequelize.define('Ice Sheet', {
     hostId: {
-        type: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
         field: 'host_id',
         primaryKey: true,
         references: {
@@ -311,7 +364,7 @@ export const MatchModel = sequelize.define<MatchResultInstance>('Match Info', {
         autoIncrement: true,
     },
     hostId: {
-        type: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
         field: 'host_id',
         references: {
             model: HostInfoModel,

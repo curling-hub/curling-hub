@@ -16,23 +16,24 @@ import ProfileButton from '../components/profile/ProfileButton';
 import MatchesBox from '../components/profile/MatchesBox';
 import MatchesTable from '../components/profile/MatchesTable'
 import MembersTable from '../components/profile/MembersTable'
-import { TeamInfo, TeamMatches, TeamCategories, TeamMembers } from '../lib/models/teams'
+import { Category, TeamMember } from '../lib/models';
+import { TeamInfo, TeamMatches, TeamWithMembersAndRatings } from '../lib/models/teams'
 import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo } from '../lib/handlers/teams'
 import { getSession, getSessionServerSideResult } from '../lib/auth/session'
 
 
 interface TeamProfileProps {
-    teamInfo?: TeamInfo[]
+    teamInfo?: TeamWithMembersAndRatings
     teamMatches?: TeamMatches[]
     teamEmail: string
-    teamCategories?: TeamCategories[]
-    teamMembers?: TeamMembers[]
+    teamCategories?: Category[]
+    teamMembers?: TeamMember[]
 }
 
 const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
 
     const {
-        teamInfo = [],
+        teamInfo,
         teamMatches = [],
         teamCategories = [],
         teamMembers = [],
@@ -59,14 +60,14 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                             <VStack spacing="78px" height="100%">
                                 <LeftHandBox color='primary.white'>
                                     <VStack spacing="0px" h="356px">
-                                        {teamInfo?.map((team: TeamInfo, i: number) => (
-                                            <Text key={`${i}`}
+                                        {teamInfo && (
+                                            <Text
                                                 fontSize="2.5em"
                                                 fontWeight="bold"
                                             >
-                                                {team.name}
+                                                {teamInfo.name}
                                             </Text>
-                                        ))}
+                                        )}
                                         <Text
                                             fontSize="1.5em"
                                             fontWeight="bold"
@@ -91,14 +92,14 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                         >
                                             Rating
                                         </Text>
-                                        {teamInfo?.map((team: TeamInfo, i: number) => (
-                                            <Text key={`${i}`}
+                                        {teamInfo && (
+                                            <Text
                                                 fontSize="6em"
                                                 fontWeight="bold"
                                             >
-                                                {team.rating}
+                                                {teamInfo.teamGlickoInfo.rating}
                                             </Text>
-                                        ))}
+                                        )}
                                     </VStack>
                                 </LeftHandBox>
                             </VStack>
@@ -133,16 +134,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // Redirect if not authentiated
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    if (signedIn || signedUp) {
+    if (!signedIn || !signedUp) {
         return getSessionServerSideResult(sessionWrapper)
     }
     try {
-        const [teamInfo, teamMatches, teamContactInfo, teamCategories, teamMembers] = await Promise.all([
-            getTeamInfo('1'),
+        const [teamInfo, teamMatches, teamContactInfo, teamCategories] = await Promise.all([
+            getTeamInfo(61),
             getTeamMatches('1'),
-            getTeamContactInfo('1'),
-            getTeamCategories('1'),
-            getTeamMembers('1')
+            getTeamContactInfo(61),
+            getTeamCategories(61),
         ])
         const teamEmail = session?.["user"].email || null
         /* console.log(teamEmail) */
@@ -152,7 +152,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 teamMatches,
                 teamContactInfo,
                 teamCategories,
-                teamMembers,
+                teamMembers: teamInfo?.members || [],
                 teamEmail,
             },
         }

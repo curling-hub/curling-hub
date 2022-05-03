@@ -6,14 +6,10 @@ import getConfig from 'next/config'
 
 import * as DbModels from '../../../lib/db_model'
 import { sequelize } from '../../../lib/db'
+import { nextauthSequelizeAdaptor } from '../../../lib/db_model'
 
 const { serverRuntimeConfig } = getConfig()
 const {
-    mysql_host,
-    mysql_port,
-    mysql_user,
-    mysql_password,
-    mysql_database,
     google_client_id,
     google_client_secret,
 } = serverRuntimeConfig
@@ -60,10 +56,5 @@ export default NextAuth({
             }
         },
     },
-    adapter: SequelizeAdaptor(sequelize, {
-        models: {
-            User: DbModels.UserModel,
-            Account: DbModels.AccountModel,
-        },
-    }),
+    adapter: nextauthSequelizeAdaptor,
 })
