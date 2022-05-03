@@ -11,7 +11,6 @@ import { getSession, getSessionServerSideResult } from '../../../lib/auth/sessio
 import ProfileBox from '../../../components/host/profile/ProfileBox'
 import type { HostInfo } from '../../../lib/models/host'
 import type { HostMatchResult } from '../../../lib/models/match'
-import { TeamInfo } from '../../../lib/models/team';
 import { getHostInfoById } from '../../../lib/handlers/hosts';
 import { getHostMatchesById } from '../../../lib/handlers/matches'
 import { getTeamById } from '../../../lib/handlers/teams';
@@ -19,7 +18,6 @@ import { getTeamById } from '../../../lib/handlers/teams';
 interface HostProfileProps {
     currentHost: HostInfo
     hostMatches: HostMatchResult[]
-    teams: TeamInfo[]
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -30,7 +28,6 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
     const {
         currentHost,
         hostMatches = [],
-        teams = [],
     } = props
 
     return (
