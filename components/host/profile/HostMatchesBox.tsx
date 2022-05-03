@@ -47,7 +47,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                     <td>{match.date}</td>
                                     <td>{match.team1}</td>
                                     <td>{match.team2}</td>
-                                    <td><GrFormEdit /></td>
+                                    <td><GrFormEdit aria-labelledby="Edit" /></td>
                                 </Tr>
                             })}
                         </Tbody>
