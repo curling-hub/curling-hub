@@ -29,7 +29,6 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
         currentMatches = [],
     } = props
 
-    // TODO: Links in top bar are broken
     return (
         <>
             <Head>
