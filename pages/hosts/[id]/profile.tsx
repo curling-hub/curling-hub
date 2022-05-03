@@ -16,7 +16,7 @@ import { getHostMatchesById, matchResultSerialize } from '../../../lib/handlers/
 
 interface HostProfileProps {
     currentHost: HostInfo
-    currentMatches: MatchResultSerial[]
+    hostMatches: MatchResultSerial[]
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -26,7 +26,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
 
     const {
         currentHost,
-        currentMatches = [],
+        hostMatches = [],
     } = props
 
     return (
@@ -41,7 +41,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 <HostLayout>
-                    <ProfileBox currentHost={currentHost} currentMatches={currentMatches} />
+                    <ProfileBox currentHost={currentHost} hostMatches={hostMatches} />
                 </HostLayout>
                 <Footer />
             </Box >

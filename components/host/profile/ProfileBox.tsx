@@ -9,14 +9,14 @@ import type { MatchResultSerial } from '../../../lib/models/match'
 
 interface ProfileBoxProps {
     currentHost: HostInfo
-    currentMatches: MatchResultSerial[]
+    hostMatches: MatchResultSerial[]
 }
 
 export default function ProfileBox(props: ProfileBoxProps) {
 
     const {
         currentHost,
-        currentMatches,
+        hostMatches,
     } = props
 
     return (
@@ -30,7 +30,7 @@ export default function ProfileBox(props: ProfileBoxProps) {
                     </SideBySideContainer>
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
-                        <HostMatchesBox currentMatches={currentMatches} />
+                        <HostMatchesBox hostMatches={hostMatches} />
                         <ProfileButton buttonText='Edit Matches' color='primary.green' />
                     </SideBySideContainer>
                     <Spacer />

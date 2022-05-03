@@ -6,13 +6,13 @@ import type { MatchResultSerial } from '../../../lib/models/match'
 
 
 interface HostInfoBoxProps {
-    currentMatches: MatchResultSerial[]
+    hostMatches: MatchResultSerial[]
 }
 
 export default function HostInfoBox(props: HostInfoBoxProps) {
 
     const {
-        currentMatches,
+        hostMatches,
     } = props
 
     return (
@@ -41,7 +41,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {currentMatches.map((match) => {
+                            {hostMatches.map((match) => {
                                 return <Tr>
                                     <td>{match.date}</td>
                                     <td>{match.teamId1}</td>
