@@ -69,7 +69,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                     Contact
                 </Text>
                 <Text>
-                    currentHost doesn't have email, should I infer from session?
+                    I am a placeholder, nice to meet you!
                 </Text>
                 <Text>
                     {currentHost.phoneNumber}
