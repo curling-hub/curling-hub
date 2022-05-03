@@ -1,7 +1,7 @@
 import { date } from "yup"
 import { sequelize } from "../../lib/db"
 import * as DbModels from '../../lib/db_model'
-import { getAllRankings } from '../../lib/handlers/teams'
+import { getAllRankings, getTeamContactInfo } from '../../lib/handlers/teams'
 
 
 describe('Team operations', () => {
@@ -16,7 +16,10 @@ describe('Team operations', () => {
         await Promise.all([
             DbModels.TeamMemberModel.destroy({ where: {} }),
             DbModels.TeamGlickoInfoModel.destroy({ where: {} }),
+            DbModels.RatingPeriodModel.destroy({ where: {} }),
             DbModels.RatingHistoryModel.destroy({ where: {} }),
+            DbModels.UserModel.destroy({ where: {} }),
+            DbModels.TeamAdminModel.destroy({ where: {} }),
             DbModels.TeamInfoModel.destroy({ where: {} }),
         ])
     })
@@ -123,12 +126,42 @@ describe('Team operations', () => {
                 ],
             },
         ]
-        // 2. Query
+        // 2. Query & Validation
         await expect(getAllRankings())
             .resolves
             .toEqual(expect.arrayContaining(
                 expected.map((e) => expect.objectContaining(e))
             ))
+    })
+
+    it('should retrieve inserted admins', async () => {
+        // 1. Setup
+        const userData = {
+            id: '68249974-7875-44aa-80e7-2d270c1dd1cd',
+            name: 'User 1',
+            email: 'sample@example.com',
+        }
+        const teamData = {
+            name: 'Team A',
+        }
+        const [ user, team ] = await Promise.all([
+            DbModels.UserModel.create(userData),
+            DbModels.TeamInfoModel.create(teamData),
+        ])
+        const admin = await DbModels.TeamAdminModel.create({
+            teamId: team.teamId,
+            userId: user.id,
+        })
+        const expected = {
+            teamName: team.name,
+            teamEmail: user.email,
+        }
+        // 2. Query & Validation
+        await expect(getTeamContactInfo(team.teamId))
+            .resolves
+            .toEqual(expect.arrayContaining([
+                expect.objectContaining(expected),
+            ]))
     })
 })
 
