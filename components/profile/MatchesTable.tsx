@@ -50,7 +50,7 @@ export default function MatchesTable(props: MatchesTableProps) {
                     <Tbody>
                         {teamMatches.map((match) => (
                             <Tr key={`${match.matchId}`}>
-                                <Td>{formatDate(match.date)}</Td>
+                                <Td>{match.date}</Td>
                                 {/* <Td>{match.date}</Td> */}
                                 <Td>{outcome(match.winner, match.team_1_name)}</Td>
                                 <Td>{(match.team_1_name == props.teamName) ? match.team_1_name : match.team_2_name}</Td>

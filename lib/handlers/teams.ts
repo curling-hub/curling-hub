@@ -2,11 +2,13 @@ import { RowDataPacket } from 'mysql2'
 import { Op } from 'sequelize'
 import { UserInstance } from 'next-auth'
 import { Includeable, WhereOptions } from 'sequelize/types'
-import { pool, sequelize } from '../db'
+import { sequelize } from '../db'
+import moment from 'moment'
 
 import * as DbModels from '../db_model'
 
 import type { Category, TeamInfo } from '../models'
+import { MatchResult } from '../models/match'
 import { TeamCreationForm, TeamMember } from '../models/team'
 import { TeamRanking, TeamWithMembersAndRatings } from '../models/teams'
 
@@ -71,39 +73,37 @@ export async function populateTeamMatchesPage(teamId: string) {
     }))
 }
 
-export async function getTeamMatches(teamId: string) {
-    const query = `
-        SELECT 
-            mi.match_id,
-            team_1.name as team_id_1,
-            team_2.name as team_id_2,
-            winner,
-            cat.name as category,
-            mi.date
-        FROM match_info mi
-        JOIN team_profile team_1 
-        ON mi.team_id_1 = team_1.team_id
-        JOIN team_profile team_2
-        ON mi.team_id_2 = team_2.team_id
-        JOIN categories cat
-        ON mi.category_id = cat.category_id
-        JOIN match_team_rel match_rel
-        ON mi.match_id = match_rel.match_id
-        WHERE match_rel.team_id = ?`
-        + `
-        ORDER BY mi.date desc`
-    const queryArgs = [teamId]
-    const [rows, _] = await pool.promise().query(query,queryArgs)
-    const r = rows as RowDataPacket[] 
-    
-    return r.map((val) => ({
-        matchId: val['match_id'],
-        team_1_name: val['team_id_1'],
-        team_2_name: val['team_id_2'],
-        winner: val[val['winner']] || null, // winner is literally 'team_id_1'
-        category: val['category'],
-        date: `${val['date']}`,
-    }))
+export async function getTeamMatches(teamId: number) {
+    const winnerMap = (m: any) => {
+        if (m.winner === 'team_id_1') {
+            return m.teams.filter((t: TeamInfo) => t.teamId === m.teamId1)[0].name
+        } else if (m.winner === 'team_id_2') {
+            return m.teams.filter((t: TeamInfo) => t.teamId === m.teamId2)[0].name
+        }
+        return null
+    }
+    const team = await DbModels.TeamInfoModel.findOne({
+        where: { teamId },
+        include: [{
+            model: DbModels.MatchModel,
+            as: 'matches',
+            include: [{
+                model: DbModels.TeamInfoModel,
+                as: 'teams',
+            }],
+        }],
+        attributes: [],
+        order: [['matches', 'date', 'DESC']],   // ORDER BY matches.date DESC
+    })
+    const matches = team?.matches
+        .map((m) => ({
+            matchId: m.matchId,
+            team_1_name: m.teams.filter((t) => t.teamId === m.teamId1)[0].name,
+            team_2_name: m.teams.filter((t) => t.teamId === m.teamId2)[0].name,
+            winner: winnerMap(m),
+            date: moment(m.date).format('YYYY-MM-DD'),
+        }))
+    return matches || []
 }
 
 export async function getTeamContactInfo(teamId: number): Promise<Array<{teamName: string, teamEmail: string}>> {

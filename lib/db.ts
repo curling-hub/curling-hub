@@ -29,7 +29,7 @@ export function getSequelize() {
 export const sequelize = getSequelize()
 
 // Deprecated in favor of sequelize
-export const pool = mysql.createPool({
+const pool = mysql.createPool({
     host: mysql_host,
     port: mysql_port,
     user: mysql_user,

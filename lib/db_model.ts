@@ -43,7 +43,7 @@ interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo 
     // Allows `addCategory` on a team instance
     addCategory: BelongsToManyAddAssociationMixin<Category, number>
 
-    matches: NonAttribute<MatchResult[]>
+    matches: NonAttribute<MatchResultInstance[]>
     // Allows `addMatch` on a team instance
     addMatch: BelongsToManyAddAssociationMixin<MatchResult, number>
 
@@ -53,7 +53,7 @@ interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo 
 interface CategoryInstance extends Model<Category, Partial<Category>>, Category {}
 
 interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, MatchResultDetails {
-    teams: NonAttribute<TeamInfoRatings[]>
+    teams: NonAttribute<TeamInfoInstance[]>
     // Allows `addTeam` on a match_result instance
     addTeam: BelongsToManyAddAssociationsMixin<TeamInfo, number>
 }
@@ -449,8 +449,8 @@ TeamInfoModel.belongsToMany(MatchModel, {
         field: 'team_id',
     },
     as: {
-        singular: 'Match',
-        plural: 'Matches',
+        singular: 'match',
+        plural: 'matches',
     },
 })
 

@@ -140,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         const [teamInfo, teamMatches, teamContactInfo, teamCategories] = await Promise.all([
             getTeamInfo(61),
-            getTeamMatches('1'),
+            getTeamMatches(85),
             getTeamContactInfo(61),
             getTeamCategories(61),
         ])
