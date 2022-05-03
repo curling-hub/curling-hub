@@ -62,6 +62,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { signedIn, signedUp, session } = sessionWrapper
     const currentHost = await getHostInfoById(id.toString())
     const hostMatches = await getHostMatchesById(id.toString())
+    // Format hosts for page and serialization
     const serialMatches = await Promise.all(hostMatches.map(async (match) => {
         const convert: HostMatchResult = {
             team1: (await getTeamById(match.teamId1))?.name || match.teamId1.toString(),
