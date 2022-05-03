@@ -10,13 +10,16 @@ import { useEffect, useState } from 'react'
 import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 import ProfileBox from '../../../components/host/profile/ProfileBox'
 import type { HostInfo } from '../../../lib/models/host'
-import type { MatchResultSerial } from '../../../lib/models/match'
+import type { HostMatchResult } from '../../../lib/models/match'
+import { TeamInfo } from '../../../lib/models/team';
 import { getHostInfoById } from '../../../lib/handlers/hosts';
-import { getHostMatchesById, matchResultSerialize } from '../../../lib/handlers/matches'
+import { getHostMatchesById } from '../../../lib/handlers/matches'
+import { getTeamById } from '../../../lib/handlers/teams';
 
 interface HostProfileProps {
     currentHost: HostInfo
-    hostMatches: MatchResultSerial[]
+    hostMatches: HostMatchResult[]
+    teams: TeamInfo[]
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -27,6 +30,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
     const {
         currentHost,
         hostMatches = [],
+        teams = [],
     } = props
 
     return (
@@ -61,7 +65,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { signedIn, signedUp, session } = sessionWrapper
     const currentHost = await getHostInfoById(id.toString())
     const hostMatches = await getHostMatchesById(id.toString())
-    const serialMatches = hostMatches.map((match) => matchResultSerialize(match))
+    const serialMatches = await Promise.all(hostMatches.map(async (match) => {
+        const convert: HostMatchResult = {
+            team1: (await getTeamById(match.teamId1))?.name || match.teamId1.toString(),
+            team2: (await getTeamById(match.teamId2))?.name || match.teamId2.toString(),
+            date: match.date.getMonth().toString() + "/" +
+                match.date.getDate().toString() + "/" +
+                match.date.getFullYear().toString(),
+        }
+        return convert
+    }))
     if (!session || !session["user"]) {
         // not signed in / signed up
         return {
@@ -69,7 +82,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 user: null,
                 // TODO: Remove props when not signed in
                 currentHost: currentHost,
-                // TODO: null for serialize error
                 hostMatches: serialMatches,
             }
         }

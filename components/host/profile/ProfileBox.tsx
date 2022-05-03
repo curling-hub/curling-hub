@@ -5,11 +5,11 @@ import ProfileButton from "../../profile/ProfileButton";
 import HostInfoBox from "./HostInfoBox";
 import HostMatchesBox from './HostMatchesBox'
 import type { HostInfo } from '../../../lib/models/host'
-import type { MatchResultSerial } from '../../../lib/models/match'
+import type { HostMatchResult } from '../../../lib/models/match'
 
 interface ProfileBoxProps {
     currentHost: HostInfo
-    hostMatches: MatchResultSerial[]
+    hostMatches: HostMatchResult[]
 }
 
 export default function ProfileBox(props: ProfileBoxProps) {
