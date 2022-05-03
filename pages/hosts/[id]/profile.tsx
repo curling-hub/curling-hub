@@ -51,8 +51,9 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     // Redirect if not authentiated
+    let id
     if (context.params) {
-        const id = context.params.id
+        id = context.params.id
     } else {
         return {
             props: {}
