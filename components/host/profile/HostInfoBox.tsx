@@ -56,7 +56,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                             Sheets of Ice
                         </Text>
                         <Text>
-                            {currentHost.iceSheets && currentHost.iceSheets}
+                            {currentHost.iceSheets?.length}
                         </Text>
                     </VStack>
 
