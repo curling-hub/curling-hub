@@ -60,7 +60,6 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     }
 
     useEffect(() => {
-       console.log('refresh')
        const req = {
            id: tabIndex
        }
@@ -154,36 +153,38 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                         <Td fontWeight="bold">Website</Td>
                                         <Td></Td>
                                     </Tr>
-                                    { Children.toArray(hosts?.map((host: HostInfo) => 
+                                    {Children.toArray(hosts?.map((host: HostInfo) => 
                                         <Tr>
                                             <Td>{host.organization}</Td>
                                             <Td>{host.phoneNumber}</Td>
                                             <Td>{host.email}</Td>
                                             <Td>{host.website}</Td>
-                                            <Td>
-                                                <HStack
-                                                    spacing={4}
-                                                >
-                                                    <Button
-                                                        colorScheme='green'
-                                                        borderRadius='30px'
-                                                        size='sm'
-                                                        color='black'
-                                                        onClick={async () => {await updateHostStatus(host.hostId, 'accepted')}}
+                                            { tabIndex == 0 &&
+                                                <Td>
+                                                    <HStack
+                                                        spacing={4}
                                                     >
-                                                        Accept
-                                                    </Button>
-                                                    <Button
-                                                        colorScheme='red'
-                                                        borderRadius='30px'
-                                                        size='sm'
-                                                        color='black'
-                                                        onClick={async () => {await updateHostStatus(host.hostId, 'rejected')}}
-                                                    >
-                                                        Reject
-                                                    </Button>
-                                                </HStack>
-                                            </Td>
+                                                        <Button
+                                                            colorScheme='green'
+                                                            borderRadius='30px'
+                                                            size='sm'
+                                                            color='black'
+                                                            onClick={async () => {await updateHostStatus(host.hostId, 'accepted')}}
+                                                        >
+                                                            Accept
+                                                        </Button>
+                                                        <Button
+                                                            colorScheme='red'
+                                                            borderRadius='30px'
+                                                            size='sm'
+                                                            color='black'
+                                                            onClick={async () => {await updateHostStatus(host.hostId, 'rejected')}}
+                                                        >
+                                                            Reject
+                                                        </Button>
+                                                    </HStack>
+                                                </Td>
+                                            }
                                         </Tr>
                                     ))}
                                 </Thead>
