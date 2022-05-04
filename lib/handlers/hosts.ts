@@ -10,7 +10,10 @@ export async function hosts() {
 
 export async function getAllHosts(): Promise<HostInfo[]> {
     const hostInfoList = await DbModels.HostInfoModel.findAll({
-        nest: true,
+        attributes: {
+            // `getServerSideProps` Cannot serialize date
+            exclude: [ 'updatedAt' ],
+        },
     })
     if (!hostInfoList) {
         return []
@@ -19,7 +22,7 @@ export async function getAllHosts(): Promise<HostInfo[]> {
 }
 
 export async function getIceSheetsByHostId(hostId: string) {
-    return await DbModels.IceSheetModel.findAll({
+    await DbModels.IceSheetModel.findAll({
         where: {
             hostId: hostId,
         },
@@ -32,6 +35,10 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
         where: {
             hostId: hostId,
         },
+        attributes: {
+            // `getServerSideProps` Cannot serialize date
+            exclude: [ 'updatedAt' ],
+        },
         include: [{
             model: DbModels.IceSheetModel,
             as: 'iceSheets',
@@ -40,7 +47,7 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
         nest: true,
     })
     return Object.assign({}, hostInfo?.toJSON(), {
-        iceSheets: hostInfo?.iceSheets.map((iceSheet) => iceSheet.name)
+        iceSheets: hostInfo?.iceSheets.map((iceSheet) => iceSheet.name),
     }) as HostInfo
 }
 
