@@ -1,7 +1,9 @@
 import { date } from "yup"
 import { sequelize } from "../../lib/db"
 import * as DbModels from '../../lib/db_model'
-import { getAllRankings, getTeamContactInfo } from '../../lib/handlers/teams'
+import { getAllRankings, getTeamContactInfo, getTeamMatches } from '../../lib/handlers/teams'
+import type { HostInfoBase } from "../../lib/models"
+import { TeamCreationForm } from "../../lib/models/team"
 
 
 describe('Team operations', () => {
@@ -169,6 +171,57 @@ describe('Team operations', () => {
         //   - insert 2 teams
         //   - insert a host
         //   - insert matches
+        const userData = {
+            id: '68249974-7875-44aa-80e7-2d270c1dd1cd',
+            name: 'User 1',
+            email: 'sample@example.com',
+        }
+        const teamData = [
+            { name: 'Team A' },
+            { name: 'Team B' },
+        ]
+        const hostData: HostInfoBase = {
+            hostId: userData.id,
+            organization: 'Husky',
+            website: 'http://example.com',
+            phoneNumber: '(555) 555-5555',
+            streetAddress: '55th Ave',
+            city: 'New York City',
+            state: 'New York',
+            zip: '55555',
+            country: 'US',
+            status: 'accepted',
+        }
+        const [ hostUser, teams ] = await Promise.all([
+            DbModels.UserModel.create(userData),
+            DbModels.TeamInfoModel.bulkCreate(teamData),
+        ])
+        const hostInfo = await DbModels.HostInfoModel.create(hostData)
+        const matchData = [
+            {
+                hostId: hostData.hostId,
+                teamId1: teams[0].teamId,
+                teamId2: teams[1].teamId,
+                winner: 'team_id_1',
+                sheetOfIce: 'A',
+                comments: null,
+                date: new Date('2022-05-02'),
+            },
+            {
+                hostId: hostData.hostId,
+                teamId1: teams[0].teamId,
+                teamId2: teams[1].teamId,
+                winner: 'team_id_2',
+                sheetOfIce: 'B',
+                comments: null,
+                date: new Date('2022-05-04'),
+            },
+        ]
+        const matches = await DbModels.MatchModel.bulkCreate(matchData)
+
+        await expect(getTeamMatches(teams[0].teamId))
+            .resolves
+            .toHaveLength(2)
     })
 })
 
