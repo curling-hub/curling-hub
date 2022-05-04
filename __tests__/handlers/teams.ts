@@ -1,4 +1,5 @@
 import { date } from "yup"
+import moment from "moment"
 import { sequelize } from "../../lib/db"
 import * as DbModels from '../../lib/db_model'
 import { getAllRankings, getTeamContactInfo, getTeamMatches } from '../../lib/handlers/teams'
@@ -225,10 +226,16 @@ describe('Team operations', () => {
             { matchId: matches[1].matchId, teamId: teams[1].teamId },
         ]
         await DbModels.MatchTeamRel.bulkCreate(matchTeamData)
-
+        // 2. Query & Validation
         await expect(getTeamMatches(teams[0].teamId))
             .resolves
-            .toHaveLength(2)
+            .toEqual(expect.arrayContaining(
+                matchData.map((m) => expect.objectContaining({
+                    ...m,
+                    // Date is expected to be string `YYYY-MM-DD`
+                    date: moment(m.date).format('YYYY-MM-DD'),
+                }))
+            ))
     })
 })
 
