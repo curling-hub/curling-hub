@@ -17,14 +17,14 @@ import MatchesBox from '../components/profile/MatchesBox';
 import MatchesTable from '../components/profile/MatchesTable'
 import MembersTable from '../components/profile/MembersTable'
 import { Category, TeamMember } from '../lib/models';
-import { TeamInfo, TeamMatches, TeamWithMembersAndRatings } from '../lib/models/teams'
+import type { TeamInfo, TeamMatch, TeamWithMembersAndRatings } from '../lib/models/teams'
 import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo } from '../lib/handlers/teams'
 import { getSession, getSessionServerSideResult } from '../lib/auth/session'
 
 
 interface TeamProfileProps {
     teamInfo?: TeamWithMembersAndRatings
-    teamMatches?: TeamMatches[]
+    teamMatches?: TeamMatch[]
     teamEmail: string
     teamCategories?: Category[]
     teamMembers?: TeamMember[]

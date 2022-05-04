@@ -6,8 +6,8 @@ import moment from 'moment'
 import * as DbModels from '../db_model'
 
 import type { Category, TeamInfo } from '../models'
-import { TeamCreationForm, TeamMember } from '../models/team'
-import { TeamMatches, TeamRanking, TeamWithMembersAndRatings } from '../models/teams'
+import type { TeamCreationForm, TeamMember } from '../models/team'
+import type { TeamMatch, TeamRanking, TeamWithMembersAndRatings } from '../models/teams'
 
 export async function teams() {
     return 0
@@ -30,7 +30,7 @@ export async function getTeamInfo(teamId: number): Promise<TeamInfo & TeamWithMe
     return result?.toJSON<TeamInfo & TeamWithMembersAndRatings>() || null
 }
 
-export async function getTeamMatches(teamId: number): Promise<TeamMatches[]> {
+export async function getTeamMatches(teamId: number): Promise<TeamMatch[]> {
     const team = await DbModels.TeamInfoModel.findOne({
         where: { teamId },
         include: [{
@@ -54,7 +54,7 @@ export async function getTeamMatches(teamId: number): Promise<TeamMatches[]> {
         attributes: [],
         order: [['matches', 'date', 'DESC']],   // ORDER BY matches.date DESC
     })
-    const matches: TeamMatches[] = team?.matches
+    const matches: TeamMatch[] = team?.matches
         .map((m) => ({
             ...m.toJSON(),
             date: (moment(m.date).format('YYYY-MM-DD') as unknown) as Date,

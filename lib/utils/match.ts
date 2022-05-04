@@ -1,6 +1,6 @@
-import type { TeamMatches } from '../models/teams'
+import type { TeamMatch } from '../models/teams'
 
-export function matchResultToString(currentTeamId: number, matchResult: TeamMatches): string {
+export function matchResultToString(currentTeamId: number, matchResult: TeamMatch): string {
     if (currentTeamId !== matchResult.teamId1 && currentTeamId !== matchResult.teamId2) {
         return 'N/A'
     }
@@ -16,7 +16,7 @@ export function matchResultToString(currentTeamId: number, matchResult: TeamMatc
     }
 }
 
-export function matchResultOpponentTeamName(currentTeamId: number, matchResult: TeamMatches): string {
+export function matchResultOpponentTeamName(currentTeamId: number, matchResult: TeamMatch): string {
     if (currentTeamId !== matchResult.teamId1 && currentTeamId !== matchResult.teamId2) {
         return 'N/A'
     }

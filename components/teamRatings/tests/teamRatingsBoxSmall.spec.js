@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { mount } from '@cypress/react'
 import { ChakraProvider } from '@chakra-ui/react'
-import { TeamMatches } from '../../../lib/models/teams'
+import { TeamMatch } from '../../../lib/models/teams'
 import TeamRatingsBoxSmall from '../teamRatingsBoxSmall'
 
 const filters = [
@@ -12,7 +12,7 @@ const filters = [
     {filter_id: 5, value: "Ties"}
 ]
 
-/** @type {TeamMatches[]} */
+/** @type {TeamMatch[]} */
 const matches = [
     {
         date: '2022-04-30',

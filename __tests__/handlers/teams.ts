@@ -163,6 +163,13 @@ describe('Team operations', () => {
                 expect.objectContaining(expected),
             ]))
     })
+
+    it('should retrieve team matches', async () => {
+        // 1. Setup
+        //   - insert 2 teams
+        //   - insert a host
+        //   - insert matches
+    })
 })
 
 export {}

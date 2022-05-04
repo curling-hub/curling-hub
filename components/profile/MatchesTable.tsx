@@ -7,22 +7,13 @@ import {
     TableCaption,
     TableContainer,
 } from "@chakra-ui/react"
-import { TeamMatches } from '../../lib/models/teams'
+import type { TeamMatch } from '../../lib/models/teams'
 import { matchResultOpponentTeamName, matchResultToString } from '../../lib/utils/match'
 
 interface MatchesTableProps {
-    teamMatches?: TeamMatches[]
+    teamMatches?: TeamMatch[]
     teamName?: string
     teamId?: number
-}
-
-function outcome(winner: string, team: string) {
-    if (winner == team)
-        return "Win"
-    else if (!winner)
-        return "Tie"
-    else
-        return "Loss"
 }
 
 export default function MatchesTable(props: MatchesTableProps) {

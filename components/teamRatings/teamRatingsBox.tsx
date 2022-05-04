@@ -20,13 +20,13 @@ import {
 import {
     MdHorizontalRule
 } from 'react-icons/md'
-import type { TeamMatches } from '../../lib/models/teams'
+import type { TeamMatch } from '../../lib/models/teams'
 import { Filter } from '../../lib/models/match'
 import { useState, Children } from 'react'
 import { matchResultToString, matchResultOpponentTeamName } from '../../lib/utils/match'
 
 interface teamRatingsBoxProps {
-    teamMatches: TeamMatches[]
+    teamMatches: TeamMatch[]
     filters: Filter[]
     tableSize: number
     teamId: number
@@ -45,7 +45,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     const [displayedRankings, setDisplayedRankings] = useState(teamMatches)
     const [fixedRankings, setFixedRankings] = useState(teamMatches)
     let i = 0
-    const pages: Array<TeamMatches[]> = []
+    const pages: Array<TeamMatch[]> = []
     for (i; i < Math.ceil(displayedRankings.length / tableSize); ++i) {
         pages[i] = displayedRankings.slice(i*tableSize, i*tableSize + tableSize)
     }

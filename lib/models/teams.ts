@@ -14,7 +14,7 @@ export interface TeamContactInfo {
     teamEmail: string
 }
 
-export interface TeamMatches extends MatchResult {
+export interface TeamMatch extends MatchResult {
     host: HostInfo
     teams: TeamInfo[]
 }

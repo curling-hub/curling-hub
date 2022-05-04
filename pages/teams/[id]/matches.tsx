@@ -9,7 +9,7 @@ import {
 import TeamRatingsBox from '../../../components/teamRatings/teamRatingsBox'
 import TeamRatingsBoxSmall from '../../../components/teamRatings/teamRatingsBoxSmall'
 import { getTeamMatches } from '../../../lib/handlers/teams'
-import type { TeamMatches } from '../../../lib/models/teams'
+import type { TeamMatch } from '../../../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { Filter } from '../../../lib/models/match'
 
@@ -24,7 +24,7 @@ const filters = [
 interface TeamRatingsProps {
     user?: Session,
     filters: Filter[],
-    matches: TeamMatches[],
+    matches: TeamMatch[],
     teamId: number,
 }
 
