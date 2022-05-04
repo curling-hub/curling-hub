@@ -24,10 +24,7 @@ export interface MatchResult {
 export interface MatchResultDetails extends MatchResult {
     teams: TeamInfo[],
 }
-export interface Filter {
-    filter_id: number
-    value: string
-}
+
 export interface Filter {
     filter_id: number
     value: string
