@@ -8,10 +8,12 @@ import {
     TableContainer,
 } from "@chakra-ui/react"
 import { TeamMatches } from '../../lib/models/teams'
+import { matchResultOpponentTeamName, matchResultToString } from '../../lib/utils/match'
 
 interface MatchesTableProps {
     teamMatches?: TeamMatches[]
     teamName?: string
+    teamId?: number
 }
 
 function outcome(winner: string, team: string) {
@@ -23,15 +25,11 @@ function outcome(winner: string, team: string) {
         return "Loss"
 }
 
-function formatDate(dateString: string) {
-    const index_of_time: number = dateString.indexOf("GMT+0000")
-    return dateString.substring(0, index_of_time)
-}
-
 export default function MatchesTable(props: MatchesTableProps) {
 
     const {
-        teamMatches = []
+        teamId,
+        teamMatches = [],
     } = props
 
     return (
@@ -52,8 +50,8 @@ export default function MatchesTable(props: MatchesTableProps) {
                             <Tr key={`${match.matchId}`}>
                                 <Td>{match.date}</Td>
                                 {/* <Td>{match.date}</Td> */}
-                                <Td>{outcome(match.winner, match.team_1_name)}</Td>
-                                <Td>{(match.team_1_name == props.teamName) ? match.team_1_name : match.team_2_name}</Td>
+                                <Td>{matchResultToString(teamId || 0, match)}</Td>
+                                <Td>{matchResultOpponentTeamName(teamId || 0, match)}</Td>
                                 {/* <Td>{match.category}</Td> */}
                             </Tr>
                         ))}

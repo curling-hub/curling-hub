@@ -1,6 +1,4 @@
-import { RowDataPacket } from 'mysql2'
 import { Op } from 'sequelize'
-import { UserInstance } from 'next-auth'
 import { Includeable, WhereOptions } from 'sequelize/types'
 import { sequelize } from '../db'
 import moment from 'moment'
@@ -33,74 +31,33 @@ export async function getTeamInfo(teamId: number): Promise<TeamInfo & TeamWithMe
     return result?.toJSON<TeamInfo & TeamWithMembersAndRatings>() || null
 }
 
-export async function populateTeamMatchesPage(teamId: string) {
-    const matchInfo = await DbModels.MatchModel.findAll({
-        where: {
-            [Op.or]: [{teamId1: teamId}, {teamId2: teamId}]
-        }
-    })
-    const teamNames = await DbModels.TeamInfoModel.findAll()
-    const hostNames = await DbModels.HostInfoModel.findAll()
-
-    var names = new Map()
-    teamNames.map((team) => {
-        let t = team.get()
-        names.set(t.teamId, t.name)
-    })
-    var hosts = new Map()
-    hostNames.map((host) => {
-        let h = host.get()
-        hosts.set(h.hostId, h.organization)
-    })
-    const matches = matchInfo.map((match) => match.get())
-    
-    return matches.map((match) => ({
-        date: (1+match.date.getMonth()).toString()+
-            '/'+
-            match.date.getDate().toString()+
-            '/'+
-            match.date.getFullYear().toString()
-            ,
-        outcome: match.teamId1.toString() == teamId && match.winner == 'team_id_1' ? 'Win' : 
-                 match.teamId1.toString() == teamId && match.winner == 'team_id_2' ? 'Loss' : 
-                 match.teamId2.toString() == teamId && match.winner == 'team_id_2' ? 'Win' :
-                 match.teamId2.toString() == teamId && match.winner == 'team_id_1' ? 'Loss' :
-                 'Tie',
-        opponent: match.teamId1.toString() == teamId ? names.get(match.teamId2) : names.get(match.teamId2),
-        location: hosts.get(match.hostId),
-        sheetOfIce: match.sheetOfIce,
-        comment: match.comments
-    }))
-}
-
 export async function getTeamMatches(teamId: number) {
-    const winnerMap = (m: any) => {
-        if (m.winner === 'team_id_1') {
-            return m.teams.filter((t: TeamInfo) => t.teamId === m.teamId1)[0].name
-        } else if (m.winner === 'team_id_2') {
-            return m.teams.filter((t: TeamInfo) => t.teamId === m.teamId2)[0].name
-        }
-        return null
-    }
     const team = await DbModels.TeamInfoModel.findOne({
         where: { teamId },
         include: [{
             model: DbModels.MatchModel,
             as: 'matches',
-            include: [{
-                model: DbModels.TeamInfoModel,
-                as: 'teams',
-            }],
+            include: [
+                {
+                    model: DbModels.TeamInfoModel,
+                    as: 'teams',
+                },
+                {
+                    model: DbModels.HostInfoModel,
+                    as: 'host',
+                    required: true,
+                    attributes: {
+                        exclude: ['updatedAt'],
+                    },
+                },
+            ],
         }],
         attributes: [],
         order: [['matches', 'date', 'DESC']],   // ORDER BY matches.date DESC
     })
     const matches = team?.matches
         .map((m) => ({
-            matchId: m.matchId,
-            team_1_name: m.teams.filter((t) => t.teamId === m.teamId1)[0].name,
-            team_2_name: m.teams.filter((t) => t.teamId === m.teamId2)[0].name,
-            winner: winnerMap(m),
+            ...m.toJSON(),
             date: moment(m.date).format('YYYY-MM-DD'),
         }))
     return matches || []
@@ -170,6 +127,7 @@ export async function getAllRankings(options?: RankingOptions): Promise<Array<Te
     if (options && options.categoryId) {
         includeCategory = {
             model: DbModels.CategoryModel,
+            as: 'Categories',
             required: true,
             attributes: [],
             where: {

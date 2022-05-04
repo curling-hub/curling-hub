@@ -56,10 +56,13 @@ interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, 
     teams: NonAttribute<TeamInfoInstance[]>
     // Allows `addTeam` on a match_result instance
     addTeam: BelongsToManyAddAssociationsMixin<TeamInfo, number>
+
+    host: NonAttribute<HostInfoInstance>
 }
 
 interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, HostInfoBase {
-    iceSheets: Array<{ hostId: string, name: string }>
+    iceSheets: NonAttribute<Array<{ hostId: string, name: string }>>
+    matches: NonAttribute<MatchResultInstance>
 }
 
 interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod {}
@@ -452,6 +455,22 @@ TeamInfoModel.belongsToMany(MatchModel, {
         singular: 'match',
         plural: 'matches',
     },
+})
+
+
+MatchModel.belongsTo(HostInfoModel, {
+    foreignKey: {
+        name: 'hostId',
+        field: 'host_id',
+    },
+    as: 'host',
+})
+HostInfoModel.hasMany(MatchModel, {
+    foreignKey: {
+        name: 'hostId',
+        field: 'host_id',
+    },
+    as: 'matches',
 })
 
 

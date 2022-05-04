@@ -8,11 +8,10 @@ import {
 } from '@chakra-ui/react'
 import TeamRatingsBox from '../../../components/teamRatings/teamRatingsBox'
 import TeamRatingsBoxSmall from '../../../components/teamRatings/teamRatingsBoxSmall'
-import { populateTeamMatchesPage } from '../../../lib/handlers/teams'
-import { TeamMatch } from '../../../lib/models/teams'
+import { getTeamMatches } from '../../../lib/handlers/teams'
+import type { TeamMatches } from '../../../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { Filter } from '../../../lib/models/match'
-import { useRouter } from 'next/router'
 
 const filters = [
     {filter_id: 1, value: "Most Recent"},
@@ -25,12 +24,14 @@ const filters = [
 interface TeamRatingsProps {
     user?: Session,
     filters: Filter[],
-    matches: TeamMatch[]
+    matches: TeamMatches[],
+    teamId: number,
 }
 
 const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
-    const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
-    const [mounted, setMounted] = useState(false)
+    const { teamId } = props
+    const [ isSmallScreen ] = useMediaQuery("(max-width: 768px)")
+    const [ mounted, setMounted ] = useState(false)
     useEffect(() => { setMounted(true) }, [])
     
     return (
@@ -51,6 +52,7 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                                 teamMatches={props.matches}
                                 filters={filters}
                                 tableSize={10}
+                                teamId={teamId}
                             />
                         </TeamLayout>
                 }
@@ -61,6 +63,7 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                                 teamMatches={props.matches}
                                 filters={filters}
                                 tableSize={8}
+                                teamId={teamId}
                             />
                         </TeamLayout>
                 }
@@ -70,16 +73,18 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const id = context.params?.id ? context.params.id : 1
+    const idString = context.params?.id || ''
+    const teamId = Array.isArray(idString) ? NaN : Number.parseInt(idString)
     const session = await getSession(context)
-    const matches = await populateTeamMatchesPage(id.toString())
+    const matches = await getTeamMatches(teamId)
     
     if (!session || !session["user"]) {
         // not signed in / signed up
         return {
             props: {
                 user: null,
-                matches: matches
+                matches: matches,
+                teamId,
             }
         }
     }
@@ -90,7 +95,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 user: null,
-                matches: matches
+                matches: matches,
+                teamId,
             },
         }
     }
@@ -99,7 +105,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             user: session,
-            rankings: null
+            rankings: null,
+            teamId,
         },
     }
 }

@@ -1,5 +1,7 @@
 import { RatingPeriod, TeamGlickoInfo } from './glicko'
-import { TeamMember } from './team'
+import type { HostInfo } from './host'
+import type { MatchResult } from './match'
+import type { TeamMember } from './team'
 
 export interface TeamInfo {
     teamId: number
@@ -12,13 +14,9 @@ export interface TeamContactInfo {
     teamEmail: string
 }
 
-export interface TeamMatches {
-    matchId: string
-    team_1_name: string
-    team_2_name: string
-    winner: string
-    category: string
-    date: string
+export interface TeamMatches extends MatchResult {
+    host: HostInfo
+    teams: TeamInfo[]
 }
 
 export interface TeamCategories {
@@ -45,13 +43,4 @@ export interface TeamRanking {
     Rating: number
     Changes: number[] | null 
     Players: string[]
-}
-
-export interface TeamMatch {
-    date: string
-    outcome: string
-    opponent: string
-    location: string
-    sheetOfIce: string
-    comment: string
 }

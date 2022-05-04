@@ -97,7 +97,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                                 fontSize="6em"
                                                 fontWeight="bold"
                                             >
-                                                {teamInfo.teamGlickoInfo.rating}
+                                                {teamInfo.teamGlickoInfo?.rating}
                                             </Text>
                                         )}
                                     </VStack>
@@ -113,7 +113,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                 <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
                                     Matches
                                 </Text>
-                                <MatchesTable teamMatches={teamMatches} teamName="The Sliding Stones" />
+                                <MatchesTable teamId={teamInfo?.teamId} teamMatches={teamMatches} teamName="The Sliding Stones" />
                                 <Box marginTop="63px">
                                     <Link href="/matches">
                                         <ProfileButton buttonText='View Matches' color='primary.green' top="-20px" />
@@ -139,10 +139,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
     try {
         const [teamInfo, teamMatches, teamContactInfo, teamCategories] = await Promise.all([
-            getTeamInfo(61),
+            getTeamInfo(85),
             getTeamMatches(85),
-            getTeamContactInfo(61),
-            getTeamCategories(61),
+            getTeamContactInfo(85),
+            getTeamCategories(85),
         ])
         const teamEmail = session?.["user"].email || null
         /* console.log(teamEmail) */
