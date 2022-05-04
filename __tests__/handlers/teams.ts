@@ -1,10 +1,8 @@
-import { date } from "yup"
 import moment from "moment"
 import { sequelize } from "../../lib/db"
 import * as DbModels from '../../lib/db_model'
 import { getAllRankings, getTeamContactInfo, getTeamMatches } from '../../lib/handlers/teams'
 import type { HostInfoBase } from "../../lib/models"
-import { TeamCreationForm } from "../../lib/models/team"
 
 
 describe('Team operations', () => {
