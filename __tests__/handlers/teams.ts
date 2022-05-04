@@ -218,6 +218,13 @@ describe('Team operations', () => {
             },
         ]
         const matches = await DbModels.MatchModel.bulkCreate(matchData)
+        const matchTeamData = [
+            { matchId: matches[0].matchId, teamId: teams[0].teamId },
+            { matchId: matches[0].matchId, teamId: teams[1].teamId },
+            { matchId: matches[1].matchId, teamId: teams[0].teamId },
+            { matchId: matches[1].matchId, teamId: teams[1].teamId },
+        ]
+        await DbModels.MatchTeamRel.bulkCreate(matchTeamData)
 
         await expect(getTeamMatches(teams[0].teamId))
             .resolves
