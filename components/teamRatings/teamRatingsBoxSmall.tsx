@@ -23,7 +23,7 @@ import {
 import type { TeamMatches } from '../../lib/models/teams'
 import { Filter } from '../../lib/models/match'
 import { useState, Children } from 'react'
-import { matchResultToString } from '../../lib/utils/match'
+import { matchResultToString, matchResultOpponentTeamName } from '../../lib/utils/match'
 
 
 interface teamRatingsBoxProps {
@@ -279,7 +279,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                         <GridItem
                                             colStart={7}
                                         >
-                                            <Text>{matchResultToString(teamId, match)}</Text>
+                                            <Text>{matchResultOpponentTeamName(teamId, match)}</Text>
                                         </GridItem>
                                     </>
                             ))) }
