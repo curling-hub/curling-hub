@@ -7,7 +7,7 @@ describe('Admin Requests Page Tests', () => {
     })
     it('Should contain an Accepted tab', () => {
         cy.visit(`${baseUrl}/admin-requests`)
-        cy.get('[name="selected-tab"]').click({force: true})
+        cy.get('[name="accepted-tab"]').click({force: true})
     })
     it('Should contain a Rejected tab', () => {
         cy.visit(`${baseUrl}/admin-requests`)
