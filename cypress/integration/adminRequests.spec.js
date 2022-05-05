@@ -3,14 +3,14 @@ describe('Admin Requests Page Tests', () => {
     const baseUrl = `http://localhost:${port}`
     it('Should contain a Pending tab', () => {
         cy.visit(`${baseUrl}/admin-requests`)
-        cy.get('[name="pending-tab"]').click()
+        cy.get('[name="pending-tab"]').click({force: true})
     })
     it('Should contain an Accepted tab', () => {
         cy.visit(`${baseUrl}/admin-requests`)
-        cy.get('[name="selected-tab"]').click()
+        cy.get('[name="selected-tab"]').click({force: true})
     })
     it('Should contain a Rejected tab', () => {
         cy.visit(`${baseUrl}/admin-requests`)
-        cy.get('[name="rejected-tab"]').click()
+        cy.get('[name="rejected-tab"]').click({force: true})
     })
 })
