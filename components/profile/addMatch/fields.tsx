@@ -271,7 +271,6 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 onChange={
                                                     (newValue, actionMeta) => {
                                                         form.values.sheetOfIce = newValue?.value
-                                                        form.validateField("sheetOfIce")
                                                     }
                                                 }
                                             />
