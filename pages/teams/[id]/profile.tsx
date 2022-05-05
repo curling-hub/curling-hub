@@ -1,4 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next'
+import { getSession } from 'next-auth/react'
+import { Session } from 'next-auth'
 import Head from 'next/head'
 import TeamLayout from '../../../components/layouts/TeamLayout'
 import Footer from "../../../components/footer/footer";
@@ -16,12 +18,23 @@ import ProfileButton from '../../../components/profile/ProfileButton';
 import MatchesBox from '../../../components/profile/MatchesBox';
 import MatchesTable from '../../../components/profile/MatchesTable'
 import MembersTable from '../../../components/profile/MembersTable'
-import { TeamInfo, TeamMatches, TeamCategories, TeamMembers } from '../../../lib/models/teams'
-import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo } from '../../../lib/handlers/teams'
-import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import {
+    TeamInfo,
+    TeamMatches,
+    TeamCategories,
+    TeamMembers,
+} from '../../../lib/models/teams'
+import {
+    getTeamMatches,
+    getTeamContactInfo,
+    getTeamCategories,
+    getTeamMembers,
+    getTeamInfo,
+} from '../../../lib/handlers/teams'
 
 
 interface TeamProfileProps {
+    user?: Session,
     teamInfo?: TeamInfo[]
     teamMatches?: TeamMatches[]
     teamEmail: string
@@ -131,32 +144,62 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     // Redirect if not authentiated
-    const sessionWrapper = await getSession(context)
-    const { signedIn, signedUp, session } = sessionWrapper
-    if (signedIn || signedUp) {
-        return getSessionServerSideResult(sessionWrapper)
-    }
+    const id = context.params?.id ? context.params.id : 1
+    const session = await getSession(context)
+
     try {
         const [teamInfo, teamMatches, teamContactInfo, teamCategories, teamMembers] = await Promise.all([
-            getTeamInfo('1'),
-            getTeamMatches('1'),
-            getTeamContactInfo('1'),
-            getTeamCategories('1'),
-            getTeamMembers('1')
+            getTeamInfo(id.toString()),
+            getTeamMatches(id.toString()),
+            getTeamContactInfo(id.toString()),
+            getTeamCategories(id.toString()),
+            getTeamMembers(id.toString())
         ])
-        const teamEmail = session?.["user"].email || null
-        /* console.log(teamEmail) */
+        if (!session || !session["user"]) {
+            // not signed in / signed up
+            return {
+                props: {
+                    user: null,
+                    teamInfo,
+                    teamMatches,
+                    teamContactInfo,
+                    teamCategories,
+                    teamMembers,
+                    //teamEmail,
+                }
+            }
+        }
+
+        const user = session["user"]
+        if (!user["account_type"]) {
+            // has not completed sign up up
+            return {
+                props: {
+                    user: null,
+                    teamInfo,
+                    teamMatches,
+                    teamContactInfo,
+                    teamCategories,
+                    teamMembers,
+                    //teamEmail,
+                },
+            }
+        }
+
+        // signed in, share session with component
         return {
             props: {
+                user: session,
                 teamInfo,
                 teamMatches,
                 teamContactInfo,
                 teamCategories,
                 teamMembers,
-                teamEmail,
+                //teamEmail,
             },
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error)
     }
     return {
