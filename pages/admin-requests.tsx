@@ -1,6 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import TeamLayout from '../components/layouts/TeamLayout'
 import Footer from "../components/footer/footer";
 import {
     Tabs, 
@@ -17,12 +16,13 @@ import {
     Button,
     HStack,
     IconButton,
+    useMediaQuery,
 } from '@chakra-ui/react'
 import { getPendingHosts } from '../lib/handlers/hosts'
-import { getSession, getSessionServerSideResult } from '../lib/auth/session'
 import { useState, Children, useEffect } from 'react';
 import { HostInfo } from '../lib/models';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import AdminLayout from '../components/layouts/AdminLayout';
 
 interface ReqProps {
     hosts: HostInfo[]
@@ -33,8 +33,9 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     const [pageIndex, setPageIndex] = useState(0)
     const [tabIndex, setTabIndex] = useState(0)
     const [refreshKey, setRefreshKey] = useState(0)
-
-    const tableSize = 13
+    const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
+    
+    const tableSize = isSmallScreen ? 4 : 13
 
     var pages: Array<HostInfo[]> =  []
     for (let i=0;i < Math.ceil(hosts.length / tableSize); ++i) {
@@ -88,7 +89,7 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                 minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-            <TeamLayout />
+            <AdminLayout/>
                 <Box paddingBottom={"4rem"}>
                     <Box
                         backgroundColor="primary.white"
@@ -110,7 +111,10 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                             marginTop="5px" 
                             variant='soft-rounded' 
                             align='center'
-                            onChange={(index) => setTabIndex(index)}
+                            onChange={(index) => {
+                                setHosts([])
+                                setTabIndex(index)
+                            }}
                         >
                             <TabList>
                                 <Tab 
@@ -119,6 +123,7 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                                 bg: 'primary.green',
                                                 border: 'green'
                                     }}
+                                    name='pending-tab'
                                     color='black'
                                 >Pending</Tab>
                                 <Tab
@@ -127,6 +132,7 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                                 bg: 'primary.green',
                                                 border: 'green'
                                     }}
+                                    name='accepted-tab'
                                     color='black'
                                 >Accepted</Tab>
                                 <Tab 
@@ -135,6 +141,7 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                                 bg: 'primary.green',
                                                 border: 'green'
                                     }}
+                                    name='rejected-tab'
                                     color='black'
                                 >Rejected</Tab>
                             </TabList>
@@ -148,17 +155,17 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                 <Thead textAlign="center">
                                     <Tr>
                                         <Td fontWeight="bold">Name</Td>
-                                        <Td fontWeight="bold">Phone Number</Td>
-                                        <Td fontWeight="bold">Email</Td>
-                                        <Td fontWeight="bold">Website</Td>
+                                        {!isSmallScreen && <Td fontWeight="bold">Phone Number</Td>}
+                                        {!isSmallScreen && <Td fontWeight="bold">Email</Td>}
+                                        {!isSmallScreen && <Td fontWeight="bold">Website</Td>}
                                         <Td></Td>
                                     </Tr>
-                                    {Children.toArray(hosts?.map((host: HostInfo) => 
+                                    {Children.toArray(pages[pageIndex]?.map((host: HostInfo) => 
                                         <Tr>
                                             <Td>{host.organization}</Td>
-                                            <Td>{host.phoneNumber}</Td>
-                                            <Td>{host.email}</Td>
-                                            <Td>{host.website}</Td>
+                                            {!isSmallScreen && <Td>{host.phoneNumber}</Td>}
+                                            {!isSmallScreen && <Td>{host.email}</Td>}
+                                            {!isSmallScreen && <Td>{host.website}</Td>}
                                             { tabIndex == 0 &&
                                                 <Td>
                                                     <HStack
