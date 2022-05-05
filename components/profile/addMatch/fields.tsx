@@ -202,6 +202,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 placeholder="Select opponent team"
                                                 closeMenuOnSelect
                                                 focusBorderColor="blue.500"
+                                                id="team2"
                                                 instanceId="team2"
                                                 onFocus={() => form.setFieldTouched("team2", true, true)}
                                                 onChange={
@@ -235,6 +236,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 placeholder="Select host location"
                                                 closeMenuOnSelect
                                                 focusBorderColor="blue.500"
+                                                id="location"
                                                 instanceId="location"
                                                 onFocus={() => form.setFieldTouched("location", true, true)}
                                                 onChange={
@@ -263,6 +265,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 placeholder="Select host location"
                                                 closeMenuOnSelect
                                                 focusBorderColor="blue.500"
+                                                id="sheet-of-ice"
                                                 instanceId="sheet-of-ice"
                                                 onFocus={() => form.setFieldTouched("sheet-of-ice", true, true)}
                                                 onChange={
