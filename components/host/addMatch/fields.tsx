@@ -141,7 +141,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             columnGap={4}
                             w="100%"
                         >
-                            <Box w={{ base: "100%", md: "40%" }}>
+                            <Box w={{ base: "100%", md: "35%" }}>
                                 <Field name="team1">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
@@ -166,7 +166,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="team1" />
                                 </Box>
                             </Box>
-                            <Box w={{ base: "100%", md: "40%" }}>
+                            <Box w={{ base: "100%", md: "35%" }}>
                                 <Field name="team2">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
@@ -191,11 +191,11 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="team2" />
                                 </Box>
                             </Box>
-                            <Box w={{ base: "100%", md: "20%" }}>
+                            <Box w={{ base: "100%", md: "30%" }}>
                                 <Field name="sheetOfIce">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
-                                            <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
+                                            <FormLabel htmlFor="sheet-of-ice" srOnly>Ice sheets</FormLabel>
                                             <Select
                                                 disabled={!values.location}
                                                 borderRadius="full"
