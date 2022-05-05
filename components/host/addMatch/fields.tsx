@@ -135,13 +135,13 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid
-                            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
+                        <Flex
+                            direction={{ base: "column", md: "row" }}
                             rowGap={4}
-                            columnGap={12}
+                            columnGap={4}
                             w="100%"
                         >
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "40%" }}>
                                 <Field name="team1">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
@@ -166,7 +166,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="team1" />
                                 </Box>
                             </Box>
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "40%" }}>
                                 <Field name="team2">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
@@ -191,37 +191,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="team2" />
                                 </Box>
                             </Box>
-                        </Grid>
-                        <Grid
-                            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
-                            rowGap={4}
-                            columnGap={12}
-                            w="100%"
-                        >
-                            <Box w="100%">
-                                <Field name="location">
-                                    {({field, form}: FieldProps) => (
-                                        <FormControl>
-                                            <FormLabel htmlFor="location" srOnly>Location</FormLabel>
-                                            <Select
-                                                borderRadius="full"
-                                                placeholder="Location"
-                                                {...field}
-                                                value={host?.hostId}
-                                                id="location"
-                                            >
-                                                <option key={`${host?.hostId}`} value={host?.hostId}>
-                                                    {host?.organization}
-                                                </option>
-                                            </Select>
-                                        </FormControl>
-                                    )}
-                                </Field>
-                                <Box textColor="red.500" px={2}>
-                                    <ErrorMessage name="location" />
-                                </Box>
-                            </Box>
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "20%" }}>
                                 <Field name="sheetOfIce">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
@@ -229,7 +199,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                             <Select
                                                 disabled={!values.location}
                                                 borderRadius="full"
-                                                placeholder="Sheet of Ice"
+                                                placeholder="Ice Sheet"
                                                 {...field}
                                                 id="sheet-of-ice"
                                             >
@@ -247,7 +217,24 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="sheetOfIce" />
                                 </Box>
                             </Box>
-                        </Grid>
+                        </Flex>
+                        <Field name="location">
+                            {({ field, form }: FieldProps) => (
+                                <FormControl hidden={true}>
+                                    <Select
+                                        borderRadius="full"
+                                        placeholder="Location"
+                                        {...field}
+                                        value={host?.hostId}
+                                        id="location"
+                                    >
+                                        <option key={`${host?.hostId}`} value={host?.hostId}>
+                                            {host?.organization}
+                                        </option>
+                                    </Select>
+                                </FormControl>
+                            )}
+                        </Field>
                         <Field name="comments">
                             {({field, form}: FieldProps) => (
                                 <FormControl>
