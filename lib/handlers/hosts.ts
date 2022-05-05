@@ -76,6 +76,35 @@ export async function getPendingHosts(): Promise<HostInfo[] | null> {
     return finalHosts
 }
 
+export async function createHost(form: HostCreationForm): Promise<HostInfo> {
+    const hostInfo = await sequelize.transaction(async (t) => {
+        // 1. Update `account_type`
+        await DbModels.UserModel.update({
+            account_type: 'host',
+        }, {
+            where: { id: form.hostId },
+            transaction: t,
+        })
+
+        // 2. Create host entry
+        const hostInfo = await DbModels.HostInfoModel.create({
+            hostId: form.hostId,
+            organization: form.organization,
+            website: form.website || undefined,
+            phoneNumber: form.phoneNumber,
+            streetAddress: form.streetAddress,
+            addressExtras: form.addressExtras || undefined,
+            city: form.city,
+            state: form.state,
+            zip: form.zip,
+            country: form.country,
+            status: 'pending',
+        }, { transaction: t })
+        return hostInfo.toJSON()
+    })
+    return hostInfo
+}
+
 export async function getAcceptedHosts(): Promise<HostInfo[] | null> {
     const hosts = await DbModels.HostInfoModel.findAll({
         where: {

@@ -28,7 +28,7 @@ interface ReqProps {
     hosts: HostInfo[]
 }
 
-const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
+const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     const [hosts, setHosts] = useState(props.hosts)
     const [pageIndex, setPageIndex] = useState(0)
     const [tabIndex, setTabIndex] = useState(0)
@@ -160,8 +160,10 @@ const adminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                         {!isSmallScreen && <Td fontWeight="bold">Website</Td>}
                                         <Td></Td>
                                     </Tr>
-                                    {Children.toArray(pages[pageIndex]?.map((host: HostInfo) => 
-                                        <Tr>
+                                    {Children.toArray(pages[pageIndex]?.map((host: HostInfo, index) => 
+                                        <Tr
+                                            key={index}
+                                        >
                                             <Td>{host.organization}</Td>
                                             {!isSmallScreen && <Td>{host.phoneNumber}</Td>}
                                             {!isSmallScreen && <Td>{host.email}</Td>}
@@ -256,4 +258,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 }
 
-export default adminRequests
+export default AdminRequests
