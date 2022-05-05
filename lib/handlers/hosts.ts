@@ -10,12 +10,11 @@ export async function hosts() {
 
 export async function getAllHosts(): Promise<HostInfo[]> {
     const hostInfoList = await DbModels.HostInfoModel.findAll({
-        nest: true,
+        attributes: {
+            exclude: ['updatedAt'],
+        },
     })
-    if (!hostInfoList) {
-        return []
-    }
-    return hostInfoList.map((hostInfo) => hostInfo.get())
+    return hostInfoList.map((hostInfo) => hostInfo.toJSON())
 }
 
 export async function getIceSheetsByHostId(hostId: string) {
@@ -37,9 +36,12 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
             as: 'iceSheets',
             required: false,
         }],
+        attributes: {
+            exclude: ['updatedAt'],
+        },
         nest: true,
     })
-    return Object.assign({}, hostInfo?.get(), {
+    return Object.assign({}, hostInfo?.toJSON(), {
         iceSheets: hostInfo?.iceSheets.map((iceSheet) => iceSheet.name)
     }) as HostInfo
 }
