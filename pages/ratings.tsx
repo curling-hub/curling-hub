@@ -34,50 +34,54 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                 <title>Ratings | curlo</title>
             </Head>
             <Box
-                position="absolute"
-                w="100%"
+                position="relative"
+                w="100vw"
                 h="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 {
                     mounted && !isSmallScreen && props.user &&
-                    <TeamLayout>
+                    <>
+                        <TeamLayout/>
                         <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
                             tableSize={20}
                         />
-                    </TeamLayout>
+                    </>     
                 }
                 {mounted && !isSmallScreen && !props.user &&
-                    <StandardLayout>
+                    <>
+                        <StandardLayout/>
                         <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
                             tableSize={20}
                         />
-                    </StandardLayout>
+                    </>     
                 }
                 {
                     mounted && isSmallScreen && props.user &&
-                    <TeamLayout>
-                        <RatingsBoxSmall
+                    <>
+                        <TeamLayout/>
+                        <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
                             tableSize={8}
                         />
-                    </TeamLayout>
+                    </>     
                 }
                 {mounted && isSmallScreen && !props.user &&
-                    <StandardLayout>
-                        <RatingsBoxSmall
+                    <>
+                        <StandardLayout/>
+                        <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
                             tableSize={8}
                         />
-                    </StandardLayout>
+                    </>    
                 }
-                <Footer />
+            <Footer />
             </Box>
         </>
     )

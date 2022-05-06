@@ -23,6 +23,7 @@ import {
 import { TeamRanking } from '../../lib/models/teams'
 import { Category } from '../../lib/models/category'
 import { useState } from 'react'
+import Footer from '../footer/footer'
 
 interface RatingsBoxProps {
     teamRanking: TeamRanking[]
@@ -87,21 +88,27 @@ export default function RatingsBox(props: RatingsBoxProps) {
 
     return (
         <>
-            <Container maxW="2xl" centerContent>
+            <Box paddingBottom={"4rem"}>
                 <Box
-                    minW="sm"
-                    maxW={{ base: "sm", md: "none" }}
-                    w="100vh"
-                    h="80vh"
-                    my="4"
-                    borderRadius="20"
-                    bg="white"
-                    shadow="md"
+                    backgroundColor="primary.white"
+                    display='flex'
+                    flexDirection='column'
+                    boxShadow='lg'
+                    alignItems="center"
+                    padding="1rem"
+                    borderRadius="35px"
+                    maxH='100%'
+                    maxW="100%"
+                    textAlign="center"
+                    marginLeft='4rem'
+                    marginRight='4rem'
+                    marginTop='4rem'
                 >
-                    <Grid
+                   <Grid
                         templateColumns='repeat(10, 1fr)'
                         templateRows='repeat(10, 1fr)'
                         h="100%"
+                        maxW='100%'
                     >
                         <GridItem
                             colSpan={10}
@@ -112,6 +119,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
                             >
                                 <Text
                                     fontSize="4xl"
+                                    fontWeight='bold'
                                 >
                                     Ratings
                                 </Text>
@@ -129,7 +137,6 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                 >
                                     <Select
                                         name='category-dropdown'
-                                        placeholder="All Teams"
                                         borderRadius='20px'
                                         variant='filled'
                                         color='black'
@@ -208,65 +215,49 @@ export default function RatingsBox(props: RatingsBoxProps) {
                            
                         </GridItem>
                         <GridItem
-                            colSpan={10}
+                            colSpan={18}
+                            colStart={2}
+                            alignContent='center'
                         >
-                            <Grid
-                                templateColumns='repeat(20, 1fr)'
-                            >
-                                <GridItem
-                                    colStart={2}
-                                    colSpan={3}
-                                    justifyContent='center'
-                                >
-                                    <Flex
-                                        flexDirection="column"
-                                        justifyContent="center"
-                                        h='100%'
+                            { pages.length > 1 &&
+                                <>
+                                    <HStack
+                                        spacing={2}
                                     >
-                                        <Text
-                                            fontWeight='bold'
-                                            justifyItems='center'
-                                        >
-                                            {pageIndex+1} of {pageCount}
-                                        </Text>
-                                    </Flex>
-                                </GridItem>
-                                <GridItem
-                                    colStart={18}
-                                >
-                                    <IconButton
-                                        aria-label='page-left'
-                                        icon={<AiOutlineLeft />}
-                                        onClick={() => {
-                                            if (pageIndex + 1 > 1) {
-                                                setPageIndex(pageIndex-1)
-                                            }
-                                        }}
-                                    />
-                                </GridItem>
-                                <GridItem
-                                    colStart={19}
-                                >
-                                    <IconButton
-                                        aria-label='page-right'
-                                        icon={<AiOutlineRight />}
-                                        onClick={() => {
-                                            if (pageIndex + 1 < pageCount) {
-                                                setPageIndex(pageIndex+1)
-                                            }
-                                        }}
-                                    />
-                                </GridItem>
-                            </Grid>
+                                        <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
+                                        <Box w='70%'/>
+                                        <IconButton
+                                            aria-label='page-left'
+                                            icon={<AiOutlineLeft />}
+                                            onClick={() => {
+                                                if (pageIndex + 1 > 1) {
+                                                    setPageIndex(pageIndex-1)
+                                                }
+                                            }}
+                                        />
+                                        <IconButton
+                                            aria-label='page-right'
+                                            icon={<AiOutlineRight />}
+                                            onClick={() => {
+                                                if (pageIndex + 1 < pageCount) {
+                                                    setPageIndex(pageIndex+1)
+                                                }
+                                            }}
+                                        />
+                                    </HStack>
+                                </>
+                            }   
                         </GridItem>
                     </Grid>
                 </Box>
-            </Container>
+            </Box>
         </>
     )
 }
 
-
+/*
+ 
+*/
 interface RatingPagingProps {
     rank: TeamRanking
     tableSize: number

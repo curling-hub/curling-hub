@@ -84,9 +84,9 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                 <title>Admin Requests | Curlo</title>
             </Head>
             <Box
-                position="relative"
+                position="absolute"
                 w="100%"
-                minH="100vh"
+                minH="100%"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
             <AdminLayout/>
