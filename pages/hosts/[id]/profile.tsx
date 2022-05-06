@@ -60,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const id = context.params?.id ? context.params.id : 1
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    const email = await getHostEmailById(id.toString())
+    const email = await getHostEmailById(id.toString()) || undefined
     const tempHost = await getHostInfoById(id.toString())
     if (!tempHost) {
         return {
@@ -78,6 +78,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         zip: tempHost.zip,
         country: tempHost.country,
         iceSheets: tempHost.iceSheets,
+        email: email,
     }
     const tempMatches = await getHostMatchesById(id.toString())
     // Format hosts for page and serialization

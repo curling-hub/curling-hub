@@ -38,6 +38,7 @@ export interface CurrentHostInfo {
     zip: string
     country: string
     iceSheets?: string[]
+    email?: string
 }
 
 export interface HostInfo extends HostInfoBase {

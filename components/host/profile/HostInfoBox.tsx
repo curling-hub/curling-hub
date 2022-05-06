@@ -69,7 +69,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                     Contact
                 </Text>
                 <Text>
-                    ^_^ I am a placeholder, nice to meet you! ^_^
+                    {currentHost.email}
                 </Text>
                 <Text>
                     {currentHost.phoneNumber}
