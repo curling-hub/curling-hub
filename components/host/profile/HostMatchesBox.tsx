@@ -32,7 +32,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                 >
                     Recently Added Matches
                 </Text>
-                <TableContainer w="75%" maxW="388px" minW="302px" overflowY="scroll">
+                <TableContainer w="75%" maxW="388px" minW="302px" overflowY="auto">
                         <Table variant='simple' size="sm" whiteSpace="normal">
                         <Thead>
                             <Tr>
