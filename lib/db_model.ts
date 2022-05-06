@@ -1,13 +1,32 @@
 import { DataTypes, Model, HasManyAddAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, NonAttribute } from 'sequelize'
 import { sequelize } from './db'
-import { models } from "@next-auth/sequelize-adapter"
+import SequelizeAdapter, { models } from "@next-auth/sequelize-adapter"
 import type { Account as AdapterAccount } from 'next-auth'
 import type { AdapterUser } from 'next-auth/adapters'
 
 import { Category, HostInfoBase, TeamInfo, TeamMember } from './models'
 import { MatchResult, MatchResultDetails } from './models/match'
 import { TeamInfoRatings } from './models/team'
-import { RatingPeriod } from './models/glicko'
+import { RatingPeriod, TeamGlickoInfo } from './models/glicko'
+import { RatingPeriodExt } from './models/teams'
+
+/**
+ * Redefine next-auth's User instance
+ */
+interface UserInstance extends
+        Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
+    account_type?: String
+}
+
+interface AccountInstance extends
+        Model<AdapterAccount, Partial<AdapterAccount>>, AdapterAccount {}
+
+declare module 'next-auth' {
+    interface UserInstance extends
+            Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
+        account_type?: String
+    }
+}
 
 interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember { }
 
@@ -16,47 +35,38 @@ interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo 
     // Allows `addMember` on a team instance
     addMember: HasManyAddAssociationMixin<TeamMemberInstance, number>
 
+    ratingPeriods: NonAttribute<RatingPeriodExt>
+
+    teamGlickoInfo: NonAttribute<TeamGlickoInfo>
+
     categories: Array<Category>
     // Allows `addCategory` on a team instance
     addCategory: BelongsToManyAddAssociationMixin<Category, number>
 
-    matches: NonAttribute<MatchResult[]>
+    matches: NonAttribute<MatchResultInstance[]>
     // Allows `addMatch` on a team instance
     addMatch: BelongsToManyAddAssociationMixin<MatchResult, number>
+
+    admins: NonAttribute<UserInstance[]>
 }
 
 interface CategoryInstance extends Model<Category, Partial<Category>>, Category { }
 
 interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, MatchResultDetails {
-    teams: NonAttribute<TeamInfoRatings[]>
+    teams: NonAttribute<TeamInfoInstance[]>
     // Allows `addTeam` on a match_result instance
     addTeam: BelongsToManyAddAssociationsMixin<TeamInfo, number>
+
+    host: NonAttribute<HostInfoInstance>
 }
 
 interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, HostInfoBase {
-    iceSheets: Array<{ hostId: string, name: string }>,
-    user: {email: string}
+    iceSheets: NonAttribute<Array<{ hostId: string, name: string }>>
+    matches: NonAttribute<MatchResultInstance>
+    user: NonAttribute<{email: string}>
 }
 
 interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod { }
-
-/**
- * Redefine next-auth's User instance
- */
-interface UserInstance extends
-    Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
-    account_type?: String
-}
-
-interface AccountInstance extends
-    Model<AdapterAccount, Partial<AdapterAccount>>, AdapterAccount { }
-
-declare module 'next-auth' {
-    interface UserInstance extends
-        Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
-        account_type?: String
-    }
-}
 
 
 /**
@@ -64,7 +74,7 @@ declare module 'next-auth' {
  */
 export const UserModel = sequelize.define<UserInstance>('users', {
     ...models.User,
-    // account_type is one of: ['curler', 'club', 'admin']
+    // account_type is one of: ['curler', 'team', 'admin']
     account_type: DataTypes.STRING(256),
 })
 
@@ -76,6 +86,14 @@ export const AccountModel = sequelize.define<AccountInstance>("accounts", {
     ...models.Account,
     // overwrite default `id_token` data type because VARCHAR(255) is too short
     id_token: DataTypes.STRING(8192),
+})
+
+
+export const nextauthSequelizeAdaptor = SequelizeAdapter(sequelize, {
+    models: {
+        User: UserModel,
+        Account: AccountModel,
+    },
 })
 
 
@@ -92,11 +110,52 @@ export const TeamInfoModel = sequelize.define<TeamInfoInstance>('TeamInfo', {
     },
     rating: {
         type: DataTypes.STRING(255),
-        allowNull: false,
     },
 }, {
     tableName: 'team_profile',
     timestamps: false,
+})
+
+
+export const TeamAdminModel = sequelize.define('TeamAdmin', {
+    teamId: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        references: {
+            model: TeamInfoModel,
+            key: 'team_id',
+        },
+    },
+    userId: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        references: {
+            model: UserModel,
+            key: 'id',
+        },
+    },
+}, {
+    tableName: 'team_admin',
+    underscored: true,
+    timestamps: false,
+})
+
+
+UserModel.belongsToMany(TeamInfoModel, {
+    through: TeamAdminModel,
+    foreignKey: {
+        name: 'userId',
+        field: 'user_id',
+    },
+    as: 'teams',
+})
+TeamInfoModel.belongsToMany(UserModel, {
+    through: TeamAdminModel,
+    foreignKey: {
+        name: 'teamId',
+        field: 'team_id',
+    },
+    as: 'admins',
 })
 
 
@@ -132,14 +191,20 @@ export const TeamMemberModel = sequelize.define<TeamMemberInstance>('TeamMember'
 
 
 TeamInfoModel.hasMany(TeamMemberModel, {
-    foreignKey: 'teamId',
+    foreignKey: {
+        field: 'team_id',
+        name: 'teamId',
+    },
     as: {
         singular: 'member',
         plural: 'members',
     },
 })
 TeamMemberModel.belongsTo(TeamInfoModel, {
-    foreignKey: 'teamId',
+    foreignKey: {
+        field: 'team_id',
+        name: 'teamId',
+    },
 })
 
 
@@ -185,7 +250,10 @@ export const CategoryTeamRel = sequelize.define('CategoryTeamRel', {
 
 CategoryModel.belongsToMany(TeamInfoModel, {
     through: CategoryTeamRel,
-    foreignKey: 'category_id',
+    foreignKey: {
+        name: 'categoryId',
+        field: 'category_id',
+    },
     as: {
         singular: 'Team',
         plural: 'Teams',
@@ -193,7 +261,10 @@ CategoryModel.belongsToMany(TeamInfoModel, {
 })
 TeamInfoModel.belongsToMany(CategoryModel, {
     through: CategoryTeamRel,
-    foreignKey: 'team_id',
+    foreignKey: {
+        name: 'teamId',
+        field: 'team_id',
+    },
     as: {
         singular: 'Category',
         plural: 'Categories',
@@ -203,8 +274,13 @@ TeamInfoModel.belongsToMany(CategoryModel, {
 
 export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
     hostId: {
-        type: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
+        field: 'host_id',
         primaryKey: true,
+        references: {
+            model: UserModel,
+            key: 'id',
+        },
     },
     organization: {
         type: DataTypes.STRING(255),
@@ -245,7 +321,11 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
     status: {
         type: DataTypes.ENUM<string>('pending','accepted','rejected'),
         allowNull: false
-    }
+    },
+    updatedAt: {
+	type: DataTypes.DATE(),
+	defaultValue: DataTypes.NOW(),
+    },
 }, {
     tableName: 'host_profile',
     timestamps: false,
@@ -254,7 +334,7 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
 
 export const IceSheetModel = sequelize.define('Ice Sheet', {
     hostId: {
-        type: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
         field: 'host_id',
         primaryKey: true,
         references: {
@@ -272,16 +352,32 @@ export const IceSheetModel = sequelize.define('Ice Sheet', {
     timestamps: false,
 })
 
-HostInfoModel.hasOne(UserModel, {
-    foreignKey: 'id',
+
+UserModel.hasOne(HostInfoModel, {
+    foreignKey: {
+        name: 'hostId',
+        field: 'id',
+    },
+})
+HostInfoModel.belongsTo(UserModel, {
+    foreignKey: {
+        name: 'hostId',
+        field: 'id',
+    },
     as: 'user'
 })
 HostInfoModel.hasMany(IceSheetModel, {
-    foreignKey: 'hostId',
+    foreignKey: {
+        name: 'hostId',
+        field: 'host_id',
+    },
     as: 'iceSheets',
 })
 IceSheetModel.belongsTo(HostInfoModel, {
-    foreignKey: 'hostId',
+    foreignKey: {
+        name: 'hostId',
+        field: 'host_id',
+    },
 })
 
 
@@ -293,7 +389,7 @@ export const MatchModel = sequelize.define<MatchResultInstance>('Match Info', {
         autoIncrement: true,
     },
     hostId: {
-        type: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
         field: 'host_id',
         references: {
             model: HostInfoModel,
@@ -362,7 +458,10 @@ export const MatchTeamRel = sequelize.define('MatchTeamRel', {
 
 MatchModel.belongsToMany(TeamInfoModel, {
     through: MatchTeamRel,
-    foreignKey: 'matchId',
+    foreignKey: {
+        name: 'matchId',
+        field: 'match_id',
+    },
     as: {
         singular: 'team',
         plural: 'teams',
@@ -370,11 +469,30 @@ MatchModel.belongsToMany(TeamInfoModel, {
 })
 TeamInfoModel.belongsToMany(MatchModel, {
     through: MatchTeamRel,
-    foreignKey: 'teamId',
-    as: {
-        singular: 'Match',
-        plural: 'Matches',
+    foreignKey: {
+        name: 'teamId',
+        field: 'team_id',
     },
+    as: {
+        singular: 'match',
+        plural: 'matches',
+    },
+})
+
+
+MatchModel.belongsTo(HostInfoModel, {
+    foreignKey: {
+        name: 'hostId',
+        field: 'host_id',
+    },
+    as: 'host',
+})
+HostInfoModel.hasMany(MatchModel, {
+    foreignKey: {
+        name: 'hostId',
+        field: 'host_id',
+    },
+    as: 'matches',
 })
 
 
@@ -446,7 +564,7 @@ export const TeamGlickoInfoModel = sequelize.define('TeamGlickoInfo', {
         primaryKey: true,
         references: {
             model: TeamInfoModel,
-            key: 'teamId',
+            key: 'team_id',
         },
     },
     rating: {
@@ -468,15 +586,26 @@ export const TeamGlickoInfoModel = sequelize.define('TeamGlickoInfo', {
 })
 
 
-TeamInfoModel.hasOne(TeamGlickoInfoModel, { foreignKey: 'teamId', as: 'teamGlickoInfo' })
-TeamGlickoInfoModel.belongsTo(TeamInfoModel, { foreignKey: 'teamId' })
+TeamInfoModel.hasOne(TeamGlickoInfoModel, {
+    foreignKey: {
+        name: 'teamId',
+        field: 'team_id',
+    },
+    as: 'teamGlickoInfo',
+})
+TeamGlickoInfoModel.belongsTo(TeamInfoModel, {
+    foreignKey: {
+        name: 'teamId',
+        field: 'team_id',
+    },
+})
 
 
 export const RatingHistoryModel = sequelize.define('RatingHistory', {
     teamId: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        primaryKey: true,
+        unique: 'identifier',
         references: {
             model: TeamInfoModel,
             key: 'team_id',
@@ -485,7 +614,7 @@ export const RatingHistoryModel = sequelize.define('RatingHistory', {
     ratingPeriodId: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        primaryKey: true,
+        unique: 'identifier',
         references: {
             model: RatingPeriodModel,
             key: 'rating_period_id',
@@ -507,4 +636,22 @@ export const RatingHistoryModel = sequelize.define('RatingHistory', {
     tableName: 'rating_history',
     timestamps: false,
     underscored: true,
+})
+
+
+TeamInfoModel.belongsToMany(RatingPeriodModel, {
+    through: RatingHistoryModel,
+    foreignKey: {
+        name: 'teamId',
+        field: 'team_id',
+    },
+    as: 'ratingPeriods',
+})
+RatingPeriodModel.belongsToMany(TeamInfoModel, {
+    through: RatingHistoryModel,
+    foreignKey: {
+        name: 'ratingPeriodId',
+        field: 'rating_period_id',
+    },
+    as: 'teams',
 })

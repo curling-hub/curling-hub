@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { getSession } from 'next-auth/react'
+import { getSession } from '../lib/auth/session'
 import { Session } from 'next-auth'
 import TeamLayout from '../components/layouts/TeamLayout'
 import StandardLayout from '../components/layouts/StandardLayout'
@@ -11,9 +11,10 @@ import RatingsBox from '../components/ratings/ratingsBox'
 import RatingsBoxSmall from '../components/ratings/ratingsBoxSmall'
 import { getAllCategories } from '../lib/handlers/categories'
 import { Category } from '../lib/models/category'
-import { getAllRankings } from '../lib/handlers/teams'
+import { getAllRankingsSimple } from '../lib/handlers/teams'
 import { TeamRanking } from '../lib/models/teams'
 import { useEffect, useState } from 'react'
+import { sequelize } from '../lib/db'
 import Footer from "../components/footer/footer";
 
 interface RatingsProps {
@@ -83,11 +84,14 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getSession(context)
+    if (process.env.NODE_ENV === 'test' || process.env.TEST !== undefined) {
+        await sequelize.sync()
+    }
+    const { signedUp, signedIn, session } = await getSession(context)
     const categories = await getAllCategories()
-    const rankings = await getAllRankings()
+    const rankings = await getAllRankingsSimple()
 
-    if (!session || !session["user"]) {
+    if (!session || !signedIn) {
         // not signed in / signed up
         return {
             props: {
@@ -98,11 +102,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
     }
 
-    const user = session["user"]
-    if (!user["account_type"]) {
+    if (!signedUp) {
         // has not completed sign up up
         return {
             props: {
+                session,
                 user: null,
                 categories: categories,
                 rankings: rankings
@@ -113,6 +117,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // signed in, share session with component
     return {
         props: {
+            session,
             user: session,
             categories: categories,
             rankings: rankings

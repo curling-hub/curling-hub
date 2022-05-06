@@ -4,12 +4,11 @@ import {
     Text,
     Spacer
 } from "@chakra-ui/react"
-import { TeamMembers } from '../../lib/models/teams'
-import { TeamCategories } from '../../lib/models/teams'
+import { Category, TeamMember } from "../../lib/models"
 
 interface MembersTableProps {
-    teamMembers?: TeamMembers[]
-    teamCategories?: TeamCategories[]
+    teamMembers?: TeamMember[]
+    teamCategories?: Category[]
 }
 
 export default function MembersTable(props: MembersTableProps) {
@@ -30,7 +29,7 @@ export default function MembersTable(props: MembersTableProps) {
                     >Curlers</Text>
                     {teamMembers.map((member, i) => (
                         <Text key={`${i}`}>
-                            {member.memberName}
+                            {member.name}
                         </Text>
                     ))}
                 </VStack>
@@ -42,7 +41,7 @@ export default function MembersTable(props: MembersTableProps) {
                     >Categories</Text>
                     {teamCategories.map((category, i) => (
                         <Text key={`${i}`}>
-                            {category.categoryName}
+                            {category.name}
                         </Text>
                     ))}
                 </VStack>

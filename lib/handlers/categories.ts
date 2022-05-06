@@ -1,20 +1,8 @@
-import { RowDataPacket } from 'mysql2'
-import { pool } from '../db'
 import * as DbModels from '../db_model'
 import type { Category } from '../models'
 
 export async function categories() {
-    const conn = await pool.promise().getConnection()
-    try {
-        const [rows, _] = await conn.query('SELECT * FROM `categories`')
-        const r = rows as RowDataPacket[]
-        await conn.commit()
-        return r
-    } catch (e: any) {
-        await conn.rollback()
-    } finally {
-        conn.release()
-    }
+    return await getAllCategories()
 }
 
 export async function getAllCategories(): Promise<Category[]> {
@@ -22,7 +10,7 @@ export async function getAllCategories(): Promise<Category[]> {
     if (!categories) {
         return []
     }
-    return categories.map((category) => (category.get()))
+    return categories.map((category) => (category.toJSON()))
 }
 
 export async function getCategoriesByTeamId(teamId: number): Promise<Category[]> {
@@ -33,12 +21,12 @@ export async function getCategoriesByTeamId(teamId: number): Promise<Category[]>
                 teamId: teamId,
             },
             as: 'Teams',    // has to match `as` in `belongsToMany`
-            attributes: [],
+            attributes: [], // don't include the team's fields in the result
         }],
     })
     if (!categories) {
         return []
     } 
-    return categories.map((category) => category.get())
+    return categories.map((category) => category.toJSON())
 }
 

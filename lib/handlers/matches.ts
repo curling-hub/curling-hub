@@ -28,7 +28,7 @@ export async function create(form: AddMatchSchema): Promise<MatchResult> {
         // TODO: Add checks for teamId1 and teamId2 - what if some team plays against themselves?
         // 2. Create relation between match and team
         await matchResult.addTeam([matchResult.teamId1, matchResult.teamId2])
-        return matchResult.get()
+        return matchResult.toJSON()
     })
     return result
 }

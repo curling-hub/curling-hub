@@ -20,23 +20,26 @@ import {
 import {
     MdHorizontalRule
 } from 'react-icons/md'
-import { TeamMatch } from '../../lib/models/teams'
+import type { TeamMatch } from '../../lib/models/teams'
 import { Filter } from '../../lib/models/match'
 import { useState, Children } from 'react'
+import { matchResultToString, matchResultOpponentTeamName } from '../../lib/utils/match'
 
 
 interface teamRatingsBoxProps {
     teamMatches: TeamMatch[]
     filters: Filter[]
     tableSize: number
+    teamId: number
 }
 
 export default function TeamRatingsBox(props: teamRatingsBoxProps) {
 
     const {
+        teamId,
         teamMatches = [],
         filters,
-        tableSize
+        tableSize,
     } = props
     
     const [pageIndex, setPageIndex] = useState(0)
@@ -53,51 +56,52 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     
     // Search function
     function search(query: string) {
-        const tables = fixedRankings.filter((team) => {
-            return (team.outcome.toString()?.includes(query) || 
-            team.location?.includes(query) ||
-            team.comment?.includes(query) ||
-            team.date?.includes(query) ||
-            team.sheetOfIce?.includes(query) ||
-            team.comment?.includes(query))
+        const tables = fixedRankings.filter((match) => {
+            return (matchResultToString(teamId, match).toLowerCase().includes(query) || 
+            match.host?.organization?.toLowerCase().includes(query) ||
+            match.date?.toString().toLowerCase().includes(query) ||
+            match.sheetOfIce?.toLowerCase().includes(query) ||
+            match.comments?.toLowerCase().includes(query))
         })
         setDisplayedRankings(tables)
     }
 
     // use this to filter
     function filterMatches(selected: number) {  
-        console.log(selected) 
-       if (selected == 1) {
-           const dates = fixedRankings.sort((m1, m2) => {
-               return new Date(m1.date).getTime() - new Date(m2.date).getTime()
-           })
-           setDisplayedRankings(dates)
-       } 
-       else if (selected == 2) {
-           const dates = fixedRankings.sort((m1, m2) => {
-               return new Date(m1.date).getTime() + new Date(m2.date).getTime()
-           })
-           setDisplayedRankings(dates)
-       } 
-       else if (selected == 3) {
-           const wins = fixedRankings.filter((match) => {
-               return match.outcome == 'Win'
-           })
-           setDisplayedRankings(wins)
-       } 
-       else if (selected == 4) {
+        if (selected == 1) {
+            const dates = fixedRankings.sort((m1, m2) => {
+                return new Date(m1.date).getTime() - new Date(m2.date).getTime()
+            })
+            setDisplayedRankings(dates)
+        }
+        else if (selected == 2) {
+            const dates = fixedRankings.sort((m1, m2) => {
+                return new Date(m1.date).getTime() + new Date(m2.date).getTime()
+            })
+            setDisplayedRankings(dates)
+        }
+        else if (selected == 3) {
+            const wins = fixedRankings.filter((match) => {
+                const outcome = matchResultToString(teamId, match)
+                return outcome === 'Win'
+            })
+            setDisplayedRankings(wins)
+        }
+        else if (selected == 4) {
             const losses = fixedRankings.filter((match) => {
-                return match.outcome == 'Loss'
+                const outcome = matchResultToString(teamId, match)
+                return outcome === 'Loss'
             })
             console.log(losses)
             setDisplayedRankings(losses)
-       }
-       else {
+        }
+        else {
             const ties = fixedRankings.filter((match) => {
-                return match.outcome == 'Tie'
+                const outcome = matchResultToString(teamId, match)
+                return outcome === 'Tie'
             })
             setDisplayedRankings(ties)
-       }
+        }
     }
 
     return (
@@ -213,7 +217,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                             <Text>{match.date}</Text>
                                         </GridItem>
                                         {
-                                            match.outcome == 'Win' && 
+                                            matchResultToString(teamId, match) === 'Win' && 
                                             <GridItem
                                                 colStart={4}
                                             >
@@ -227,13 +231,13 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                             key={'arrow'}
                                                             style={{color: 'green'}}
                                                         />
-                                                        <Text>{match.outcome}</Text>
+                                                        <Text>{matchResultToString(teamId, match)}</Text>
                                                     </HStack>
                                                 </Flex>
                                             </GridItem>
                                         }
                                         {
-                                            match.outcome == 'Loss' && 
+                                            matchResultToString(teamId, match) === 'Loss' && 
                                             <GridItem
                                                 colStart={4}
                                             >
@@ -247,13 +251,13 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                             key={'arrow'}
                                                             style={{color: 'red'}}
                                                         />
-                                                        <Text>{match.outcome}</Text>
+                                                        <Text>{matchResultToString(teamId, match)}</Text>
                                                     </HStack>
                                                 </Flex>
                                             </GridItem>
                                         }
                                         {
-                                            match.outcome == 'Tie' && 
+                                            matchResultToString(teamId, match) === 'Tie' &&
                                             <GridItem
                                                 colStart={4}
                                             >
@@ -267,7 +271,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                             key={'arrow'}
                                                             style={{color: 'blue'}}
                                                         />
-                                                        <Text>{match.outcome}</Text>
+                                                        <Text>{matchResultToString(teamId, match)}</Text>
                                                     </HStack>
                                                 </Flex>
                                             </GridItem>
@@ -275,7 +279,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                         <GridItem
                                             colStart={7}
                                         >
-                                            <Text>{match.opponent}</Text>
+                                            <Text>{matchResultOpponentTeamName(teamId, match)}</Text>
                                         </GridItem>
                                     </>
                             ))) }

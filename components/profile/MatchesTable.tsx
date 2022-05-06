@@ -7,31 +7,20 @@ import {
     TableCaption,
     TableContainer,
 } from "@chakra-ui/react"
-import { TeamMatches } from '../../lib/models/teams'
+import type { TeamMatch } from '../../lib/models/teams'
+import { matchResultOpponentTeamName, matchResultToString } from '../../lib/utils/match'
 
 interface MatchesTableProps {
-    teamMatches?: TeamMatches[]
+    teamMatches?: TeamMatch[]
     teamName?: string
-}
-
-function outcome(winner: string, team: string) {
-    if (winner == team)
-        return "Win"
-    else if (!winner)
-        return "Tie"
-    else
-        return "Loss"
-}
-
-function formatDate(dateString: string) {
-    const index_of_time: number = dateString.indexOf("GMT+0000")
-    return dateString.substring(0, index_of_time)
+    teamId?: number
 }
 
 export default function MatchesTable(props: MatchesTableProps) {
 
     const {
-        teamMatches = []
+        teamId,
+        teamMatches = [],
     } = props
 
     return (
@@ -50,10 +39,10 @@ export default function MatchesTable(props: MatchesTableProps) {
                     <Tbody>
                         {teamMatches.map((match) => (
                             <Tr key={`${match.matchId}`}>
-                                <Td>{formatDate(match.date)}</Td>
+                                <Td>{match.date}</Td>
                                 {/* <Td>{match.date}</Td> */}
-                                <Td>{outcome(match.winner, match.team_1_name)}</Td>
-                                <Td>{(match.team_1_name == props.teamName) ? match.team_1_name : match.team_2_name}</Td>
+                                <Td>{matchResultToString(teamId || 0, match)}</Td>
+                                <Td>{matchResultOpponentTeamName(teamId || 0, match)}</Td>
                                 {/* <Td>{match.category}</Td> */}
                             </Tr>
                         ))}
