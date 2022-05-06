@@ -32,8 +32,8 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                 >
                     Recently Added Matches
                 </Text>
-                <TableContainer w="75%" maxW="388px" minW="302px">
-                    <Table variant='simple' size="sm">
+                <TableContainer w="75%" maxW="388px" minW="302px" overflowY="scroll">
+                        <Table variant='simple' size="sm" whiteSpace="normal">
                         <Thead>
                             <Tr>
                                 <Td fontWeight="bold">Date</Td>
