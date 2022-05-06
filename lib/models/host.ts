@@ -33,6 +33,19 @@ export interface HostCreationForm {
     country: string
 }
 
+export interface CurrentHostInfo {
+    organization: string
+    website?: string
+    phoneNumber: string
+    streetAddress: string
+    addressExtras?: string
+    city: string
+    state: string
+    zip: string
+    country: string
+    iceSheets?: string[]
+}
+
 export interface HostInfo extends HostInfoBase {
     iceSheets?: string[]
     user?: user

@@ -18,6 +18,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
                 fontSize={REG_BUTTON_FONT_SIZE}
                 w="64%"
                 top={props.top}
+                _focus={{shadow: "dark-lg"}}
             >
                 {props.buttonText}
             </Button>

@@ -9,7 +9,7 @@ import { MatchResult, MatchResultDetails } from './models/match'
 import { TeamInfoRatings } from './models/team'
 import { RatingPeriod } from './models/glicko'
 
-interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember {}
+interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember { }
 
 interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo {
     members: NonAttribute<TeamMember[]>
@@ -25,7 +25,7 @@ interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo 
     addMatch: BelongsToManyAddAssociationMixin<MatchResult, number>
 }
 
-interface CategoryInstance extends Model<Category, Partial<Category>>, Category {}
+interface CategoryInstance extends Model<Category, Partial<Category>>, Category { }
 
 interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, MatchResultDetails {
     teams: NonAttribute<TeamInfoRatings[]>
@@ -38,22 +38,22 @@ interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, H
     user: {email: string}
 }
 
-interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod {}
+interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod { }
 
 /**
  * Redefine next-auth's User instance
  */
 interface UserInstance extends
-        Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
+    Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
     account_type?: String
 }
 
 interface AccountInstance extends
-        Model<AdapterAccount, Partial<AdapterAccount>>, AdapterAccount {}
+    Model<AdapterAccount, Partial<AdapterAccount>>, AdapterAccount { }
 
 declare module 'next-auth' {
     interface UserInstance extends
-            Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
+        Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
         account_type?: String
     }
 }
@@ -61,7 +61,7 @@ declare module 'next-auth' {
 
 /**
  * Managed by NextAuth, extends the default User model to include `account_type`
- */ 
+ */
 export const UserModel = sequelize.define<UserInstance>('users', {
     ...models.User,
     // account_type is one of: ['curler', 'club', 'admin']
@@ -223,6 +223,8 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
     },
     addressExtras: {
         type: DataTypes.STRING(255),
+        field: 'address_extras',
+        allowNull: true,
     },
     city: {
         type: DataTypes.STRING(255),

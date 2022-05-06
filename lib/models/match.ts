@@ -32,3 +32,10 @@ export interface Filter {
     filter_id: number
     value: string
 }
+
+export interface HostMatchResult {
+    matchId: number
+    team1: string
+    team2: string
+    date: string
+}
