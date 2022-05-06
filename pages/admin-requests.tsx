@@ -103,139 +103,156 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                         maxW="100%"
                         textAlign="center"
                         top="0"
+                        marginLeft='4rem'
+                        marginRight='4rem'
                     >
                         <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
                             Host Account Requests
                         </Text>
-                        <Tabs 
-                            marginTop="5px" 
-                            variant='soft-rounded' 
-                            align='center'
-                            onChange={(index) => {
-                                setHosts([])
-                                setTabIndex(index)
-                            }}
+                        <Box
+                            display='flex'
+                            flexDir='row'
+                            alignItems='start'
+                            w='100%'
                         >
-                            <TabList>
-                                <Tab 
-                                    _selected={{color: 'black',
-                                                fontWeight: 'bold',
-                                                bg: 'primary.green',
-                                                border: 'green'
-                                    }}
-                                    name='pending-tab'
-                                    color='black'
-                                >Pending</Tab>
-                                <Tab
-                                    _selected={{color: 'black',
-                                                fontWeight: 'bold',
-                                                bg: 'primary.green',
-                                                border: 'green'
-                                    }}
-                                    name='accepted-tab'
-                                    color='black'
-                                >Accepted</Tab>
-                                <Tab 
-                                    _selected={{color: 'black',
-                                                fontWeight: 'bold',
-                                                bg: 'primary.green',
-                                                border: 'green'
-                                    }}
-                                    name='rejected-tab'
-                                    color='black'
-                                >Rejected</Tab>
-                            </TabList>
-                        </Tabs>
-                        <TableContainer 
-                            marginTop="5px"
-                            width='80%'
-                            height='80%'
-                        >
-                            <Table variant='simple' size="sm">
-                                <Thead textAlign="center">
-                                    <Tr>
-                                        <Td fontWeight="bold">Name</Td>
-                                        {!isSmallScreen && <Td fontWeight="bold">Phone Number</Td>}
-                                        {!isSmallScreen && <Td fontWeight="bold">Email</Td>}
-                                        {!isSmallScreen && <Td fontWeight="bold">Website</Td>}
-                                        <Td></Td>
-                                    </Tr>
-                                    {Children.toArray(pages[pageIndex]?.map((host: HostInfo, index) => 
-                                        <Tr
-                                            key={index}
-                                        >
-                                            <Td>{host.organization}</Td>
-                                            {!isSmallScreen && <Td>{host.phoneNumber}</Td>}
-                                            {!isSmallScreen && <Td>{host.email}</Td>}
-                                            {!isSmallScreen && <Td>{host.website}</Td>}
-                                            { tabIndex == 0 &&
-                                                <Td>
-                                                    <HStack
-                                                        spacing={4}
-                                                    >
-                                                        <Button
-                                                            colorScheme='green'
-                                                            borderRadius='30px'
-                                                            size='sm'
-                                                            color='black'
-                                                            onClick={async () => {await updateHostStatus(host.hostId, 'accepted')}}
-                                                        >
-                                                            Accept
-                                                        </Button>
-                                                        <Button
-                                                            colorScheme='red'
-                                                            borderRadius='30px'
-                                                            size='sm'
-                                                            color='black'
-                                                            onClick={async () => {await updateHostStatus(host.hostId, 'rejected')}}
-                                                        >
-                                                            Reject
-                                                        </Button>
-                                                    </HStack>
-                                                </Td>
-                                            }
-                                        </Tr>
-                                    ))}
-                                </Thead>
-                                <Tbody>
-
-                                </Tbody>
-                            </Table>    
-                        </TableContainer>
-                        {pages.length > 1 && 
-                            <Box
-                                aria-label="Page navigation " 
-                                display='flex'
-                                flexDirection='row'
-                                justifyContent='center'
-                                w='100%'
+                            <Tabs 
+                                
+                                marginTop="5px" 
+                                variant='soft-rounded' 
+                                onChange={(index) => {
+                                    setHosts([])
+                                    setTabIndex(index)
+                                }}
                             >
-                                    <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
-                                    <Box w='80%'/>
-                                    <HStack
-                                        spacing={2}
-                                    >   
-                                        <IconButton
-                                                aria-label='page-left'
-                                                icon={<AiOutlineLeft />}
-                                                onClick={() => {
-                                                    if (pageIndex + 1 > 1) {
-                                                        setPageIndex(pageIndex-1)
-                                                    }
-                                                }}
-                                        />
-                                        <IconButton
-                                                aria-label='page-right'
-                                                icon={<AiOutlineRight />}
-                                                onClick={() => {
-                                                    if (pageIndex + 1 < pageCount) {
-                                                        setPageIndex(pageIndex+1)
-                                                    }
-                                                }}
-                                        />
-                                    </HStack>
-                            </Box>
-                        }    
+                                <TabList>
+                                    <Tab 
+                                        _selected={{color: 'black',
+                                                    fontWeight: 'bold',
+                                                    bg: 'primary.green',
+                                                    border: 'green'
+                                        }}
+                                        name='pending-tab'
+                                        color='black'
+                                    >Pending</Tab>
+                                    <Tab
+                                        _selected={{color: 'black',
+                                                    fontWeight: 'bold',
+                                                    bg: 'primary.green',
+                                                    border: 'green'
+                                        }}
+                                        name='accepted-tab'
+                                        color='black'
+                                    >Accepted</Tab>
+                                    <Tab 
+                                        _selected={{color: 'black',
+                                                    fontWeight: 'bold',
+                                                    bg: 'primary.green',
+                                                    border: 'green'
+                                        }}
+                                        name='rejected-tab'
+                                        color='black'
+                                    >Rejected</Tab>
+                                </TabList>
+                            </Tabs>
+                        </Box>
+                        <Box
+                            display='flex'
+                            flexDir='row'
+                            alignItems='start'
+                            w='100%'
+                            marginTop='1%'
+                        >
+                            <TableContainer 
+                                marginTop="5px"
+                                width='100%'
+                                height='80%'
+                            >
+                                <Table variant='simple' size="sm">
+                                    <Thead textAlign="center">
+                                        <Tr>
+                                            <Td fontWeight="bold">Name</Td>
+                                            {!isSmallScreen && <Td fontWeight="bold">Phone Number</Td>}
+                                            {!isSmallScreen && <Td fontWeight="bold">Email</Td>}
+                                            {!isSmallScreen && <Td fontWeight="bold">Website</Td>}
+                                            <Td></Td>
+                                        </Tr>
+                                        {Children.toArray(pages[pageIndex]?.map((host: HostInfo, index) => 
+                                            <Tr
+                                                key={index}
+                                            >
+                                                <Td>{host.organization}</Td>
+                                                {!isSmallScreen && <Td>{host.phoneNumber}</Td>}
+                                                {!isSmallScreen && <Td>{host.email}</Td>}
+                                                {!isSmallScreen && <Td>{host.website}</Td>}
+                                                { tabIndex == 0 &&
+                                                    <Td>
+                                                        <HStack
+                                                            spacing={4}
+                                                        >
+                                                            <Button
+                                                                colorScheme='green'
+                                                                borderRadius='30px'
+                                                                size='sm'
+                                                                color='black'
+                                                                onClick={async () => {await updateHostStatus(host.hostId, 'accepted')}}
+                                                            >
+                                                                Accept
+                                                            </Button>
+                                                            <Button
+                                                                colorScheme='red'
+                                                                borderRadius='30px'
+                                                                size='sm'
+                                                                color='black'
+                                                                onClick={async () => {await updateHostStatus(host.hostId, 'rejected')}}
+                                                            >
+                                                                Reject
+                                                            </Button>
+                                                        </HStack>
+                                                    </Td>
+                                                }
+                                            </Tr>
+                                        ))}
+                                    </Thead>
+                                    <Tbody>
+
+                                    </Tbody>
+                                </Table>    
+                            </TableContainer>
+                            {pages.length > 1 && 
+                                <Box
+                                    aria-label="Page navigation " 
+                                    display='flex'
+                                    flexDirection='row'
+                                    justifyContent='center'
+                                    w='100%'
+                                >
+                                        <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
+                                        <Box w='80%'/>
+                                        <HStack
+                                            spacing={2}
+                                        >   
+                                            <IconButton
+                                                    aria-label='page-left'
+                                                    icon={<AiOutlineLeft />}
+                                                    onClick={() => {
+                                                        if (pageIndex + 1 > 1) {
+                                                            setPageIndex(pageIndex-1)
+                                                        }
+                                                    }}
+                                            />
+                                            <IconButton
+                                                    aria-label='page-right'
+                                                    icon={<AiOutlineRight />}
+                                                    onClick={() => {
+                                                        if (pageIndex + 1 < pageCount) {
+                                                            setPageIndex(pageIndex+1)
+                                                        }
+                                                    }}
+                                            />
+                                        </HStack>
+                                </Box>
+                            }
+                        </Box>
                     </Box>
                 </Box>
                 <Footer />
