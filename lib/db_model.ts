@@ -317,7 +317,11 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
     status: {
         type: DataTypes.ENUM<string>('pending','accepted','rejected'),
         allowNull: false
-    }
+    },
+    updatedAt: {
+	type: DataTypes.DATE(),
+	defaultValue: DataTypes.NOW(),
+    },
 }, {
     tableName: 'host_profile',
     timestamps: false,
@@ -344,7 +348,9 @@ export const IceSheetModel = sequelize.define('Ice Sheet', {
     timestamps: false,
 })
 
-HostInfoModel.hasOne(UserModel, {
+
+UserModel.hasOne(HostInfoModel)
+HostInfoModel.belongsTo(UserModel, {
     foreignKey: 'id',
     as: 'user'
 })
