@@ -44,6 +44,15 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
     }) as HostInfo
 }
 
+export async function getHostEmailById(hostId: string): Promise<string | null> {
+    return (await DbModels.UserModel.findOne({
+        attributes: ["email"],
+        where: {
+            id: hostId,
+        },
+    }))?.email || null
+}
+
 
 export async function createHost(form: HostCreationForm): Promise<HostInfo> {
     const hostInfo = await sequelize.transaction(async (t) => {

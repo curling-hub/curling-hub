@@ -33,3 +33,29 @@ export async function create(form: AddMatchSchema): Promise<MatchResult> {
     return result
 }
 
+export async function getHostMatchesById(hostId: string): Promise<MatchResult[]> {
+    const hostMatchesList = await DbModels.MatchModel.findAll({
+        where: {
+            hostId: hostId,
+        },
+        order: [['date', 'ASC']],
+        /* include: [{
+            model: DbModels.TeamInfoModel,
+            as: 'teamName1',
+            where: { teamId: 'teamId1' },
+            required: true,
+            include: [{
+                model: DbModels.TeamInfoModel,
+                as: 'teamName2',
+                where: { teamId: 'teamId2' },
+                required: true
+            }],
+        }], */
+        nest: true,
+    })
+
+    if (!hostMatchesList) {
+        return []
+    }
+    return hostMatchesList.map((matchResults) => matchResults.get())
+}
