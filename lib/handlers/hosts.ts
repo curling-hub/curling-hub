@@ -41,9 +41,18 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
         },
         nest: true,
     })
-    return Object.assign({}, hostInfo?.get(), {
+    return Object.assign({}, hostInfo?.toJSON(), {
         iceSheets: hostInfo?.iceSheets.map((iceSheet) => iceSheet.name)
     }) as HostInfo
+}
+
+export async function getHostEmailById(hostId: string): Promise<string | null> {
+    return (await DbModels.UserModel.findOne({
+        attributes: ["email"],
+        where: {
+            id: hostId,
+        },
+    }))?.email || null
 }
 
 

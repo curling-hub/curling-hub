@@ -43,8 +43,8 @@ it('Renders add match fields that are selectable', () => {
     cy.contains('Loss')
     cy.contains('Tie')
     cy.get('#date').type('2022-04-07')
-    cy.get('#team1').select('Team A')
-    cy.get('#team2').select('Team B')
+    cy.get('#team1').type('Team A{enter}')
+    cy.get('#team2').type('Team B{enter}')
     cy.get('#sheet-of-ice').select('Right')
     cy.get('#comment').type('Coming from cypress test')
     cy.get('button').contains('Add Match').click().then(() => {
