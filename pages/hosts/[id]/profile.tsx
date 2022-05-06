@@ -11,7 +11,7 @@ import { getSession, getSessionServerSideResult } from '../../../lib/auth/sessio
 import ProfileBox from '../../../components/host/profile/ProfileBox'
 import type { CurrentHostInfo } from '../../../lib/models/host'
 import type { HostMatchResult } from '../../../lib/models/match'
-import { getHostInfoById } from '../../../lib/handlers/hosts';
+import { getHostEmailById, getHostInfoById } from '../../../lib/handlers/hosts';
 import { getHostMatchesById } from '../../../lib/handlers/matches'
 import { getTeamById } from '../../../lib/handlers/teams';
 
@@ -60,6 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const id = context.params?.id ? context.params.id : 1
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
+    const email = await getHostEmailById(id.toString())
     const tempHost = await getHostInfoById(id.toString())
     if (!tempHost) {
         return {
