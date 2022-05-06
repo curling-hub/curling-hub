@@ -18,6 +18,7 @@ import { getTeamById } from '../../../lib/handlers/teams';
 interface HostProfileProps {
     currentHost: CurrentHostInfo
     hostMatches: HostMatchResult[]
+    hostEmail: string
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -28,6 +29,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
     const {
         currentHost,
         hostMatches = [],
+        hostEmail,
     } = props
 
     return (
@@ -42,7 +44,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 <HostLayout>
-                    <ProfileBox currentHost={currentHost} hostMatches={hostMatches} />
+                    <ProfileBox currentHost={currentHost} hostMatches={hostMatches} hostEmail={hostEmail} />
                 </HostLayout>
                 <Footer />
             </Box >
@@ -60,7 +62,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const id = context.params?.id ? context.params.id : 1
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    const email = await getHostEmailById(id.toString()) || undefined
+    const hostEmail = await getHostEmailById(id.toString()) || undefined
     const tempHost = await getHostInfoById(id.toString())
     if (!tempHost) {
         return {
@@ -78,7 +80,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         zip: tempHost.zip,
         country: tempHost.country,
         iceSheets: tempHost.iceSheets,
-        email: email,
     }
     const tempMatches = await getHostMatchesById(id.toString())
     // Format hosts for page and serialization
@@ -101,6 +102,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 // TODO: Remove props when not signed in
                 currentHost: currentHost,
                 hostMatches: hostMatches,
+                hostEmail: hostEmail,
             }
         }
     }
@@ -114,6 +116,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 // TODO: Remove props when not signed in
                 currentHost: currentHost,
                 hostMatches: hostMatches,
+                hostEmail: hostEmail,
             },
         }
     }
@@ -124,6 +127,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             user: session,
             currentHost: currentHost,
             hostMatches: hostMatches,
+            hostEmail: hostEmail,
         },
     }
 }

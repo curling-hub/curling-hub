@@ -10,6 +10,7 @@ import type { HostMatchResult } from '../../../lib/models/match'
 interface ProfileBoxProps {
     currentHost: CurrentHostInfo
     hostMatches: HostMatchResult[]
+    hostEmail: string
 }
 
 export default function ProfileBox(props: ProfileBoxProps) {
@@ -17,6 +18,7 @@ export default function ProfileBox(props: ProfileBoxProps) {
     const {
         currentHost,
         hostMatches,
+        hostEmail,
     } = props
 
     return (
@@ -25,7 +27,7 @@ export default function ProfileBox(props: ProfileBoxProps) {
                 <Flex alignItems={{ base: "center", md: "start" }} direction={{ base: 'column', md: 'row' }}>
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
-                        <HostInfoBox currentHost={currentHost} />
+                        <HostInfoBox currentHost={currentHost} hostEmail={hostEmail} />
                         <ProfileButton buttonText='Edit' color='primary.gray' />
                     </SideBySideContainer>
                     <Spacer />

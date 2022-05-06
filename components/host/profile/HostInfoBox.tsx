@@ -7,11 +7,13 @@ import type { CurrentHostInfo } from '../../../lib/models/host'
 
 interface HostInfoBoxProps {
     currentHost: CurrentHostInfo
+    hostEmail: string
 }
 
 export default function HostInfoBox(props: HostInfoBoxProps) {
     const {
         currentHost,
+        hostEmail,
     } = props
 
     return (
@@ -69,7 +71,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                     Contact
                 </Text>
                 <Text>
-                    {currentHost.email}
+                    {hostEmail}
                 </Text>
                 <Text>
                     {currentHost.phoneNumber}
