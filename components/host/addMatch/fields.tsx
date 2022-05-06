@@ -15,13 +15,19 @@ import {
     Grid,
     HStack,
     Input,
-    Select,
+    Select as ChakraSelect,
     Stack,
     Spacer,
     Textarea,
     VStack,
     useRadioGroup,
 } from '@chakra-ui/react'
+import {
+    Select,
+    OptionBase,
+    GroupBase,
+    ActionMeta,
+} from 'chakra-react-select'
 
 import schema from './schema'
 import ResultRadio from './resultRadio'
@@ -38,6 +44,12 @@ const getInitialValues = (otherFields: {[key: string]: any} = {}) => ({
     comments: '',
     ...otherFields,
 })
+
+
+interface TeamSelectOptions extends OptionBase {
+    label: string
+    value: number
+}
 
 
 interface FieldsProps {
@@ -63,6 +75,10 @@ const Fields = (props: FieldsProps): JSX.Element => {
         onChange: (val) => console.log(val)
     })
     const group = getRootProps()
+    const teamOptions = teams.map((t) => ({
+        value: t.teamId,
+        label: t.name,
+    }))
 
     return (
         <Formik
@@ -146,19 +162,21 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
                                             <FormLabel htmlFor="team1" srOnly>Team 1</FormLabel>
-                                            <Select
-                                                borderRadius="full"
-                                                placeholder="Team 1"
-                                                {...field}
+                                            <Select<TeamSelectOptions>
+                                                options={teamOptions}
+                                                placeholder="Select team 1"
+                                                closeMenuOnSelect
+                                                focusBorderColor="blue.500"
                                                 id="team1"
-                                            >
-                                                {teams.map((val) => (
-                                                    <option key={`${val.teamId}`} value={val.teamId}>
-                                                        {val.name}
-                                                    </option>
-                                                ))}
-                                                <option key="other" value="other">Other</option>
-                                            </Select>
+                                                instanceId="team1"
+                                                onFocus={() => form.setFieldTouched("team1", true, true)}
+                                                onChange={
+                                                    (newValue, actionMeta) => {
+                                                        form.values.team1 = newValue?.value
+                                                        form.validateField("team1")
+                                                    }
+                                                }
+                                            />
                                         </FormControl>
                                     )}
                                 </Field>
@@ -171,19 +189,21 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
                                             <FormLabel htmlFor="team2" srOnly>Team 2</FormLabel>
-                                            <Select
-                                                borderRadius="full"
-                                                placeholder="Team 2"
-                                                {...field}
+                                            <Select<TeamSelectOptions>
+                                                options={teamOptions}
+                                                placeholder="Select team 2"
+                                                closeMenuOnSelect
+                                                focusBorderColor="blue.500"
                                                 id="team2"
-                                            >
-                                                {teams.map((val) => (
-                                                    <option key={`${val.teamId}`} value={val.teamId}>
-                                                        {val.name}
-                                                    </option>
-                                                ))}
-                                                <option key="other" value="other">Other</option>
-                                            </Select>
+                                                instanceId="team2"
+                                                onFocus={() => form.setFieldTouched("team2", true, true)}
+                                                onChange={
+                                                    (newValue, actionMeta) => {
+                                                        form.values.team2 = newValue?.value
+                                                        form.validateField("team2")
+                                                    }
+                                                }
+                                            />
                                         </FormControl>
                                     )}
                                 </Field>
@@ -203,7 +223,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
                                             <FormLabel htmlFor="location" srOnly>Location</FormLabel>
-                                            <Select
+                                            <ChakraSelect
                                                 borderRadius="full"
                                                 placeholder="Location"
                                                 {...field}
@@ -213,7 +233,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 <option key={`${host?.hostId}`} value={host?.hostId}>
                                                     {host?.organization}
                                                 </option>
-                                            </Select>
+                                            </ChakraSelect>
                                         </FormControl>
                                     )}
                                 </Field>
@@ -226,7 +246,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
                                             <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
-                                            <Select
+                                            <ChakraSelect
                                                 disabled={!values.location}
                                                 borderRadius="full"
                                                 placeholder="Sheet of Ice"
@@ -239,7 +259,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                     </option>
                                                 ))}
                                                 <option value="other">Other</option>
-                                            </Select>
+                                            </ChakraSelect>
                                         </FormControl>
                                     )}
                                 </Field>

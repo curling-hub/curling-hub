@@ -32,15 +32,15 @@ it('Renders add match fields that are selectable', () => {
                 teams={teams}
                 onSubmit={(values) => {
                     clicked = true
-                    expect(values).toStrictEqual({
+                    expect(values).toEqual(expect.objectContaining({
                         team1: '0',
+                        team2: '1',
                         matchResult: 'Win',
                         date: '2022-04-07',
-                        team2: '1',
                         location: 'host 1',
                         sheetOfIce: 'Right',
                         comments: 'Coming from cypress test',
-                    })
+                    }))
                 }}
                 fetchIceSheetsByHostId={fetchIceSheets}
             />
@@ -50,10 +50,10 @@ it('Renders add match fields that are selectable', () => {
     cy.contains('Win')
     cy.contains('Loss')
     cy.contains('Tie')
+    cy.get('#location').type('Curly Inc{enter}')
     cy.get('#date').type('2022-04-07')
-    cy.get('#location').select('Curly Inc')
-    cy.get('#team2').select('Team A')
-    cy.get('#sheet-of-ice').select('Right')
+    cy.get('#team2').type('Team A{enter}')
+    cy.get('#sheet-of-ice').type('Right{enter}')
     cy.get('#comment').type('Coming from cypress test')
     cy.get('button').contains('Add Match').click().then(() => {
         expect(clicked).to.be.true
