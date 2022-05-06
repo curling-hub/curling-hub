@@ -51,6 +51,11 @@ interface TeamSelectOptions extends OptionBase {
     value: number
 }
 
+interface IceSheetSelectOptions extends OptionBase {
+    label: string
+    value: string
+}
+
 
 interface FieldsProps {
     host?: HostInfo
@@ -78,6 +83,10 @@ const Fields = (props: FieldsProps): JSX.Element => {
     const teamOptions = teams.map((t) => ({
         value: t.teamId,
         label: t.name,
+    }))
+    const iceSheetsOptions = [...iceSheets, 'other'].map((iceSheet) => ({
+        value: iceSheet,
+        label: iceSheet,
     }))
 
     return (
@@ -151,13 +160,13 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid
-                            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
+                        <Flex
+                            direction={{ base: "column", md: "row" }}
                             rowGap={4}
-                            columnGap={12}
+                            columnGap={4}
                             w="100%"
                         >
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "35%" }}>
                                 <Field name="team1">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
@@ -184,7 +193,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="team1" />
                                 </Box>
                             </Box>
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "35%" }}>
                                 <Field name="team2">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
@@ -211,55 +220,26 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="team2" />
                                 </Box>
                             </Box>
-                        </Grid>
-                        <Grid
-                            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
-                            rowGap={4}
-                            columnGap={12}
-                            w="100%"
-                        >
-                            <Box w="100%">
-                                <Field name="location">
-                                    {({field, form}: FieldProps) => (
-                                        <FormControl>
-                                            <FormLabel htmlFor="location" srOnly>Location</FormLabel>
-                                            <ChakraSelect
-                                                borderRadius="full"
-                                                placeholder="Location"
-                                                {...field}
-                                                value={host?.hostId}
-                                                id="location"
-                                            >
-                                                <option key={`${host?.hostId}`} value={host?.hostId}>
-                                                    {host?.organization}
-                                                </option>
-                                            </ChakraSelect>
-                                        </FormControl>
-                                    )}
-                                </Field>
-                                <Box textColor="red.500" px={2}>
-                                    <ErrorMessage name="location" />
-                                </Box>
-                            </Box>
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "30%" }}>
                                 <Field name="sheetOfIce">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
-                                            <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
-                                            <ChakraSelect
-                                                disabled={!values.location}
-                                                borderRadius="full"
-                                                placeholder="Sheet of Ice"
-                                                {...field}
+                                            <FormLabel htmlFor="sheet-of-ice" srOnly>Ice sheet</FormLabel>
+                                            <Select<IceSheetSelectOptions>
+                                                options={iceSheetsOptions}
+                                                placeholder="Ice sheet"
+                                                closeMenuOnSelect
+                                                focusBorderColor="blue.500"
                                                 id="sheet-of-ice"
-                                            >
-                                                {iceSheets.map((val) => (
-                                                    <option key={`${val}`} value={val}>
-                                                        {val}
-                                                    </option>
-                                                ))}
-                                                <option value="other">Other</option>
-                                            </ChakraSelect>
+                                                instanceId="sheet-of-ice"
+                                                onFocus={() => form.setFieldTouched("sheetOfIce", true, true)}
+                                                onChange={
+                                                    (newValue, actionMeta) => {
+                                                        form.values.sheetOfIce = newValue?.value
+                                                        form.validateField("sheetOfIce")
+                                                    }
+                                                }
+                                            />
                                         </FormControl>
                                     )}
                                 </Field>
@@ -267,7 +247,25 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="sheetOfIce" />
                                 </Box>
                             </Box>
-                        </Grid>
+                        </Flex>
+                        <Field name="location">
+                            {({ field, form }: FieldProps) => (
+                                <FormControl hidden={true}>
+                                    <ChakraSelect
+                                        disabled
+                                        borderRadius="full"
+                                        placeholder="Location"
+                                        {...field}
+                                        value={host?.hostId}
+                                        id="location"
+                                    >
+                                        <option key={`${host?.hostId}`} value={host?.hostId}>
+                                            {host?.organization}
+                                        </option>
+                                    </ChakraSelect>
+                                </FormControl>
+                            )}
+                        </Field>
                         <Field name="comments">
                             {({field, form}: FieldProps) => (
                                 <FormControl>
