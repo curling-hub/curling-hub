@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { mount } from '@cypress/react'
 import { ChakraProvider } from '@chakra-ui/react'
+import { TeamMatch } from '../../../lib/models/teams'
 import TeamRatingsBox from '../teamRatingsBox'
 
 const filters = [
@@ -11,14 +12,41 @@ const filters = [
     {filter_id: 5, value: "Ties"}
 ]
 
+/** @type {TeamMatch[]} */
 const matches = [
     {
-        date: new Date('2022-04-30').toString(), 
-        outcome: 'Win',
-        opponent: 'Team B',
-        location: 'Husky',
+        date: '2022-04-30',
+        matchId: 1,
+        teamId1: 1,
+        teamId2: 2,
+        winner: 'team_id_1',
+        hostId: 'id',
+        host: {
+            hostId: 'id',
+            organization: 'Husky',
+            website: 'http://example.com',
+            phoneNumber: '(555) 555-5555',
+            streetAddress: '',
+            city: '',
+            state: '',
+            zip: '',
+            country: '',
+            status: 'accepted',
+        },
         sheetOfIce: 'Sheet A',
-        comment: 'wet ice'
+        comments: 'wet ice',
+        teams: [
+            {
+                teamId: 1,
+                name: 'Team 1',
+                rating: '',
+            },
+            {
+                teamId: 2,
+                name: 'Team 2',
+                rating: '',
+            },
+        ]
     }
 ]
 
@@ -29,6 +57,7 @@ it('New Team Page', () => {
                 teamMatches={matches}
                 filters={filters}
                 tableSize={20}
+                teamId={1}
             />
         </ChakraProvider>
     )
