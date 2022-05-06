@@ -34,7 +34,8 @@ interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, 
 }
 
 interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, HostInfoBase {
-    iceSheets: Array<{ hostId: string, name: string }>
+    iceSheets: Array<{ hostId: string, name: string }>,
+    user: {email: string}
 }
 
 interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod { }
@@ -242,12 +243,9 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
         allowNull: false,
     },
     status: {
-        type: DataTypes.ENUM('pending', 'accepted', 'rejected'),
-    },
-    updatedAt: {
-        type: DataTypes.DATE(),
-        defaultValue: DataTypes.NOW(),
-    },
+        type: DataTypes.ENUM<string>('pending','accepted','rejected'),
+        allowNull: false
+    }
 }, {
     tableName: 'host_profile',
     timestamps: false,
@@ -274,6 +272,10 @@ export const IceSheetModel = sequelize.define('Ice Sheet', {
     timestamps: false,
 })
 
+HostInfoModel.hasOne(UserModel, {
+    foreignKey: 'id',
+    as: 'user'
+})
 HostInfoModel.hasMany(IceSheetModel, {
     foreignKey: 'hostId',
     as: 'iceSheets',
