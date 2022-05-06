@@ -277,6 +277,10 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
         type: DataTypes.UUID,
         field: 'host_id',
         primaryKey: true,
+        references: {
+            model: UserModel,
+            key: 'id',
+        },
     },
     organization: {
         type: DataTypes.STRING(255),
@@ -349,9 +353,17 @@ export const IceSheetModel = sequelize.define('Ice Sheet', {
 })
 
 
-UserModel.hasOne(HostInfoModel)
+UserModel.hasOne(HostInfoModel, {
+    foreignKey: {
+        name: 'hostId',
+        field: 'id',
+    },
+})
 HostInfoModel.belongsTo(UserModel, {
-    foreignKey: 'id',
+    foreignKey: {
+        name: 'hostId',
+        field: 'id',
+    },
     as: 'user'
 })
 HostInfoModel.hasMany(IceSheetModel, {
