@@ -220,13 +220,13 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid
-                            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
+                        <Flex
+                            direction={{ base: "column", md: "row" }}
                             rowGap={4}
-                            columnGap={12}
+                            columnGap={4}
                             w="100%"
                         >
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "70%" }}>
                                 <Field name="location">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
@@ -254,7 +254,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="location" />
                                 </Box>
                             </Box>
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "30%" }}>
                                 <Field name="sheetOfIce">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
@@ -262,7 +262,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                             <Select<IceSheetSelectOptions>
                                                 isDisabled={!values.location || values.location === 'other' || fetchingIceSheets}
                                                 options={getIceSheetsOptions(iceSheets)}
-                                                placeholder="Select host location"
+                                                placeholder="Ice sheet"
                                                 closeMenuOnSelect
                                                 focusBorderColor="blue.500"
                                                 id="sheet-of-ice"
@@ -281,7 +281,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="sheetOfIce" />
                                 </Box>
                             </Box>
-                        </Grid>
+                        </Flex>
                         <Field name="comments">
                             {({field, form}: FieldProps) => (
                                 <FormControl>
