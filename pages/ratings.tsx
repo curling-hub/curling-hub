@@ -23,11 +23,43 @@ interface RatingsProps {
     rankings: TeamRanking[]
 }
 
+function useWindowDimensions() {
+
+    const hasWindow = typeof window !== 'undefined';
+    
+    function getWindowDimensions() {
+        const width = hasWindow ? window.innerWidth : null;
+        const height = hasWindow ? window.innerHeight : null;
+        return {
+        width,
+        height,
+        };
+    }
+
+    function handleResize() {
+        setWindowDimensions(getWindowDimensions());
+    }
+
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+    
+    useEffect(() => {
+        if (hasWindow) {
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }
+    }, [hasWindow]);
+    
+    return windowDimensions;
+}
+  
+
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
+    const {height, width} = useWindowDimensions()
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
     const [mounted, setMounted] = useState(false)
     useEffect(() => { setMounted(true) }, [])
-
+    const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 3) : 10
+    
     return (
         <>
             <Head>
@@ -46,7 +78,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                         <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
-                            tableSize={12}
+                            tableSize={pageNum}
                         />
                     </>     
                 }
@@ -56,7 +88,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                         <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
-                            tableSize={12}
+                            tableSize={pageNum}
                         />
                     </>     
                 }
@@ -67,7 +99,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                         <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
-                            tableSize={8}
+                            tableSize={pageNum}
                         />
                     </>     
                 }
@@ -77,7 +109,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                         <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
-                            tableSize={8}
+                            tableSize={pageNum}
                         />
                     </>    
                 }

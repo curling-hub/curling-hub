@@ -101,7 +101,6 @@ export default function RatingsBox(props: RatingsBoxProps) {
                     flexDirection='column'
                     boxShadow='lg'
                     alignItems="center"
-                    padding="1rem"
                     borderRadius="35px"
                     h='70vh'
                     maxW="100%"
@@ -149,6 +148,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
                             />
                         </HStack>
                         <TableContainer
+                            aria-label='table'
                             marginTop="5px"
                             width='100%'
                             height='80%'
