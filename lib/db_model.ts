@@ -28,7 +28,7 @@ declare module 'next-auth' {
     }
 }
 
-interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember {}
+interface TeamMemberInstance extends Model<TeamMember, Partial<TeamMember>>, TeamMember { }
 
 interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo {
     members: NonAttribute<TeamMember[]>
@@ -50,7 +50,7 @@ interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo 
     admins: NonAttribute<UserInstance[]>
 }
 
-interface CategoryInstance extends Model<Category, Partial<Category>>, Category {}
+interface CategoryInstance extends Model<Category, Partial<Category>>, Category { }
 
 interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, MatchResultDetails {
     teams: NonAttribute<TeamInfoInstance[]>
@@ -65,12 +65,12 @@ interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, H
     matches: NonAttribute<MatchResultInstance>
 }
 
-interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod {}
+interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod { }
 
 
 /**
  * Managed by NextAuth, extends the default User model to include `account_type`
- */ 
+ */
 export const UserModel = sequelize.define<UserInstance>('users', {
     ...models.User,
     // account_type is one of: ['curler', 'team', 'admin']
@@ -294,6 +294,8 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
     },
     addressExtras: {
         type: DataTypes.STRING(255),
+        field: 'address_extras',
+        allowNull: true,
     },
     city: {
         type: DataTypes.STRING(255),

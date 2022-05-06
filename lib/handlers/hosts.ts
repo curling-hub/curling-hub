@@ -12,12 +12,9 @@ export async function getAllHosts(): Promise<HostInfo[]> {
     const hostInfoList = await DbModels.HostInfoModel.findAll({
         attributes: {
             // `getServerSideProps` Cannot serialize date
-            exclude: [ 'updatedAt' ],
+            exclude: ['updatedAt'],
         },
     })
-    if (!hostInfoList) {
-        return []
-    }
     return hostInfoList.map((hostInfo) => hostInfo.toJSON())
 }
 
@@ -49,6 +46,15 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
     return Object.assign({}, hostInfo?.toJSON(), {
         iceSheets: hostInfo?.iceSheets.map((iceSheet) => iceSheet.name),
     }) as HostInfo
+}
+
+export async function getHostEmailById(hostId: string): Promise<string | null> {
+    return (await DbModels.UserModel.findOne({
+        attributes: ["email"],
+        where: {
+            id: hostId,
+        },
+    }))?.email || null
 }
 
 

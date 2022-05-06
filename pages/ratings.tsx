@@ -15,6 +15,7 @@ import { getAllRankingsSimple } from '../lib/handlers/teams'
 import { TeamRanking } from '../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { sequelize } from '../lib/db'
+import Footer from "../components/footer/footer";
 
 interface RatingsProps {
     user?: Session,
@@ -26,7 +27,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
     const [mounted, setMounted] = useState(false)
     useEffect(() => { setMounted(true) }, [])
-    
+
     return (
         <>
             <Head>
@@ -40,42 +41,43 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
             >
                 {
                     mounted && !isSmallScreen && props.user &&
-                        <TeamLayout>
-                            <RatingsBox
-                                categories={props.categories}
-                                teamRanking={props.rankings}
-                                tableSize={20}
-                            />
-                        </TeamLayout>
-                }        
-                {   mounted && !isSmallScreen && !props.user &&
-                        <StandardLayout>
-                            <RatingsBox
-                                categories={props.categories}
-                                teamRanking={props.rankings}
-                                tableSize={20}
-                            />
-                        </StandardLayout>
+                    <TeamLayout>
+                        <RatingsBox
+                            categories={props.categories}
+                            teamRanking={props.rankings}
+                            tableSize={20}
+                        />
+                    </TeamLayout>
+                }
+                {mounted && !isSmallScreen && !props.user &&
+                    <StandardLayout>
+                        <RatingsBox
+                            categories={props.categories}
+                            teamRanking={props.rankings}
+                            tableSize={20}
+                        />
+                    </StandardLayout>
                 }
                 {
                     mounted && isSmallScreen && props.user &&
-                        <TeamLayout>
-                            <RatingsBoxSmall
-                                categories={props.categories}
-                                teamRanking={props.rankings}
-                                tableSize={8}
-                            />
-                        </TeamLayout>
-                }        
-                {   mounted && isSmallScreen && !props.user &&
-                        <StandardLayout>
-                            <RatingsBoxSmall
-                                categories={props.categories}
-                                teamRanking={props.rankings}
-                                tableSize={8}
-                            />
-                        </StandardLayout>
+                    <TeamLayout>
+                        <RatingsBoxSmall
+                            categories={props.categories}
+                            teamRanking={props.rankings}
+                            tableSize={8}
+                        />
+                    </TeamLayout>
                 }
+                {mounted && isSmallScreen && !props.user &&
+                    <StandardLayout>
+                        <RatingsBoxSmall
+                            categories={props.categories}
+                            teamRanking={props.rankings}
+                            tableSize={8}
+                        />
+                    </StandardLayout>
+                }
+                <Footer />
             </Box>
         </>
     )
