@@ -51,6 +51,11 @@ interface TeamSelectOptions extends OptionBase {
     value: number
 }
 
+interface IceSheetSelectOptions extends OptionBase {
+    label: string
+    value: string
+}
+
 
 interface FieldsProps {
     host?: HostInfo
@@ -78,6 +83,10 @@ const Fields = (props: FieldsProps): JSX.Element => {
     const teamOptions = teams.map((t) => ({
         value: t.teamId,
         label: t.name,
+    }))
+    const iceSheetsOptions = [...iceSheets, 'other'].map((iceSheet) => ({
+        value: iceSheet,
+        label: iceSheet,
     }))
 
     return (
@@ -215,21 +224,22 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 <Field name="sheetOfIce">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
-                                            <FormLabel htmlFor="sheet-of-ice" srOnly>Ice sheets</FormLabel>
-                                            <ChakraSelect
-                                                disabled={!values.location}
-                                                borderRadius="full"
-                                                placeholder="Ice Sheet"
-                                                {...field}
+                                            <FormLabel htmlFor="sheet-of-ice" srOnly>Ice sheet</FormLabel>
+                                            <Select<IceSheetSelectOptions>
+                                                options={iceSheetsOptions}
+                                                placeholder="Ice sheet"
+                                                closeMenuOnSelect
+                                                focusBorderColor="blue.500"
                                                 id="sheet-of-ice"
-                                            >
-                                                {iceSheets.map((val) => (
-                                                    <option key={`${val}`} value={val}>
-                                                        {val}
-                                                    </option>
-                                                ))}
-                                                <option value="other">Other</option>
-                                            </ChakraSelect>
+                                                instanceId="sheet-of-ice"
+                                                onFocus={() => form.setFieldTouched("sheetOfIce", true, true)}
+                                                onChange={
+                                                    (newValue, actionMeta) => {
+                                                        form.values.sheetOfIce = newValue?.value
+                                                        form.validateField("sheetOfIce")
+                                                    }
+                                                }
+                                            />
                                         </FormControl>
                                     )}
                                 </Field>
@@ -242,6 +252,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             {({ field, form }: FieldProps) => (
                                 <FormControl hidden={true}>
                                     <ChakraSelect
+                                        disabled
                                         borderRadius="full"
                                         placeholder="Location"
                                         {...field}
