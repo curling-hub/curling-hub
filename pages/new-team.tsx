@@ -56,7 +56,7 @@ function NewTeam({ data }: RowDataPacket) {
                                     h="auto"
                                     w="100%"
                                 >
-                                    <Image w="60%" h="30%" alt="Curlo logo" />
+                                    <Image src="/curlo_Logo.svg" w="60%" h="30%" />
                                 </Box>
                                 {/* Sign up container (should only run on client side, e.g mounted) */}
                                 <Box minW="sm" w="100%" h="100%" m={{ base: 0, md: 2 }} p={10} borderRadius="32">
