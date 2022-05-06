@@ -183,12 +183,16 @@ export async function getRankingsByCategorySimple(categoryId: number): Promise<T
 export async function createTeam(form: TeamCreationForm): Promise<any> {
     const result = await sequelize.transaction(async (t) => {
         // 1. Update the account type to `curler`
-        await DbModels.UserModel.update({
-            account_type: 'curler',
-        }, {
+        const user = await DbModels.UserModel.findOne({
             where: { email: form.email },
             transaction: t,
         })
+        if (!user) {
+            throw new Error('User not found')
+        }
+        await user.update({
+            account_type: 'curler',
+        }, { transaction: t })
 
         // 2. Create team
         const team = await DbModels.TeamInfoModel.create({
@@ -198,12 +202,18 @@ export async function createTeam(form: TeamCreationForm): Promise<any> {
             transaction: t,
         })
 
-        // 2. Add categories to team
+        // 3. Add team admin
+        await DbModels.TeamAdminModel.create({
+            teamId: team.teamId,
+            userId: user.id,
+        }, { transaction: t })
+
+        // 4. Add categories to team
         await Promise.all(form.categories.map((categoryId) =>
             team.addCategory(categoryId, { transaction: t })
         ))
 
-        // 3. Add team members to team
+        // 5. Add team members to team
         await Promise.all(form.curlers.map((curlerInfo) =>
             DbModels.TeamMemberModel.create({
                 teamId: team.teamId,
@@ -211,7 +221,7 @@ export async function createTeam(form: TeamCreationForm): Promise<any> {
             }, { transaction: t })
         ))
 
-        return team.get()
+        return team.toJSON()
     })
     return result
 }
