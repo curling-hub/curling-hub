@@ -46,18 +46,21 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         categories: Array<{value: number, label: string}>,
         agreed: boolean
     }) => {
-        const cats = values.categories.map((category) => {return category.value})
+        var cats = values.categories.map((category) => {return category.value})
         
         var req = {}
 
         if (values.gameMode == 'doubles') {
+            cats = [9]
             req = {
                 team: values.team,
                 curler1: values.curler1,
                 curler2: values.curler2,
                 categories: cats
             }
+            console.log(req)
         } else if (values.showAlternate) {
+            cats.push(1)
             req = {
                 team: values.team,
                 curler1: values.curler1,
@@ -68,6 +71,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 categories: cats
             }
         } else {
+            cats.push(1)
             req = {
                 team: values.team,
                 curler1: values.curler1,
@@ -76,6 +80,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler4: values.curler4,
                 categories: cats
             }
+            console.log(cats)
         }
         
         const res = await fetch('/api/team/create', {
@@ -104,7 +109,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
     const [alternate, setAlternate] = useState(false)
 
     const modeMap = new Map<boolean, string>([
-        [true, "classic"],
+        [true, "open"],
         [false, "doubles"]
     ])
 
@@ -114,11 +119,11 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         curler2: string().required("Curler Two is required").max(255),
         gameMode: string().required(),
         curler3: string().when("gameMode", {
-            is: 'classic',
+            is: 'open',
             then: string().required("Curler Three is required").max(255)
         }),
         curler4: string().when("gameMode", {
-            is: 'classic',
+            is: 'open',
             then: string().required("Curler Four is required").max(255)
         }),
         showAlternate: boolean().required(),
@@ -135,15 +140,17 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
     
-    const groupedOptions = categories.map((category: RowDataPacket) => {
-        return {value: category.category_id, label: category.name}
+    const filteredCategories = categories.filter((category: RowDataPacket) => category.category_id != 1 && category.category_id != 9);
+
+    const groupedOptions = filteredCategories.map((category: RowDataPacket) => {
+        return {value: category.category_id, label: category.name};
     })
     
     return (
         <Formik
             initialValues={{
                 team: '',
-                gameMode: 'classic',
+                gameMode: 'open',
                 curler1: '',
                 curler2: '',
                 curler3: '',
@@ -178,11 +185,16 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                             {({field, form}: FieldProps<string>) => (
                                 <RadioGroup 
                                     {...field}
-                                    onChange={() => setMode(!mode)} 
+                                    onChange={() => {
+                                        setMode(!mode); 
+                                        // form.values.categories = (mode ? {value: 9, lablel: "Doubles"} : {value: 1, lablel: "Open"});
+                                        // form.validateField("categories");
+                                        // console.log("In the radio button change",form.values.categories);
+                                    }} 
                                     value={modeMap.get(mode)}
                                 >
                                     <Stack {...field} direction="row" alignItems="right">
-                                        <Radio {...field} colorScheme="green" value="classic">Classic</Radio>
+                                        <Radio {...field} colorScheme="green" value="open">Open</Radio>
                                         <Radio {...field} colorScheme="green" value="doubles">Doubles</Radio> 
                                     </Stack>
                                 </RadioGroup>
@@ -301,10 +313,13 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                 }
                             </>
                         }
+                        {mode && (
                         <FieldArray name="categories">
                             {({form, remove}: FieldArrayRenderProps) => (
                                 <FormControl isInvalid={form.errors.categories != undefined && form.touched.categories != undefined}>
+                                
                                     <Select<OptionBase, true, GroupBase<OptionBase>>
+                                       // defaultValue={[groupedOptions[0], groupedOptions[8]]}
                                         isMulti
                                         options={groupedOptions}
                                         placeholder="Select Categories..."
@@ -314,15 +329,19 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                         onFocus={() => {form.setFieldTouched("categories", true, true)}}
                                         onChange={
                                             ((newValue: MultiValue<OptionBase>, actionMeta: ActionMeta<OptionBase>) => {
-                                                form.values.categories = newValue
-                                                form.validateField("categories")
+                                                form.values.categories = newValue;
+                                                console.log("newValue",newValue)
+                                                form.validateField("categories");
+                                                console.log("In the dropdown change",form.values.categories);
                                             })
                                         }
                                     />
+
                                     <FormErrorMessage>{form.errors.categories}</FormErrorMessage> 
                                 </FormControl>
                             )}
                         </FieldArray>
+                        )}
                         <HStack>
                         <Field name="agreed">
                             {({field, form}: FieldProps<string>) => (
