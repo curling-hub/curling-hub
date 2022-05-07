@@ -91,6 +91,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
         [false, "123"]
     ])
 
+
     const helperTextFontSize = "12";
     return (
         <Formik
@@ -333,19 +334,41 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                         <Field name='sheetofice'>
                           {({field, form}: FieldProps<string>) => (
                             <FormControl isInvalid={form.errors.sheetofice != undefined && form.touched.sheetofice != true}>
+                            {!schema && (
                             <Select placeholder = 'Sheets of Ice'
                                 borderRadius="full">
-                                <option value='1'>1</option>
-                                <option value='2'>2</option>
-                                <option value='3'>3</option>
-                                <option value='4'>4</option>
-                                <option value='5'>5</option>
-                                <option value='6'>6</option>
-                                <option value='7'>7</option>
-                                <option value='8'>8</option>
-                                <option value='9'>9</option>
-                                <option value='10'>10</option> 
+                                    <option value='1'>1</option>
+                                    <option value='2'>2</option>
+                                    <option value='3'>3</option>
+                                    <option value='4'>4</option>
+                                    <option value='5'>5</option>
+                                    <option value='6'>6</option>
+                                    <option value='7'>7</option>
+                                    <option value='8'>8</option>
+                                    <option value='9'>9</option>
+                                    <option value='10'>10</option>
+                                    <option value='11'>11</option>
+                                    <option value='12'>12</option>         
                             </Select>
+                            )}
+                            {schema && (
+                            <Select placeholder = 'Sheets of Ice'
+                                borderRadius="full">
+                                    <option value='A'>A</option>
+                                    <option value='B'>B</option>
+                                    <option value='C'>C</option>
+                                    <option value='D'>D</option>
+                                    <option value='E'>E</option>
+                                    <option value='F'>F</option>
+                                    <option value='G'>G</option>
+                                    <option value='H'>H</option>
+                                    <option value='I'>I</option>
+                                    <option value='J'>J</option>      
+                                    <option value='K'>K</option>    
+                                    <option value='L'>L</option>       
+                            </Select>
+                            )}
+
                             <FormErrorMessage>{form.errors.sheetofice}</FormErrorMessage>
                          </FormControl>
                           )}
