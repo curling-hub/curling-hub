@@ -96,7 +96,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                     mounted && isSmallScreen && props.user &&
                     <>
                         <TeamLayout/>
-                        <RatingsBox
+                        <RatingsBoxSmall
                             categories={props.categories}
                             teamRanking={props.rankings}
                             tableSize={pageNum}
@@ -106,7 +106,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                 {mounted && isSmallScreen && !props.user &&
                     <>
                         <StandardLayout/>
-                        <RatingsBox
+                        <RatingsBoxSmall
                             categories={props.categories}
                             teamRanking={props.rankings}
                             tableSize={pageNum}

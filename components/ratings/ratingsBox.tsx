@@ -1,12 +1,7 @@
 import {
     Box,
-    Container,
-    Flex,
     Select,
     Text,
-    Grid,
-    GridItem,
-    Divider,
     IconButton,
     Input,
     HStack,
@@ -28,8 +23,6 @@ import {
 import { TeamRanking } from '../../lib/models/teams'
 import { Category } from '../../lib/models/category'
 import { Children, useState } from 'react'
-import Footer from '../footer/footer'
-import { parse } from 'path'
 
 interface RatingsBoxProps {
     teamRanking: TeamRanking[]

@@ -1,28 +1,25 @@
 import {
     Box,
-    Container,
-    Flex,
     Select,
     Text,
-    Grid,
     GridItem,
     Divider,
     IconButton,
     Input,
-    HStack
+    HStack,
+    TableContainer,
+    Table,
+    Thead,
+    Tr,
+    Td
 } from '@chakra-ui/react'
 import {
     AiOutlineLeft,
     AiOutlineRight,
-    AiOutlineArrowUp,
-    AiOutlineArrowDown
 } from 'react-icons/ai'
-import {
-    MdHorizontalRule
-} from 'react-icons/md'
 import { TeamRanking } from '../../lib/models/teams'
 import { Category } from '../../lib/models/category'
-import { useState } from 'react'
+import { Children, useState } from 'react'
 
 interface RatingsBoxProps {
     teamRanking: TeamRanking[]
@@ -87,170 +84,124 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
 
     return (
         <>
-            <Container maxW="2xl" centerContent>
+            <Box paddingBottom={"4rem"}>
                 <Box
-                    minW="sm"
-                    maxW={{ base: "sm", md: "none" }}
-                    w="100vh"
-                    h="80vh"
-                    my="4"
-                    borderRadius="20"
-                    bg="white"
-                    shadow="md"
+                    backgroundColor="primary.white"
+                    display='flex'
+                    flexDirection='column'
+                    boxShadow='lg'
+                    alignItems="center"
+                    borderRadius="35px"
+                    h='70vh'
+                    maxW="100%"
+                    textAlign="center"
+                    marginLeft='4rem'
+                    marginRight='4rem'
+                    marginTop='2rem'
                 >
-                    <Grid
-                        templateColumns='repeat(10, 1fr)'
-                        templateRows='repeat(10, 1fr)'
-                        h="100%"
+                    <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+                        Ratings
+                    </Text>
+                    <Box
+                        w='80%'
+                        height='100%'
+                        justifyContent='start'
                     >
-                        <GridItem
-                            colSpan={10}
+                        <HStack
+                            spacing='2rem'
                         >
-                            <Flex
-                                flexDirection="row"
-                                justify='center'
+                            <Select
+                                name='category-dropdown'
+                                borderRadius='20px'
+                                variant='filled'
+                                color='black'
+                                bg='gray.300'
+                                w='100%'
+                                onChange={async (e) => {
+                                    await getSelectedMatches(parseInt(e.target.value))
+                                }}
                             >
-                                <Text
-                                    fontSize="4xl"
-                                >
-                                    Ratings
-                                </Text>
-                            </Flex>
-                        </GridItem>
-                        <GridItem
-                            colSpan={10}
+                                {
+                                    props.categories.map((category) => {
+                                        return (
+                                            <option key={category.categoryId} value={category.categoryId}>{category.name}</option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                            <Input
+                                name='search-bar'
+                                borderRadius='20px'
+                                w='200%'
+                                placeholder="Search table..."
+                                onChange={(e: any) => search(e.target.value)}
+                            />
+                        </HStack>
+                        <TableContainer
+                            aria-label='table'
+                            marginTop="5px"
+                            width='100%'
+                            height='80%'
                         >
-                            <Grid
-                                templateColumns='repeat(10, 1fr)'
+                            <Table
+                                variant='simple'
+                                size='sm'
                             >
-                                <GridItem
-                                    colSpan={2}
-                                    colStart={2}
-                                >
-                                    <Select
-                                        name="category-dropdown"
-                                        placeholder="All Teams"
-                                        borderRadius='20px'
-                                        variant='filled'
-                                        color='black'
-                                        bg='gray.300'
-                                        onChange={async (e) => {
-                                            await getSelectedMatches(parseInt(e.target.value))
-                                        }}
-                                    >
-                                        {
-                                            props.categories.map((category) => {
-                                                return (
-                                                    <option key={category.categoryId} value={category.categoryId}>{category.name}</option>
-                                                )
-                                            })
-                                        }
-                                    </Select>
-                                </GridItem>
-                                <GridItem
-                                    colSpan={5}
-                                    colStart={5}
-                                >
-                                    <Input
-                                        name="search-bar"
-                                        borderRadius='20px'
-                                        placeholder="Search table..."
-                                        onChange={(e: any) => search(e.target.value)}
-                                    >
-                                    </Input>
-                                </GridItem>
-                            </Grid>
-                        </GridItem>
-                        <GridItem
-                            rowSpan={7}
-                            colSpan={8}
-                            colStart={2}
-                        >
-                            <Grid
-                                templateColumns='repeat(20, 1fr)'
-                            >
-                                <GridItem
-                                    colStart={1}
-                                >
-                                    <Text fontWeight='bold'>Position</Text>
-                                </GridItem>
-                                <GridItem
-                                    colStart={3}
-                                >
-                                    <Text fontWeight='bold'>Team</Text>
-                                </GridItem>
-                                <GridItem
-                                    colStart={8}
-                                >
-                                    <Text fontWeight='bold'>Rating</Text>
-                                </GridItem>
-                                { pages[pageIndex]?.map((rank, index) => (
-                                    <RatingPaging
-                                        rank={rank}
-                                        tableSize={tableSize}
-                                        pageIndex={pageIndex}
-                                        index={index}
-                                        key={`${rank.ID}`}
-                                    />
-                            )) }
-                            </Grid>
-                           
-                        </GridItem>
-                        <GridItem
-                            colSpan={10}
-                        >
-                            <Grid
-                                templateColumns='repeat(20, 1fr)'
-                            >
-                                <GridItem
-                                    colStart={2}
-                                    colSpan={3}
-                                    justifyContent='center'
-                                >
-                                    <Flex
-                                        flexDirection="column"
-                                        justifyContent="center"
-                                        h='100%'
-                                    >
-                                        <Text
-                                            fontWeight='bold'
-                                            justifyItems='center'
+                                <Thead textAlign='center'>
+                                    <Tr>
+                                        <Td fontWeight="bold">Position</Td>
+                                        <Td fontWeight="bold">Team</Td>
+                                        <Td fontWeight="bold">Rating</Td>
+                                    </Tr>
+                                    { Children.toArray(pages[pageIndex]?.map((rank, index) => 
+                                        <Tr
+                                            key={index}
                                         >
-                                            {pageIndex+1} of {pageCount}
-                                        </Text>
-                                    </Flex>
-                                </GridItem>
-                                <GridItem
-                                    colStart={18}
-                                >
+                                            <Td>{tableSize * pageIndex + index + 1}</Td>
+                                            <Td>{rank.Team}</Td>
+                                            <Td>{rank.Rating}</Td></Tr>
+                                      ))
+                                    }
+                                </Thead>
+                            </Table>
+                        </TableContainer>
+                        { pages.length > 1 &&
+                            <Box
+                                aria-label="Page navigation " 
+                                display='flex'
+                                flexDirection='row'
+                                justifyContent='center'
+                                w='100%'
+                            >
+                                <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
+                                <Box w='75%'/>
+                                <HStack
+                                    spacing={2}
+                                >   
                                     <IconButton
-                                        aria-label='page-left'
-                                        icon={<AiOutlineLeft />}
-                                        onClick={() => {
-                                            if (pageIndex + 1 > 1) {
-                                                setPageIndex(pageIndex-1)
-                                            }
-                                        }}
+                                            aria-label='page-left'
+                                            icon={<AiOutlineLeft />}
+                                            onClick={() => {
+                                                if (pageIndex + 1 > 1) {
+                                                    setPageIndex(pageIndex-1)
+                                                }
+                                            }}
                                     />
-                                </GridItem>
-                                <GridItem
-                                    colStart={19}
-                                >
                                     <IconButton
-                                        aria-label='page-right'
-                                        icon={<AiOutlineRight />}
-                                        onClick={() => {
-                                            if (pageIndex + 1 < pageCount) {
-                                                setPageIndex(pageIndex+1)
-                                            }
-                                        }}
+                                            aria-label='page-right'
+                                            icon={<AiOutlineRight />}
+                                            onClick={() => {
+                                                if (pageIndex + 1 < pageCount) {
+                                                    setPageIndex(pageIndex+1)
+                                                }
+                                            }}
                                     />
-                                </GridItem>
-                            </Grid>
-                        </GridItem>
-                    </Grid>
+                                </HStack>
+                            </Box>
+                        }
+                    </Box>
                 </Box>
-            </Container>
+            </Box>
         </>
     )
 }
