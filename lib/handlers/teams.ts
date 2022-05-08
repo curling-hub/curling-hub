@@ -62,7 +62,7 @@ export async function getTeamMatches(teamId: number): Promise<TeamMatch[]> {
     return matches
 }
 
-export async function getTeamContactInfo(teamId: number): Promise<Array<{teamName: string, teamEmail: string}>> {
+export async function getTeamContactInfo(teamId: number): Promise<Array<{ teamName: string, teamEmail: string }>> {
     // TODO: SQL query and data format
     const team = await DbModels.TeamInfoModel.findOne({
         where: { teamId },
@@ -155,7 +155,7 @@ export async function getAllRankings(options?: RankingOptions): Promise<Array<Te
                 order: ['endDate', 'ASC'],
             },
         ],
-        order: [ ['teamGlickoInfo', 'rating', 'DESC'] ],
+        order: [['teamGlickoInfo', 'rating', 'DESC']],
     })
     return teams.map((t) => t.toJSON())
 }
@@ -179,6 +179,12 @@ export async function getRankingsByCategorySimple(categoryId: number): Promise<T
     const rankings = await getAllRankings({ categoryId })
     return toTeamRanking(rankings)
 }
+
+/* export async function getTeamEmailById(teamId: number): Promise<string | null> {
+    return (await DbModels.findOne({
+        where:
+    }))
+} */
 
 export async function createTeam(form: TeamCreationForm): Promise<any> {
     const result = await sequelize.transaction(async (t) => {

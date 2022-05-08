@@ -18,34 +18,23 @@ import ProfileButton from '../../../components/profile/ProfileButton';
 import MatchesBox from '../../../components/profile/MatchesBox';
 import MatchesTable from '../../../components/profile/MatchesTable'
 import MembersTable from '../../../components/profile/MembersTable'
-import {
-    TeamInfo,
-    TeamMatches,
-    TeamCategories,
-    TeamMembers,
-} from '../../../lib/models/teams'
-import {
-    getTeamMatches,
-    getTeamContactInfo,
-    getTeamCategories,
-    getTeamMembers,
-    getTeamInfo,
-} from '../../../lib/handlers/teams'
+import { TeamInfo, TeamMatch, TeamWithMembersAndRatings } from '../../../lib/models/teams'
+import { Category, TeamMember } from "../../../lib/models"
+import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo } from '../../../lib/handlers/teams'
 
 
 interface TeamProfileProps {
-    user?: Session,
-    teamInfo?: TeamInfo[]
-    teamMatches?: TeamMatches[]
+    teamInfo?: TeamWithMembersAndRatings
+    teamMatches?: TeamMatch[]
     teamEmail: string
-    teamCategories?: TeamCategories[]
-    teamMembers?: TeamMembers[]
+    teamCategories?: Category[]
+    teamMembers?: TeamMember[]
 }
 
 const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
 
     const {
-        teamInfo = [],
+        teamInfo,
         teamMatches = [],
         teamCategories = [],
         teamMembers = [],
@@ -72,14 +61,14 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                             <VStack spacing="78px" height="100%">
                                 <LeftHandBox color='primary.white'>
                                     <VStack spacing="0px" h="356px">
-                                        {teamInfo?.map((team: TeamInfo, i: number) => (
-                                            <Text key={`${i}`}
+                                        {teamInfo && (
+                                            <Text
                                                 fontSize="2.5em"
                                                 fontWeight="bold"
                                             >
-                                                {team.name}
+                                                {teamInfo.name}
                                             </Text>
-                                        ))}
+                                        )}
                                         <Text
                                             fontSize="1.5em"
                                             fontWeight="bold"
@@ -104,14 +93,14 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                         >
                                             Rating
                                         </Text>
-                                        {teamInfo?.map((team: TeamInfo, i: number) => (
-                                            <Text key={`${i}`}
+                                        {teamInfo && (
+                                            <Text
                                                 fontSize="6em"
                                                 fontWeight="bold"
                                             >
-                                                {team.rating}
+                                                {teamInfo.teamGlickoInfo?.rating}
                                             </Text>
-                                        ))}
+                                        )}
                                     </VStack>
                                 </LeftHandBox>
                             </VStack>
@@ -125,7 +114,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                 <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
                                     Matches
                                 </Text>
-                                <MatchesTable teamMatches={teamMatches} teamName="The Sliding Stones" />
+                                <MatchesTable teamMatches={teamMatches} teamId={teamInfo?.teamId} />
                                 <Box marginTop="63px">
                                     <Link href="/matches">
                                         <ProfileButton buttonText='View Matches' color='primary.green' top="-20px" />
@@ -144,17 +133,20 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     // Redirect if not authentiated
-    const id = context.params?.id ? context.params.id : 1
+    const id = context.params?.id ? Number(context.params.id) : 1
     const session = await getSession(context)
 
     try {
         const [teamInfo, teamMatches, teamContactInfo, teamCategories, teamMembers] = await Promise.all([
-            getTeamInfo(id.toString()),
-            getTeamMatches(id.toString()),
-            getTeamContactInfo(id.toString()),
-            getTeamCategories(id.toString()),
-            getTeamMembers(id.toString())
+            getTeamInfo(id),
+            getTeamMatches(id),
+            getTeamContactInfo(id),
+            getTeamCategories(id),
+            getTeamMembers(id)
         ])
+        console.log('=======================================================')
+        console.log(teamInfo)
+        console.log('=======================================================')
         if (!session || !session["user"]) {
             // not signed in / signed up
             return {
