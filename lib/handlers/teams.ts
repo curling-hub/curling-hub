@@ -180,11 +180,16 @@ export async function getRankingsByCategorySimple(categoryId: number): Promise<T
     return toTeamRanking(rankings)
 }
 
-/* export async function getTeamEmailById(teamId: number): Promise<string | null> {
-    return (await DbModels.findOne({
-        where:
-    }))
-} */
+export async function getTeamEmailById(teamId: number): Promise<string | null> {
+    return (await DbModels.UserModel.findOne({
+        attributes: ["email"],
+        include: [{
+            model: DbModels.TeamInfoModel,
+            as: 'teams',
+            where: { teamId: teamId }
+        }]
+    }))?.email || null
+}
 
 export async function createTeam(form: TeamCreationForm): Promise<any> {
     const result = await sequelize.transaction(async (t) => {

@@ -18,9 +18,9 @@ import ProfileButton from '../../../components/profile/ProfileButton';
 import MatchesBox from '../../../components/profile/MatchesBox';
 import MatchesTable from '../../../components/profile/MatchesTable'
 import MembersTable from '../../../components/profile/MembersTable'
-import { TeamInfo, TeamMatch, TeamWithMembersAndRatings } from '../../../lib/models/teams'
+import { TeamMatch, TeamWithMembersAndRatings } from '../../../lib/models/teams'
 import { Category, TeamMember } from "../../../lib/models"
-import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo } from '../../../lib/handlers/teams'
+import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo, getTeamEmailById } from '../../../lib/handlers/teams'
 
 
 interface TeamProfileProps {
@@ -75,12 +75,12 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                         >
                                             Contact
                                         </Text>
-                                        {/* <Text>
-                                        {teamEmail}
-                                    </Text> */}
                                         <Text>
-                                            ralphs.wonderful.life@gmail.com
+                                            {teamEmail}
                                         </Text>
+                                        {/* <Text>
+                                            ralphs.wonderful.life@gmail.com
+                                        </Text> */}
                                         <MembersTable teamMembers={teamMembers} teamCategories={teamCategories} />
                                     </VStack>
                                     <ProfileButton buttonText='Edit' color='primary.gray' />
@@ -137,16 +137,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context)
 
     try {
-        const [teamInfo, teamMatches, teamContactInfo, teamCategories, teamMembers] = await Promise.all([
+        const [teamInfo, teamMatches, teamContactInfo, teamCategories, teamMembers, teamEmail] = await Promise.all([
             getTeamInfo(id),
             getTeamMatches(id),
             getTeamContactInfo(id),
             getTeamCategories(id),
-            getTeamMembers(id)
+            getTeamMembers(id),
+            getTeamEmailById(id),
         ])
-        console.log('=======================================================')
-        console.log(teamInfo)
-        console.log('=======================================================')
         if (!session || !session["user"]) {
             // not signed in / signed up
             return {
@@ -157,7 +155,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                     teamContactInfo,
                     teamCategories,
                     teamMembers,
-                    //teamEmail,
+                    teamEmail,
                 }
             }
         }
@@ -173,7 +171,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                     teamContactInfo,
                     teamCategories,
                     teamMembers,
-                    //teamEmail,
+                    teamEmail,
                 },
             }
         }
@@ -187,7 +185,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 teamContactInfo,
                 teamCategories,
                 teamMembers,
-                //teamEmail,
+                teamEmail,
             },
         }
     }
