@@ -92,7 +92,7 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
                     boxShadow='lg'
                     alignItems="center"
                     borderRadius="35px"
-                    h='70vh'
+                    minH='70vh'
                     maxW="100%"
                     textAlign="center"
                     marginLeft='4rem'
@@ -137,34 +137,38 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
                                 onChange={(e: any) => search(e.target.value)}
                             />
                         </HStack>
-                        <TableContainer
-                            aria-label='table'
-                            marginTop="5px"
-                            width='100%'
-                            height='80%'
+                        <Box
+                            minH='50vh'
                         >
-                            <Table
-                                variant='simple'
-                                size='sm'
+                            <TableContainer
+                                aria-label='table'
+                                marginTop="5px"
+                                width='100%'
+                                height='80%'
                             >
-                                <Thead textAlign='center'>
-                                    <Tr>
-                                        <Td fontWeight="bold">Position</Td>
-                                        <Td fontWeight="bold">Team</Td>
-                                        <Td fontWeight="bold">Rating</Td>
-                                    </Tr>
-                                    { Children.toArray(pages[pageIndex]?.map((rank, index) => 
-                                        <Tr
-                                            key={index}
-                                        >
-                                            <Td>{tableSize * pageIndex + index + 1}</Td>
-                                            <Td>{rank.Team}</Td>
-                                            <Td>{rank.Rating}</Td></Tr>
-                                      ))
-                                    }
-                                </Thead>
-                            </Table>
-                        </TableContainer>
+                                <Table
+                                    variant='simple'
+                                    size='sm'
+                                >
+                                    <Thead textAlign='center'>
+                                        <Tr>
+                                            <Td fontWeight="bold">Position</Td>
+                                            <Td fontWeight="bold">Team</Td>
+                                            <Td fontWeight="bold">Rating</Td>
+                                        </Tr>
+                                        { Children.toArray(pages[pageIndex]?.map((rank, index) => 
+                                            <Tr
+                                                key={index}
+                                            >
+                                                <Td>{tableSize * pageIndex + index + 1}</Td>
+                                                <Td>{rank.Team}</Td>
+                                                <Td>{rank.Rating}</Td></Tr>
+                                        ))
+                                        }
+                                    </Thead>
+                                </Table>
+                            </TableContainer>
+                        </Box>
                         { pages.length > 1 &&
                             <Box
                                 aria-label="Page navigation " 
@@ -174,7 +178,7 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
                                 w='100%'
                             >
                                 <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
-                                <Box w='75%'/>
+                                <Box w='25%'/>
                                 <HStack
                                     spacing={2}
                                 >   

@@ -87,7 +87,6 @@ export default function RatingsBox(props: RatingsBoxProps) {
 
     return (
         <>
-            <Box paddingBottom={"4rem"}>
                 <Box
                     backgroundColor="primary.white"
                     display='flex'
@@ -95,8 +94,8 @@ export default function RatingsBox(props: RatingsBoxProps) {
                     boxShadow='lg'
                     alignItems="center"
                     borderRadius="35px"
-                    h='70vh'
                     maxW="100%"
+                    minH='70vh'
                     textAlign="center"
                     marginLeft='4rem'
                     marginRight='4rem'
@@ -107,7 +106,6 @@ export default function RatingsBox(props: RatingsBoxProps) {
                     </Text>
                     <Box
                         w='80%'
-                        height='100%'
                         justifyContent='start'
                     >
                         <HStack
@@ -140,11 +138,11 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                 onChange={(e: any) => search(e.target.value)}
                             />
                         </HStack>
+                        <Box minH='50vh'>
                         <TableContainer
                             aria-label='table'
                             marginTop="5px"
                             width='100%'
-                            height='80%'
                         >
                             <Table
                                 variant='simple'
@@ -168,11 +166,12 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                             <RatingPaging changes={rank.Changes} />
                                             <Td>{rank.Players?.map((player) => {return (player + '  ')})}</Td>
                                         </Tr>
-                                      ))
+                                    ))
                                     }
                                 </Thead>
                             </Table>
                         </TableContainer>
+                        </Box>
                         { pages.length > 1 &&
                             <Box
                                 aria-label="Page navigation " 
@@ -180,6 +179,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                 flexDirection='row'
                                 justifyContent='center'
                                 w='100%'
+                                marginBottom='5px'
                             >
                                 <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
                                 <Box w='75%'/>
@@ -209,7 +209,6 @@ export default function RatingsBox(props: RatingsBoxProps) {
                         }
                     </Box>
                 </Box>
-            </Box>
         </>
     )
 }
