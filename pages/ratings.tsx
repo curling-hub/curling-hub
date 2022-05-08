@@ -11,7 +11,7 @@ import RatingsBox from '../components/ratings/ratingsBox'
 import RatingsBoxSmall from '../components/ratings/ratingsBoxSmall'
 import { getAllCategories } from '../lib/handlers/categories'
 import { Category } from '../lib/models/category'
-import { getAllRankingsSimple } from '../lib/handlers/teams'
+import { getAllRankingsSimple, getRankingsByCategorySimple } from '../lib/handlers/teams'
 import { TeamRanking } from '../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { sequelize } from '../lib/db'
@@ -125,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
     const { signedUp, signedIn, session } = await getSession(context)
     const categories = await getAllCategories()
-    const rankings = await getAllRankingsSimple()
+    const rankings = await getRankingsByCategorySimple(1)
 
     if (!session || !signedIn) {
         // not signed in / signed up
