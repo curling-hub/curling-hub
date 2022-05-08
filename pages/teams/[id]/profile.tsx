@@ -1,6 +1,4 @@
 import type { GetServerSideProps, NextPage } from 'next'
-import { getSession } from 'next-auth/react'
-import { Session } from 'next-auth'
 import Head from 'next/head'
 import TeamLayout from '../../../components/layouts/TeamLayout'
 import Footer from "../../../components/footer/footer";
@@ -20,8 +18,8 @@ import MatchesTable from '../../../components/profile/MatchesTable'
 import MembersTable from '../../../components/profile/MembersTable'
 import { TeamMatch, TeamWithMembersAndRatings } from '../../../lib/models/teams'
 import { Category, TeamMember } from "../../../lib/models"
-import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamMembers, getTeamInfo, getTeamEmailById } from '../../../lib/handlers/teams'
-
+import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamInfo, getTeamEmailById } from '../../../lib/handlers/teams'
+import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 
 interface TeamProfileProps {
     teamInfo?: TeamWithMembersAndRatings
@@ -78,9 +76,6 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                         <Text>
                                             {teamEmail}
                                         </Text>
-                                        {/* <Text>
-                                            ralphs.wonderful.life@gmail.com
-                                        </Text> */}
                                         <MembersTable teamMembers={teamMembers} teamCategories={teamCategories} />
                                     </VStack>
                                     <ProfileButton buttonText='Edit' color='primary.gray' />
@@ -134,62 +129,33 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     // Redirect if not authentiated
     const id = context.params?.id ? Number(context.params.id) : 1
-    const session = await getSession(context)
-
+    const sessionWrapper = await getSession(context)
+    const { signedIn, signedUp, session } = sessionWrapper
+    if (!signedIn || !signedUp) {
+        return getSessionServerSideResult(sessionWrapper)
+    }
     try {
-        const [teamInfo, teamMatches, teamContactInfo, teamCategories, teamMembers, teamEmail] = await Promise.all([
+        const [teamInfo, teamMatches, teamContactInfo, teamCategories/* , teamEmail */] = await Promise.all([
             getTeamInfo(id),
             getTeamMatches(id),
             getTeamContactInfo(id),
             getTeamCategories(id),
-            getTeamMembers(id),
-            getTeamEmailById(id),
+            //getTeamEmailById(id),
         ])
-        if (!session || !session["user"]) {
-            // not signed in / signed up
-            return {
-                props: {
-                    user: null,
-                    teamInfo,
-                    teamMatches,
-                    teamContactInfo,
-                    teamCategories,
-                    teamMembers,
-                    teamEmail,
-                }
-            }
-        }
-
-        const user = session["user"]
-        if (!user["account_type"]) {
-            // has not completed sign up up
-            return {
-                props: {
-                    user: null,
-                    teamInfo,
-                    teamMatches,
-                    teamContactInfo,
-                    teamCategories,
-                    teamMembers,
-                    teamEmail,
-                },
-            }
-        }
-
-        // signed in, share session with component
+        const teamEmail = session?.["user"].email || null
         return {
             props: {
-                user: session,
+                user: null,
                 teamInfo,
                 teamMatches,
                 teamContactInfo,
                 teamCategories,
-                teamMembers,
+                teamMembers: teamInfo?.members || [],
                 teamEmail,
-            },
+            }
         }
-    }
-    catch (error) {
+
+    } catch (error) {
         console.log(error)
     }
     return {

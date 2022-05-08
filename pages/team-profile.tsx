@@ -74,12 +74,12 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                         >
                                             Contact
                                         </Text>
-                                        {/* <Text>
-                                        {teamEmail}
-                                    </Text> */}
                                         <Text>
-                                            ralphs.wonderful.life@gmail.com
+                                            {teamEmail}
                                         </Text>
+                                        {/* <Text>
+                                            ralphs.wonderful.life@gmail.com
+                                        </Text> */}
                                         <MembersTable teamMembers={teamMembers} teamCategories={teamCategories} />
                                     </VStack>
                                     <ProfileButton buttonText='Edit' color='primary.gray' />
