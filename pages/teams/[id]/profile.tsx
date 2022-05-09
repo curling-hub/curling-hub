@@ -145,7 +145,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         const teamEmail = session?.["user"].email || null
         return {
             props: {
-                user: null,
                 teamInfo,
                 teamMatches,
                 teamContactInfo,
