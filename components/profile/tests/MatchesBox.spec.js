@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { mount } from '@cypress/react'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, Box, Text } from '@chakra-ui/react'
 import { TeamMatch } from '../../../lib/models/teams'
 /* import { MatchesBox, MatchesTable, ProfileButton, SideBySideContainer } from '../../profile' */
 import MatchesBox from '../MatchesBox'

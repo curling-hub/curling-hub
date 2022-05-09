@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { mount } from '@cypress/react'
-import { ChakraProvider, VStack } from '@chakra-ui/react'
+import { ChakraProvider, VStack, Text } from '@chakra-ui/react'
 import { TeamWithMembersAndRatings } from '../../../lib/models/teams'
 import { Category, TeamMember } from '../../../lib/models'
 /* import { ProfileButton, SideBySideContainer, LeftHandBox } from '../../profile' */
 import ProfileButton from '../ProfileButton'
 import SideBySideContainer from '../SideBySideContainer'
 import LeftHandBox from '../LeftHandBox'
+import MembersTable from '../MembersTable'
 
 /** @type {TeamWithMembersAndRatings} */
 const teamInfo =
