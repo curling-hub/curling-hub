@@ -2,7 +2,7 @@ import * as React from 'react'
 import { mount } from '@cypress/react'
 import { ChakraProvider } from '@chakra-ui/react'
 import { TeamMatch } from '../../../lib/models/teams'
-import { MatchesBox, MatchesTable, ProfileButton, SideBySideContainer } from '../'
+import { MatchesBox, MatchesTable, ProfileButton, SideBySideContainer } from '../../profile'
 
 /** @type {TeamMatch} */
 const matches = [
