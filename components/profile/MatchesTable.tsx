@@ -6,7 +6,16 @@ import {
     Td,
     TableCaption,
     TableContainer,
+    HStack,
+    Text,
 } from "@chakra-ui/react"
+import {
+    AiOutlineCheck,
+    AiOutlineClose
+} from 'react-icons/ai'
+import {
+    MdHorizontalRule
+} from 'react-icons/md'
 import type { TeamMatch } from '../../lib/models/teams'
 import { matchResultOpponentTeamName, matchResultToString } from '../../lib/utils/match'
 
@@ -41,7 +50,39 @@ export default function MatchesTable(props: MatchesTableProps) {
                             <Tr key={`${match.matchId}`}>
                                 <Td>{match.date}</Td>
                                 {/* <Td>{match.date}</Td> */}
-                                <Td>{matchResultToString(teamId || 0, match)}</Td>
+                                {
+                                    matchResultToString(teamId || 0, match) === 'Win' &&
+                                    <Td>
+                                        <HStack>
+                                            <AiOutlineCheck
+                                                style={{ color: 'green' }}
+                                            />
+                                            <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                        </HStack>
+                                    </Td>
+                                }
+                                {
+                                    matchResultToString(teamId || 0, match) === 'Loss' &&
+                                    <Td>
+                                        <HStack>
+                                            <AiOutlineClose
+                                                style={{ color: 'red' }}
+                                            />
+                                            <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                        </HStack>
+                                    </Td>
+                                }
+                                {
+                                    matchResultToString(teamId || 0, match) === 'Tie' &&
+                                    <Td>
+                                        <HStack>
+                                            <MdHorizontalRule
+                                                style={{ color: 'blue' }}
+                                            />
+                                            <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                        </HStack>
+                                    </Td>
+                                }
                                 <Td>{matchResultOpponentTeamName(teamId || 0, match)}</Td>
                                 {/* <Td>{match.category}</Td> */}
                             </Tr>
