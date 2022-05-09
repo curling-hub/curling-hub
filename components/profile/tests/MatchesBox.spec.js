@@ -59,9 +59,7 @@ it('Team Profile Matches Table', () => {
                     </Text>
                     <MatchesTable teamMatches={matches} teamId={matches.teamId1} />
                     <Box marginTop="63px">
-                        <Link href="/matches">
-                            <ProfileButton buttonText='View Matches' color='primary.green' top="-20px" />
-                        </Link>
+                        <ProfileButton buttonText='View Matches' color='primary.green' top="-20px" />
                     </Box>
                 </MatchesBox>
             </SideBySideContainer>
