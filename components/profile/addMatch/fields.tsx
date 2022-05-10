@@ -31,6 +31,9 @@ import schema from './schema'
 import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
 
+import { RowDataPacket } from 'mysql2'
+import { t } from '@chakra-ui/styled-system/dist/declarations/src/utils'
+
 
 const getInitialValues = (otherFields: any = {}) => ({
     matchResult: 'Win',
@@ -99,10 +102,17 @@ const Fields = (props: FieldsProps): JSX.Element => {
     })
     const group = getRootProps()
 
-    const teamOptions = teams.map((t) => ({
+    const filteredTeamOptions = teams.filter((team) => team.teamId != currentTeam.teamId);//Not sure if using right fields / can't really use the page.
+
+    const teamOptions = filteredTeamOptions.map((team) => {
+        return {value: team.teamId,label: team.name};
+    })
+
+    {/* old
+    const teamOptions = teams.map((t) => ({ 
         value: t.teamId,
         label: t.name,
-    }))
+    }))*/}
     const hostOptions = hosts.map((h) => ({
         value: h.hostId,
         label: h.organization,
