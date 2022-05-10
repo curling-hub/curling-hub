@@ -7,7 +7,7 @@ const hostSignupSchema = yup.object({
     organization: yup.string().required(),
     website: yup.string().required().url().nullable(),
     phone: yup.string().matches(phoneRE, 'Invalid phone number').required(),
-    phoneType: yup.string().required("Phone type is a required field"),
+    countryCode: yup.string().required(),
     address: yup.string().required(),
     address2: yup.string().optional(),
     city: yup.string().required(),

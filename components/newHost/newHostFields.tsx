@@ -29,8 +29,8 @@ import {
 } from '@chakra-ui/react'
 
 interface NewHostFieldsProps {
-    phoneType: string;
-    onPhoneTypeChange: (phoneType: string) => void
+    countryCode: string;
+    onCountryCodeChange: (countryCode: string) => void
     isAgreedPP: boolean;
     onIsAgreedPPChange: () => void;
     onOpenPrivacyPolicy: () => void;
@@ -39,8 +39,8 @@ interface NewHostFieldsProps {
 
 export default function NewHostFields(props: NewHostFieldsProps) {
     const {
-        phoneType,
-        onPhoneTypeChange,
+        countryCode,
+        onCountryCodeChange,
         isAgreedPP,
         onIsAgreedPPChange,
         onOpenPrivacyPolicy,
@@ -54,7 +54,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
             organization: string;
             website: string;
             phone: string;
-            phoneType: string;
+            countryCode: string;
             address: string;
             address2: string;
             city: string;
@@ -86,7 +86,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                 organization: '',
                 website: '',
                 phone: '',
-                phoneType: '',
+                countryCode: '',
                 address: '',
                 address2: '',
                 city: '',
@@ -156,19 +156,20 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                         </FormControl>
                                     )}
                                 </Field>    
-                                <Field name="phoneType">
+                                <Field name="countryCode">
                                     {({field, form}: FieldProps<string>) => (
-                                        <FormControl isInvalid={form.errors.phoneType != undefined && form.touched.phoneType != undefined}>
+                                        <FormControl isInvalid={form.errors.countryCode != undefined && form.touched.countryCode != undefined}>
+                                            <FormLabel htmlFor="countryCode" srOnly>Country Code</FormLabel>
                                             <Select
                                                 // width=".5"
                                                 {...field}
                                                 borderRadius="full"
-                                                placeholder='Phone'>
-                                                <option>Home</option>
-                                                <option>Mobile</option>
-                                                <option>Business</option>
+                                                placeholder="Country Code"
+                                                id="countryCode"
+                                            >
+                                                <option>+1</option>
                                             </Select>
-                                            <FormErrorMessage>{form.errors.phoneType}</FormErrorMessage>
+                                            <FormErrorMessage>{form.errors.countryCode}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
