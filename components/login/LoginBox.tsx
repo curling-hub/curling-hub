@@ -93,11 +93,11 @@ export default function LoginFields(props: LoginFieldsProps) {
                 </Text>
                 <Text fontSize={helperTextFontSize}>
                     <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
-                        Terms of Service
+                        <b>Terms of Service</b>
                     </Button>
                     {" "}and{" "}
                     <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
-                        Privacy Policy
+                        <b>Privacy Policy</b>
                     </Button>
                 </Text>
             </VStack>
