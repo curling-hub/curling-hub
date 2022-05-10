@@ -6,60 +6,93 @@ import {
     Td,
     TableCaption,
     TableContainer,
+    HStack,
+    Text,
+    Box,
 } from "@chakra-ui/react"
-import { TeamMatches } from '../../lib/models/teams'
+import {
+    AiOutlineCheck,
+    AiOutlineClose
+} from 'react-icons/ai'
+import {
+    MdHorizontalRule
+} from 'react-icons/md'
+import type { TeamMatch } from '../../lib/models/teams'
+import { matchResultOpponentTeamName, matchResultToString } from '../../lib/utils/match'
 
 interface MatchesTableProps {
-    teamMatches?: TeamMatches[]
+    teamMatches?: TeamMatch[]
     teamName?: string
-}
-
-function outcome(winner: string, team: string) {
-    if (winner == team)
-        return "Win"
-    else if (!winner)
-        return "Tie"
-    else
-        return "Loss"
-}
-
-function formatDate(dateString: string) {
-    const index_of_time: number = dateString.indexOf("GMT+0000")
-    return dateString.substring(0, index_of_time)
+    teamId?: number
 }
 
 export default function MatchesTable(props: MatchesTableProps) {
 
     const {
-        teamMatches = []
+        teamId,
+        teamMatches = [],
     } = props
 
     return (
         <>
-            <TableContainer /* padding=" 0 5px" */>
-                <Table variant='simple' size="sm">
-                    <TableCaption>Most recent matches</TableCaption>
-                    <Thead textAlign="center">
-                        <Tr>
-                            <Td fontWeight="bold">Date</Td>
-                            <Td fontWeight="bold">Outcome</Td>
-                            <Td fontWeight="bold">Opponent</Td>
-                            {/* <Td fontWeight="bold">Category</Td> */}
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {teamMatches.map((match) => (
-                            <Tr key={`${match.matchId}`}>
-                                <Td>{formatDate(match.date)}</Td>
-                                {/* <Td>{match.date}</Td> */}
-                                <Td>{outcome(match.winner, match.team_1_name)}</Td>
-                                <Td>{(match.team_1_name == props.teamName) ? match.team_1_name : match.team_2_name}</Td>
-                                {/* <Td>{match.category}</Td> */}
+            <Box h={{ base: "75%", md: "78%" }}>
+                <TableContainer /* padding=" 0 5px" */>
+                    <Table variant='simple' size="sm">
+                        <TableCaption>Most recent matches</TableCaption>
+                        <Thead textAlign="center">
+                            <Tr>
+                                <Td fontWeight="bold">Date</Td>
+                                <Td fontWeight="bold">Outcome</Td>
+                                <Td fontWeight="bold">Opponent</Td>
+                                {/* <Td fontWeight="bold">Category</Td> */}
                             </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
-            </TableContainer>
+                        </Thead>
+                        <Tbody>
+                            {teamMatches.map((match) => (
+                                <Tr key={`${match.matchId}`}>
+                                    <Td>{match.date}</Td>
+                                    {/* <Td>{match.date}</Td> */}
+                                    {
+                                        matchResultToString(teamId || 0, match) === 'Win' &&
+                                        <Td>
+                                            <HStack>
+                                                <AiOutlineCheck
+                                                    style={{ color: 'green' }}
+                                                />
+                                                <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                            </HStack>
+                                        </Td>
+                                    }
+                                    {
+                                        matchResultToString(teamId || 0, match) === 'Loss' &&
+                                        <Td>
+                                            <HStack>
+                                                <AiOutlineClose
+                                                    style={{ color: 'red' }}
+                                                />
+                                                <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                            </HStack>
+                                        </Td>
+                                    }
+                                    {
+                                        matchResultToString(teamId || 0, match) === 'Tie' &&
+                                        <Td>
+                                            <HStack>
+                                                <MdHorizontalRule
+                                                    style={{ color: 'blue' }}
+                                                />
+                                                <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                            </HStack>
+                                        </Td>
+                                    }
+                                    <Td>{matchResultOpponentTeamName(teamId || 0, match)}</Td>
+                                    {/* <Td>{match.category}</Td> */}
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </TableContainer>
+            </Box>
         </>
     );
 }

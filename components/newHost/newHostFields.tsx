@@ -22,13 +22,15 @@ import {
     VStack,
     Select,
     FormErrorMessage,
+
     Radio,
     RadioGroup,
+
 } from '@chakra-ui/react'
 
 interface NewHostFieldsProps {
-    phoneType: string;
-    onPhoneTypeChange: (phoneType: string) => void
+    countryCode: string;
+    onCountryCodeChange: (countryCode: string) => void
     isAgreedPP: boolean;
     onIsAgreedPPChange: () => void;
     onOpenPrivacyPolicy: () => void;
@@ -37,8 +39,8 @@ interface NewHostFieldsProps {
 
 export default function NewHostFields(props: NewHostFieldsProps) {
     const {
-        phoneType,
-        onPhoneTypeChange,
+        countryCode,
+        onCountryCodeChange,
         isAgreedPP,
         onIsAgreedPPChange,
         onOpenPrivacyPolicy,
@@ -71,7 +73,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
             organization: string;
             website: string;
             phone: string;
-            phoneType: string;
+            countryCode: string;
             address: string;
             address2: string;
             city: string;
@@ -99,7 +101,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                 organization: '',
                 website: '',
                 phone: '',
-                phoneType: '',
+                countryCode: '',
                 address: '',
                 address2: '',
                 city: '',
@@ -120,6 +122,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                             <Field name="organization">
                                 {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.organization != undefined && form.touched.organization != undefined}>
+                                        <FormLabel htmlFor="organization" srOnly>Organization</FormLabel>
                                         <Input
                                             {...field}
                                             borderRadius="full"
@@ -127,6 +130,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                             shadow="sm"
                                             placeholder="Organization"
                                             onChange={props.handleChange('organization')}
+                                            id="organization"
                                         />
                                         <FormErrorMessage>{form.errors.organization}</FormErrorMessage>
                                     </FormControl>
@@ -135,6 +139,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                             <Field name="website">
                                 {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.website != undefined && form.touched.website != undefined}>
+                                        <FormLabel htmlFor="website" srOnly>Website</FormLabel>
                                         <Input
                                             {...field}
                                             borderRadius="full"
@@ -142,15 +147,34 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                             shadow="sm"
                                             placeholder="Website"
                                             onChange={props.handleChange('website')}
+                                            id="website"
                                         />
                                     <FormErrorMessage>{form.errors.website}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
                             <HStack>
+                                <Field name="countryCode">
+                                    {({field, form}: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.countryCode != undefined && form.touched.countryCode != undefined}>
+                                            <FormLabel htmlFor="countryCode" srOnly>Country Code</FormLabel>
+                                            <Select
+                                                // width=".5"
+                                                {...field}
+                                                borderRadius="full"
+                                                placeholder="Country Code"
+                                                id="countryCode"
+                                            >
+                                                <option>+1</option>
+                                            </Select>
+                                            <FormErrorMessage>{form.errors.countryCode}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
                                 <Field name="phone">
                                     {({field, form}: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.phone != undefined && form.touched.phone != undefined}>
+                                            <FormLabel htmlFor="phone" srOnly>Phone</FormLabel>
                                             <Input
                                                 // width=".75"
                                                 {...field}
@@ -160,32 +184,17 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                                 shadow="sm"
                                                 placeholder="Phone"
                                                 onChange={props.handleChange('phone')}
+                                                id="phone"
                                             />
                                         <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>    
-                                <Field name="phoneType">
-                                    {({field, form}: FieldProps<string>) => (
-                                        <FormControl isInvalid={form.errors.phoneType != undefined && form.touched.phoneType != undefined}>
-                                            <Select
-                                                // width=".5"
-                                                {...field}
-                                                borderRadius="full"
-                                                placeholder='Phone'>
-                                                <option>Home</option>
-                                                <option>Mobile</option>
-                                                <option>Business</option>
-                                            </Select>
-                                            <FormErrorMessage>{form.errors.phoneType}</FormErrorMessage>
-                                        </FormControl>
-                                    )}
-                                </Field>
-
                             </HStack>
                             <Field name="address">
                                 {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.address != undefined && form.touched.address != undefined}>
+                                        <FormLabel htmlFor="address" srOnly>Street Address</FormLabel>
                                         <Input
                                             {...field}
                                             borderRadius="full"
@@ -193,6 +202,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                             shadow="sm"
                                             placeholder="Street Address"
                                             onChange={props.handleChange('address')}
+                                            id="address"
                                         />
                                     <FormErrorMessage>{form.errors.address}</FormErrorMessage>
                                     </FormControl>
@@ -201,6 +211,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                             <Field name="address2">
                                 {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.address2 != undefined && form.touched.address2 != undefined}>
+                                        <FormLabel htmlFor="address2" srOnly>Apt., Suite, Unit, etc.</FormLabel>
                                         <Input
                                             {...field}
                                             borderRadius="full"
@@ -208,6 +219,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                             shadow="sm"
                                             placeholder="Apt., Suite, Unit, etc."
                                             onChange={props.handleChange('address2')}
+                                            id="address2"
                                         />
                                     <FormErrorMessage>{form.errors.address2}</FormErrorMessage>
                                     </FormControl>
@@ -217,6 +229,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                 <Field name="city">
                                     {({field, form}: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.city != undefined && form.touched.city != undefined}>
+                                            <FormLabel htmlFor="city" srOnly>City</FormLabel>
                                             <Input
                                                 {...field}
                                                 borderRadius="full"
@@ -224,6 +237,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                                 shadow="sm"
                                                 placeholder="City"
                                                 onChange={props.handleChange('city')}
+                                                id="city"
                                             />
                                         <FormErrorMessage>{form.errors.city}</FormErrorMessage>
                                         </FormControl>
@@ -232,10 +246,13 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                 <Field name="state">
                                     {({field, form}: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.state != undefined && form.touched.state != undefined}>
+                                            <FormLabel htmlFor="state" srOnly>State</FormLabel>
                                             <Select
                                                 {...field}
                                                 borderRadius="full"
+
                                                 placeholder='State'>
+
                                                 <option value='AL'>Alabama</option>
                                                 <option value='AK'>Alaska</option>
                                                 <option value='AS'>American Samoa</option>
@@ -304,6 +321,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                 <Field name="zip">
                                     {({field, form}: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.zip != undefined && form.touched.zip != undefined}>
+                                            <FormLabel htmlFor="zip" srOnly>Zipcode</FormLabel>
                                             <Input
                                                 {...field}
                                                 borderRadius="full"
@@ -311,6 +329,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                                 shadow="sm"
                                                 placeholder="Zipcode"
                                                 onChange={props.handleChange('zip')}
+                                                id="zip"
                                             />
                                         <FormErrorMessage>{form.errors.zip}</FormErrorMessage>
                                         </FormControl>
@@ -319,10 +338,13 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                 <Field name="country">
                                     {({field, form}: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.country != undefined && form.touched.country != undefined}>
+                                            <FormLabel htmlFor="country" srOnly>Country</FormLabel>
                                             <Select
                                                 {...field}
                                                 borderRadius="full"
-                                                placeholder='Country'>
+                                                placeholder='Country'
+                                                id="country"
+                                            >
                                                 <option value='USA'>USA</option>
                                             </Select>
                                             <FormErrorMessage>{form.errors.country}</FormErrorMessage>
@@ -330,6 +352,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                     )}
                                 </Field>
                             </HStack>
+
                         </Stack>
                         <Field name='sheetofice'>
                           {({field, form}: FieldProps<string>) => (
@@ -413,13 +436,14 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                     <ChakraLink>Login</ChakraLink>
                                 </NextLink>
                             </Text>
+
                             <Field name="agreed">
                                 {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
                                         <HStack>
                                             <Checkbox
                                                 {...field}
-                                                aria-label=""
+                                                id="agreed"
                                                 size="sm"
                                                 borderRadius="50%"
                                                 colorScheme="teal"
@@ -429,21 +453,43 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                                     }
                                                 `}
                                             />
-                                            <Text fontSize={helperTextFontSize}>
-                                            {" "}I agree to the {" "}
-                                            <Button variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
-                                                Terms of Service
-                                            </Button>
-                                            {" "}and{" "}
-                                            <Button variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
-                                                Privacy Policy
-                                            </Button>
-                                            </Text>
+                                            <FormLabel htmlFor="agreed">
+                                                <Text fontSize={helperTextFontSize}>
+                                                    I agree to the{" "}
+                                                    <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
+                                                        <b>Terms of Service</b>
+                                                    </Button>
+                                                    {" "}and{" "}
+                                                    <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
+                                                        <b>Privacy Policy</b>
+                                                    </Button>
+                                                </Text>
+                                            </FormLabel>
                                         </HStack>
                                         <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
+                        </Stack>
+                        <Button
+                            type='submit'
+                            isFullWidth
+                            bg="primary.green"
+                            borderRadius="full"
+                            boxShadow="md"
+                            _hover={{ bg: "green.400" }}
+                            _active={{ bg: "green.600" }}
+                            _focus={{ boxShadow: "dark-lg" }}
+                        >
+                            Request Account
+                        </Button>
+                        <VStack w="100%">
+                            <Text fontSize={helperTextFontSize}>
+                                Not a host?{" "}
+                                <NextLink href="/new-host" passHref>
+                                    <ChakraLink><b>Team Sign Up</b></ChakraLink>
+                                </NextLink>
+                            </Text>
                         </VStack>
                     </VStack>
                 </Form>

@@ -10,16 +10,16 @@ export async function hosts() {
 
 export async function getAllHosts(): Promise<HostInfo[]> {
     const hostInfoList = await DbModels.HostInfoModel.findAll({
-        nest: true,
+        attributes: {
+            // `getServerSideProps` Cannot serialize date
+            exclude: ['updatedAt'],
+        },
     })
-    if (!hostInfoList) {
-        return []
-    }
-    return hostInfoList.map((hostInfo) => hostInfo.get())
+    return hostInfoList.map((hostInfo) => hostInfo.toJSON())
 }
 
 export async function getIceSheetsByHostId(hostId: string) {
-    return await DbModels.IceSheetModel.findAll({
+    await DbModels.IceSheetModel.findAll({
         where: {
             hostId: hostId,
         },
@@ -32,6 +32,10 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
         where: {
             hostId: hostId,
         },
+        attributes: {
+            // `getServerSideProps` Cannot serialize date
+            exclude: [ 'updatedAt' ],
+        },
         include: [{
             model: DbModels.IceSheetModel,
             as: 'iceSheets',
@@ -39,10 +43,21 @@ export async function getHostInfoById(hostId: string): Promise<HostInfo | null> 
         }],
         nest: true,
     })
-    return Object.assign({}, hostInfo?.get(), {
-        iceSheets: hostInfo?.iceSheets.map((iceSheet) => iceSheet.name)
+    return Object.assign({}, hostInfo?.toJSON(), {
+        iceSheets: hostInfo?.iceSheets.map((iceSheet) => iceSheet.name),
     }) as HostInfo
 }
+
+
+export async function getHostEmailById(hostId: string): Promise<string | null> {
+    return (await DbModels.UserModel.findOne({
+        attributes: ["email"],
+        where: {
+            id: hostId,
+        },
+    }))?.email || null
+}
+
 
 
 export async function createHost(form: HostCreationForm): Promise<HostInfo> {
@@ -72,4 +87,105 @@ export async function createHost(form: HostCreationForm): Promise<HostInfo> {
         return hostInfo.toJSON()
     })
     return hostInfo
+}
+
+export async function getPendingHosts(): Promise<HostInfo[] | null> {
+    const hosts = await DbModels.HostInfoModel.findAll({
+        where: {
+            status: 'pending'
+        },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'user',
+            required: false,
+            attributes: ['email']
+        }],
+        nest: true
+    })
+    
+    var prtlHosts = hosts?.map((host) => host.get() as HostInfo) 
+    var finalHosts = prtlHosts.map((host) => {
+        return ({
+            email: host.user?.email,
+            hostId: host.hostId,
+            organization: host.organization,
+            website: host.website,
+            phoneNumber: host.phoneNumber,
+            streetAddress: host.streetAddress,
+            city: host.city,
+            state: host.state,
+            zip: host.zip,
+            country: host.country,
+            status: host.status,
+    })})
+    return finalHosts
+}
+
+export async function getAcceptedHosts(): Promise<HostInfo[] | null> {
+    const hosts = await DbModels.HostInfoModel.findAll({
+        where: {
+            status: 'accepted'
+        },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'user',
+            required: false,
+            attributes: ['email']
+        }],
+    })
+    var prtlHosts = hosts?.map((host) => host.get() as HostInfo) 
+    var finalHosts = prtlHosts.map((host) => {
+        return ({
+            email: host.user?.email,
+            hostId: host.hostId,
+            organization: host.organization,
+            website: host.website,
+            phoneNumber: host.phoneNumber,
+            streetAddress: host.streetAddress,
+            city: host.city,
+            state: host.state,
+            zip: host.zip,
+            country: host.country,
+            status: host.status,
+    })})
+    return finalHosts
+}
+
+export async function getRejectedHosts(): Promise<HostInfo[] | null> {
+    const hosts = await DbModels.HostInfoModel.findAll({
+        where: {
+            status: 'rejected'
+        },
+        include: [{
+            model: DbModels.UserModel,
+            as: 'user',
+            required: false,
+            attributes: ['email']
+        }],
+    })
+    var prtlHosts = hosts?.map((host) => host.get() as HostInfo) 
+    var finalHosts = prtlHosts.map((host) => {
+        return ({
+            email: host.user?.email,
+            hostId: host.hostId,
+            organization: host.organization,
+            website: host.website,
+            phoneNumber: host.phoneNumber,
+            streetAddress: host.streetAddress,
+            city: host.city,
+            state: host.state,
+            zip: host.zip,
+            country: host.country,
+            status: host.status,
+    })})
+    return finalHosts
+}
+
+export async function updateHost(hostId: string, newStatus: string): Promise<number[]> {
+    const rows = await DbModels.HostInfoModel.update({status: sequelize.literal(`'${newStatus}'`)}, {
+        where: {
+            hostId: hostId
+        }    
+    })
+    return rows
 }

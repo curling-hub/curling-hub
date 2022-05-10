@@ -18,7 +18,7 @@ import {
 
 
 const NewHost: NextPage = () => {
-    const [phoneType, setPhoneType] = useState("")
+    const [countryCode, setCountryCode] = useState("")
     const [mounted, setMounted] = useState(false)
     const [isAgreedPP, setIsAgreedPP] = useState(false)
     const {
@@ -77,8 +77,8 @@ const NewHost: NextPage = () => {
                                                 onClose={termsOfServiceOnClose}
                                             />
                                             <NewHostFields
-                                                phoneType={phoneType}
-                                                onPhoneTypeChange={setPhoneType}
+                                                countryCode={countryCode}
+                                                onCountryCodeChange={setCountryCode}
                                                 isAgreedPP={isAgreedPP}
                                                 onIsAgreedPPChange={() => setIsAgreedPP(!isAgreedPP)}
                                                 onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}

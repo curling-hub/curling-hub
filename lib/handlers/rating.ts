@@ -151,7 +151,7 @@ export async function updateRatingForRatingPeriod(ratingPeriodId: number, teamRa
         })
         await ratingHistoryPromise
         // ======= Testing, don't commit =======
-        await t.rollback()
+        //await t.rollback()
     })
 }
 

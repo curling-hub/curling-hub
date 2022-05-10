@@ -12,10 +12,10 @@ describe("Yup required schema", () => {
 
     test("Validation should pass when fields are given", async () => {
         const input = {
-            currentTeam: 1,
+            team1: 1,
+            team2: 2,
             matchResult: 'Win',
             date: '2022-04-03',
-            opponent: 2,
             category: 2,
             location: 'Host 1',
             sheetOfIce: 'Left',

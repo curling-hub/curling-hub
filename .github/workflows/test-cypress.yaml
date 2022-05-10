@@ -17,6 +17,8 @@ jobs:
       uses: cypress-io/github-action@v2
       with:
         command: npx cypress run-ct --config video=false,screenshotOnRunFailure=false
+    - name: Jest tests
+      run: npm run test
     - name: Build nextjs
       run: npm run build
     - name: Cypress run
@@ -24,8 +26,10 @@ jobs:
       env:
         NEXTAUTH_SECRET: gitactions-test
         NEXTAUTH_URL: "http://localhost:3000"
+        NODE_ENV: test
+        TEST: 1
       with:
         # already installed in the previous step
         install: false
         config: video=false,screenshotOnRunFailure=false
-        start: npm start
+        start: npm run dev

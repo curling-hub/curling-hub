@@ -26,7 +26,7 @@ export default async function handler(
             ...form,
             email: email as string,
             hostId: id,
-            phoneNumber: form.phone,
+            phoneNumber: form.countryCode + form.phone,
             streetAddress: form.address,
         }
         console.log(hostCreationForm)

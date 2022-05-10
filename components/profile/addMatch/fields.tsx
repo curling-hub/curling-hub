@@ -15,13 +15,17 @@ import {
     Grid,
     HStack,
     Input,
-    Select,
+    Select as ChakraSelect,
     Stack,
     Spacer,
     Textarea,
     VStack,
     useRadioGroup,
 } from '@chakra-ui/react'
+import {
+    Select,
+    OptionBase,
+} from 'chakra-react-select'
 
 import schema from './schema'
 import ResultRadio from './resultRadio'
@@ -37,6 +41,22 @@ const getInitialValues = (otherFields: any = {}) => ({
     comments: '',
     ...otherFields,
 })
+
+
+interface TeamSelectOptions extends OptionBase {
+    label: string
+    value: number
+}
+
+interface HostSelectOptions extends OptionBase {
+    label: string
+    value: string
+}
+
+interface IceSheetSelectOptions extends OptionBase {
+    label: string
+    value: string
+}
 
 
 interface FieldsProps {
@@ -78,6 +98,22 @@ const Fields = (props: FieldsProps): JSX.Element => {
         onChange: (val) => console.log(val)
     })
     const group = getRootProps()
+
+    const teamOptions = teams.map((t) => ({
+        value: t.teamId,
+        label: t.name,
+    }))
+    const hostOptions = hosts.map((h) => ({
+        value: h.hostId,
+        label: h.organization,
+    }))
+    hostOptions.push({ value: 'other', label: 'other' })
+    const getIceSheetsOptions = (iceSheets: any[]) => (
+        [...iceSheets, 'other'].map((iceSheet: string) => ({
+            value: iceSheet,
+            label: iceSheet,
+        }))
+    )
 
     return (
         <Formik
@@ -161,19 +197,21 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
                                             <FormLabel htmlFor="team2" srOnly>Opponent</FormLabel>
-                                            <Select
-                                                borderRadius="full"
-                                                placeholder="Opponent"
-                                                {...field}
+                                            <Select<TeamSelectOptions>
+                                                options={teamOptions}
+                                                placeholder="Select opponent team"
+                                                closeMenuOnSelect
+                                                focusBorderColor="blue.500"
                                                 id="team2"
-                                            >
-                                                {teams.map((val) => (
-                                                    <option key={`${val.teamId}`} value={val.teamId}>
-                                                        {val.name}
-                                                    </option>
-                                                ))}
-                                                <option key="other" value="other">Other</option>
-                                            </Select>
+                                                instanceId="team2"
+                                                onFocus={() => form.setFieldTouched("team2", true, true)}
+                                                onChange={
+                                                    (newValue, actionMeta) => {
+                                                        form.values.team2 = newValue?.value
+                                                        form.validateField("team2")
+                                                    }
+                                                }
+                                            />
                                         </FormControl>
                                     )}
                                 </Field>
@@ -182,34 +220,33 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid
-                            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
+                        <Flex
+                            direction={{ base: "column", md: "row" }}
                             rowGap={4}
-                            columnGap={12}
+                            columnGap={4}
                             w="100%"
                         >
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "70%" }}>
                                 <Field name="location">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
                                             <FormLabel htmlFor="location" srOnly>Location</FormLabel>
-                                            <Select
-                                                borderRadius="full"
-                                                placeholder="Location"
-                                                {...field}
-                                                onChange={(e) => {
-                                                    onLocationChange(e.target.value)
-                                                    field.onChange(e)
-                                                }}
+                                            <Select<HostSelectOptions>
+                                                options={hostOptions}
+                                                placeholder="Select host location"
+                                                closeMenuOnSelect
+                                                focusBorderColor="blue.500"
                                                 id="location"
-                                            >
-                                                {hosts.map((val) => (
-                                                    <option key={`${val.hostId}`} value={val.hostId}>
-                                                        {val.organization}
-                                                    </option>
-                                                ))}
-                                                <option key="other" value="other">Other</option>
-                                            </Select>
+                                                instanceId="location"
+                                                onFocus={() => form.setFieldTouched("location", true, true)}
+                                                onChange={
+                                                    (newValue, actionMeta) => {
+                                                        form.values.location = newValue?.value
+                                                        newValue && onLocationChange(newValue.value)
+                                                        form.validateField("location")
+                                                    }
+                                                }
+                                            />
                                         </FormControl>
                                     )}
                                 </Field>
@@ -217,25 +254,26 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="location" />
                                 </Box>
                             </Box>
-                            <Box w="100%">
+                            <Box w={{ base: "100%", md: "30%" }}>
                                 <Field name="sheetOfIce">
                                     {({field, form}: FieldProps) => (
                                         <FormControl>
                                             <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
-                                            <Select
-                                                disabled={!values.location || values.location === 'other' || fetchingIceSheets}
-                                                borderRadius="full"
-                                                placeholder="Sheet of Ice"
-                                                {...field}
+                                            <Select<IceSheetSelectOptions>
+                                                isDisabled={!values.location || values.location === 'other' || fetchingIceSheets}
+                                                options={getIceSheetsOptions(iceSheets)}
+                                                placeholder="Ice sheet"
+                                                closeMenuOnSelect
+                                                focusBorderColor="blue.500"
                                                 id="sheet-of-ice"
-                                            >
-                                                {iceSheets.map((val) => (
-                                                    <option key={`${val}`} value={val}>
-                                                        {val}
-                                                    </option>
-                                                ))}
-                                                <option value="other">Other</option>
-                                            </Select>
+                                                instanceId="sheet-of-ice"
+                                                onFocus={() => form.setFieldTouched("sheet-of-ice", true, true)}
+                                                onChange={
+                                                    (newValue, actionMeta) => {
+                                                        form.values.sheetOfIce = newValue?.value
+                                                    }
+                                                }
+                                            />
                                         </FormControl>
                                     )}
                                 </Field>
@@ -243,7 +281,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                     <ErrorMessage name="sheetOfIce" />
                                 </Box>
                             </Box>
-                        </Grid>
+                        </Flex>
                         <Field name="comments">
                             {({field, form}: FieldProps) => (
                                 <FormControl>
