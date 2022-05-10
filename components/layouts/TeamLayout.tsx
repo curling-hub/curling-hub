@@ -26,11 +26,11 @@ function getNavItems(): NavItem[] {
         },
         {
             label: "Add Match",
-            link: '/team-add-match',
+            link: '/teams/id/add-match',
         },
         {
             label: "Matches",
-            link: '/matches',
+            link: 'teams/id/matches',
         },
         {
             label: "Ratings",
