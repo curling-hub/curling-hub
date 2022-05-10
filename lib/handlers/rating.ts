@@ -46,18 +46,13 @@ export async function getAllRatingPeriods() {
     const ratingPeriods = await DbModels.RatingPeriodModel.findAll()
     const r = await Promise.all(ratingPeriods.map(async (r) => {
         // Newest glicko variables before rating period end
-        const glicko = await sequelize.query(`
-            SELECT glicko_variables.*
-            FROM glicko_variables
-            JOIN rating_periods
-            ON glicko_variables.created_at < rating_periods.end_date
-            WHERE rating_periods.rating_period_id = ?
-            ORDER BY glicko_variables.id DESC
-        `, {
-            replacements: [r.getDataValue('ratingPeriodId')],
-            plain: true,
-            model: DbModels.GlickoVariableModel,
-            mapToModel: true
+        const glicko = await DbModels.GlickoVariableModel.findOne({
+            where: {
+                createdAt: {
+                    [Op.lt]: r.endDate
+                }
+            },
+            order: [["id", "DESC"]],
         })
         return {'ratingPeriod': r.toJSON(), 'glickoVariable': glicko?.toJSON()}
     }))
