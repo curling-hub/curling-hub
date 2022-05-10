@@ -137,6 +137,23 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                 )}
                             </Field>
                             <HStack>
+                                <Field name="countryCode">
+                                    {({field, form}: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.countryCode != undefined && form.touched.countryCode != undefined}>
+                                            <FormLabel htmlFor="countryCode" srOnly>Country Code</FormLabel>
+                                            <Select
+                                                // width=".5"
+                                                {...field}
+                                                borderRadius="full"
+                                                placeholder="Country Code"
+                                                id="countryCode"
+                                            >
+                                                <option>+1</option>
+                                            </Select>
+                                            <FormErrorMessage>{form.errors.countryCode}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
                                 <Field name="phone">
                                     {({field, form}: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.phone != undefined && form.touched.phone != undefined}>
@@ -156,24 +173,6 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                         </FormControl>
                                     )}
                                 </Field>    
-                                <Field name="countryCode">
-                                    {({field, form}: FieldProps<string>) => (
-                                        <FormControl isInvalid={form.errors.countryCode != undefined && form.touched.countryCode != undefined}>
-                                            <FormLabel htmlFor="countryCode" srOnly>Country Code</FormLabel>
-                                            <Select
-                                                // width=".5"
-                                                {...field}
-                                                borderRadius="full"
-                                                placeholder="Country Code"
-                                                id="countryCode"
-                                            >
-                                                <option>+1</option>
-                                            </Select>
-                                            <FormErrorMessage>{form.errors.countryCode}</FormErrorMessage>
-                                        </FormControl>
-                                    )}
-                                </Field>
-
                             </HStack>
                             <Field name="address">
                                 {({field, form}: FieldProps<string>) => (
