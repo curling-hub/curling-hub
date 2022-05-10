@@ -20,7 +20,7 @@ export default function MatchesBox(props: MatchesBoxProps) {
                 maxH="100%"
                 w="100%"
                 minW={props.minW}
-                /* height={{ base: "900px", md: "1022px" }} */
+                height={{ base: "900px", md: "1022px" }}
                 textAlign="center"
                 top="0"
             >
