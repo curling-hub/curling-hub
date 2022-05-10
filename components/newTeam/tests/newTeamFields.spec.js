@@ -28,7 +28,7 @@ it('New Team Page', () => {
     )
     cy.get('input[type="checkbox"]').check({force: true})
     cy.get('input[type="radio"]').check("doubles", {force: true})
-    cy.get('input[type="radio"]').check("classic", {force: true})
+    cy.get('input[type="radio"]').check("open", {force: true})
     cy.get('button').contains('Create Account').click()
     cy.get('button').contains('Terms of Service').click()
     cy.get('button').contains('Privacy Policy').click()
