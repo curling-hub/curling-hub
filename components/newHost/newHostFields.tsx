@@ -355,14 +355,14 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                             />
                                             <FormLabel htmlFor="agreed">
                                                 <Text fontSize={helperTextFontSize}>
-                                                {" "}I agree to the {" "}
-                                                <Button variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
-                                                    Terms of Service
-                                                </Button>
-                                                {" "}and{" "}
-                                                <Button variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
-                                                    Privacy Policy
-                                                </Button>
+                                                    I agree to the{" "}
+                                                    <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
+                                                        <b>Terms of Service</b>
+                                                    </Button>
+                                                    {" "}and{" "}
+                                                    <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
+                                                        <b>Privacy Policy</b>
+                                                    </Button>
                                                 </Text>
                                             </FormLabel>
                                         </HStack>
@@ -384,17 +384,12 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                             Request Account
                         </Button>
                         <VStack w="100%">
-                            <Link href="/new-host" passHref>
-                                <a>
-                                    <Button
-                                        type="button"
-                                        variant="link"
-                                        size="xs"
-                                    >
-                                        Not a host? Team sign up
-                                    </Button>
-                                </a>
-                            </Link>
+                            <Text fontSize={helperTextFontSize}>
+                                Not a host?{" "}
+                                <NextLink href="/new-host" passHref>
+                                    <ChakraLink><b>Team Sign Up</b></ChakraLink>
+                                </NextLink>
+                            </Text>
                         </VStack>
                     </VStack>
                 </Form>
