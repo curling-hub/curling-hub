@@ -1,7 +1,7 @@
 import * as DbModels from '../db_model'
 import type { Category } from '../models'
 
-export async function categories() {
+export async function categories(): Promise<Category[]> {
     return await getAllCategories()
 }
 

@@ -12,15 +12,20 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import NewTeamFields from '../components/newTeam/newTeamFields'
-import { categories } from '../lib/handlers/categories'
-import { RowDataPacket } from 'mysql2'
+import type { Category } from '../lib/models'
+import { getAllCategories } from '../lib/handlers/categories'
 import { getHostInfoById } from '../lib/handlers/hosts'
 import { getSession } from '../lib/auth/session'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import { AccountType } from '../lib/models/accountType'
 
 
-function NewTeam({ data }: RowDataPacket) {
+interface NewTeamProps {
+    categories: Category[],
+}
+
+function NewTeam(props: NewTeamProps) {
+    const { categories } = props
     const {
         isOpen: privacyPolicyIsOpen = false,
         onOpen: privacyPolicyOnOpen,
@@ -75,7 +80,7 @@ function NewTeam({ data }: RowDataPacket) {
                                     <NewTeamFields
                                         onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
                                         onOpenTermsOfService={() => { termsOfServiceOnOpen() }}
-                                        categories={data}
+                                        categories={categories}
                                     />
                                 </Box>
                             </Flex>
@@ -89,7 +94,7 @@ function NewTeam({ data }: RowDataPacket) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const data = await categories()
+    const categories = await getAllCategories()
     const { signedIn, signedUp, session } = await getSession(context)
     if (!signedIn || !session) {
         return serverSideRedirectTo('/login')
@@ -112,7 +117,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
     }
     return {
-        props: { data }
+        props: { categories },
     }
 }
 

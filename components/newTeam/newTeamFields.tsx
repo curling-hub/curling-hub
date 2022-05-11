@@ -23,13 +23,21 @@ import {
 } from "chakra-react-select"
 import { object, string, boolean, number, array } from 'yup';
 import { Field, Form, Formik, FieldProps, FieldArray, FieldArrayRenderProps } from 'formik';
-import { RowDataPacket } from 'mysql2';
+import type { Category } from '../../lib/models';
 import { useRouter } from 'next/router';
+
+
+
+interface CategorySelectOptions extends OptionBase {
+    label: string
+    value: number
+}
+
 
 interface NewTeamFieldsProps {
     onOpenPrivacyPolicy: () => void;
     onOpenTermsOfService: () => void;
-    categories: RowDataPacket
+    categories: Category[]
 }
 
 export default function NewTeamFields(props: NewTeamFieldsProps) {
@@ -98,7 +106,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
     const {
         onOpenPrivacyPolicy,
         onOpenTermsOfService,
-        categories
+        categories,
     } = props
    
     const [mode, setMode] = useState(true)
@@ -129,15 +137,14 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         }),
         categories: array()
                     .of(object({
-                        value: number().min(categories[0].category_id)
-                                       .max(categories[categories.length-1].category_id),
+                        value: number(),
                         label: string().required()
                     })).min(1, "Please select at least one category"),
         agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
     
-    const groupedOptions = categories.map((category: RowDataPacket) => {
-        return {value: category.category_id, label: category.name}
+    const groupedOptions = categories.map((category: Category) => {
+        return {value: category.categoryId, label: category.name}
     })
     
     return (
@@ -305,7 +312,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         <FieldArray name="categories">
                             {({form, remove}: FieldArrayRenderProps) => (
                                 <FormControl isInvalid={form.errors.categories != undefined && form.touched.categories != undefined}>
-                                    <Select<OptionBase, true, GroupBase<OptionBase>>
+                                    <Select<CategorySelectOptions, true, GroupBase<CategorySelectOptions>>
                                         isMulti
                                         options={groupedOptions}
                                         placeholder="Select Categories..."
