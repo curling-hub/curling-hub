@@ -112,7 +112,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                 <MatchesTable teamMatches={teamMatches} teamId={teamInfo?.teamId} />
                                 <Box marginTop="63px">
                                     <Link href="/matches">
-                                        <ProfileButton buttonText='View Matches' color='primary.green' top="-20px" />
+                                        <ProfileButton buttonText='View Matches' color='primary.green' />
                                     </Link>
                                 </Box>
                             </MatchesBox>
