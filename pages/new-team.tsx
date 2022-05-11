@@ -14,6 +14,10 @@ import {
 import NewTeamFields from '../components/newTeam/newTeamFields'
 import { categories } from '../lib/handlers/categories'
 import { RowDataPacket } from 'mysql2'
+import { getHostInfoById } from '../lib/handlers/hosts'
+import { getSession } from '../lib/auth/session'
+import { serverSideRedirectTo } from '../lib/auth/redirect'
+import { AccountType } from '../lib/models/accountType'
 
 
 function NewTeam({ data }: RowDataPacket) {
@@ -86,6 +90,27 @@ function NewTeam({ data }: RowDataPacket) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const data = await categories()
+    const { signedIn, signedUp, session } = await getSession(context)
+    if (!signedIn || !session) {
+        return serverSideRedirectTo('/login')
+    }
+    if (signedUp) {
+        // not signed up (no `account_type`)
+        switch (session.user.account_type) {
+            case AccountType.ADMIN:
+                return serverSideRedirectTo('/admin')
+            case AccountType.TEAM:
+                return serverSideRedirectTo('/team-profile')
+            case AccountType.HOST:
+                const hostInfo = await getHostInfoById(session.user.id)
+                const status = hostInfo?.status
+                if (status === 'accepted') {
+                    return serverSideRedirectTo('/hosts/profile')
+                } else {
+                    return serverSideRedirectTo('/hosts/request')
+                }
+        }
+    }
     return {
         props: { data }
     }

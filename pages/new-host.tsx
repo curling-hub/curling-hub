@@ -9,13 +9,13 @@ import NewHostFields from '../components/newHost/newHostFields'
 import Footer from "../components/footer/footer";
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import { getHostInfoById } from '../lib/handlers/hosts'
+import { AccountType } from '../lib/models/accountType'
 import {
     Box,
     Container,
     Flex,
     useDisclosure,
 } from '@chakra-ui/react'
-import { AccountType } from '../lib/models/accountType'
 
 
 const NewHost: NextPage = () => {
