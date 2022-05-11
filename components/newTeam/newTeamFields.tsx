@@ -28,6 +28,20 @@ import { useRouter } from 'next/router';
 
 
 
+const getInitialValues = () => ({
+    team: '',
+    gameMode: 'classic',
+    curler1: '',
+    curler2: '',
+    curler3: '',
+    curler4: '',
+    showAlternate: false,
+    alternate: '',
+    categories: [],
+    agreed: false
+})
+
+
 interface CategorySelectOptions extends OptionBase {
     label: string
     value: number
@@ -37,76 +51,16 @@ interface CategorySelectOptions extends OptionBase {
 interface NewTeamFieldsProps {
     onOpenPrivacyPolicy: () => void;
     onOpenTermsOfService: () => void;
-    categories: Category[]
+    categories: Category[];
+    onSubmit?: (values: ReturnType<typeof getInitialValues>) => Promise<void>
 }
 
 export default function NewTeamFields(props: NewTeamFieldsProps) {
-    const router = useRouter()
-
-    const submit = async (values: {
-        team: string,
-        gameMode: string,
-        curler1: string,
-        curler2: string,
-        curler3: string,
-        curler4: string,
-        showAlternate: boolean,
-        alternate: string,
-        categories: Array<{value: number, label: string}>,
-        agreed: boolean
-    }) => {
-        const cats = values.categories.map((category) => {return category.value})
-        
-        var req = {}
-
-        if (values.gameMode == 'doubles') {
-            req = {
-                team: values.team,
-                curler1: values.curler1,
-                curler2: values.curler2,
-                categories: cats
-            }
-        } else if (values.showAlternate) {
-            req = {
-                team: values.team,
-                curler1: values.curler1,
-                curler2: values.curler2,
-                curler3: values.curler3,
-                curler4: values.curler4,
-                alternate: values.alternate,
-                categories: cats
-            }
-        } else {
-            req = {
-                team: values.team,
-                curler1: values.curler1,
-                curler2: values.curler2,
-                curler3: values.curler3,
-                curler4: values.curler4,
-                categories: cats
-            }
-        }
-        
-        const res = await fetch('/api/team/create', {
-            body: JSON.stringify(req),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'POST'
-        })
-        
-        if (res.status == 200) {
-            router.push('/team-profile')
-        } else {
-            const result = await res.json()
-            alert("error: "+result.error)
-        } 
-    }
-
     const {
         onOpenPrivacyPolicy,
         onOpenTermsOfService,
         categories,
+        onSubmit = async () => {},
     } = props
    
     const [mode, setMode] = useState(true)
@@ -162,7 +116,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 agreed: false
             }}
             validationSchema={newTeamSchema}
-            onSubmit={async (values) => await submit(values)} // Eventually do auth stuff here
+            onSubmit={onSubmit}
         >
             {( props ) => (
                 <Form>

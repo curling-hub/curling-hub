@@ -1,4 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import AuthLayout from '../components/layouts/AuthLayout'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
@@ -36,6 +37,57 @@ function NewTeam(props: NewTeamProps) {
         onOpen: termsOfServiceOnOpen,
         onClose: termsOfServiceOnClose,
     } = useDisclosure()
+
+    const router = useRouter()
+
+    const onSubmit = async (values: any) => {
+        const cats = values.categories.map((category: {value: number}) => category.value)
+
+        var req = {}
+
+        if (values.gameMode == 'doubles') {
+            req = {
+                team: values.team,
+                curler1: values.curler1,
+                curler2: values.curler2,
+                categories: cats
+            }
+        } else if (values.showAlternate) {
+            req = {
+                team: values.team,
+                curler1: values.curler1,
+                curler2: values.curler2,
+                curler3: values.curler3,
+                curler4: values.curler4,
+                alternate: values.alternate,
+                categories: cats
+            }
+        } else {
+            req = {
+                team: values.team,
+                curler1: values.curler1,
+                curler2: values.curler2,
+                curler3: values.curler3,
+                curler4: values.curler4,
+                categories: cats
+            }
+        }
+        
+        const res = await fetch('/api/team/create', {
+            body: JSON.stringify(req),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        })
+        
+        if (res.status == 200) {
+            router.push('/team-profile')
+        } else {
+            const result = await res.json()
+            alert("error: "+result.error)
+        } 
+    }
 
     return (
         <>
@@ -81,6 +133,7 @@ function NewTeam(props: NewTeamProps) {
                                         onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
                                         onOpenTermsOfService={() => { termsOfServiceOnOpen() }}
                                         categories={categories}
+                                        onSubmit={onSubmit}
                                     />
                                 </Box>
                             </Flex>
