@@ -58,7 +58,6 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler2: values.curler2,
                 categories: cats
             }
-            console.log(req)
         } else if (values.showAlternate) {
             cats.push(1)
             req = {
@@ -80,7 +79,6 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 curler4: values.curler4,
                 categories: cats
             }
-            console.log(cats)
         }
         
         const res = await fetch('/api/team/create', {
@@ -330,9 +328,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                         onChange={
                                             ((newValue: MultiValue<OptionBase>, actionMeta: ActionMeta<OptionBase>) => {
                                                 form.values.categories = newValue;
-                                                console.log("newValue",newValue)
                                                 form.validateField("categories");
-                                                console.log("In the dropdown change",form.values.categories);
                                             })
                                         }
                                     />
