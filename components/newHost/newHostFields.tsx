@@ -1,8 +1,9 @@
 import NextLink from 'next/link'
 import StateDropdown from './StateDropdown'
 import { object, string, boolean } from 'yup';
-import { Field, Form, Formik, FieldProps } from 'formik';
+import { Field, Form, Formik, FieldProps,  } from 'formik';
 import {useState} from 'react'
+
 const MyInput = ({ ...props }) => {
 
     return <input {...props} />;
@@ -22,6 +23,8 @@ import {
     VStack,
     Select,
     FormErrorMessage,
+
+    FormLabel,
 
     Radio,
     RadioGroup,
@@ -470,7 +473,8 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                     </FormControl>
                                 )}
                             </Field>
-                        </Stack>
+                            
+                        </VStack>
                         <Button
                             type='submit'
                             isFullWidth
