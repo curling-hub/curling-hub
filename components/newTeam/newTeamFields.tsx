@@ -103,18 +103,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
     
     return (
         <Formik
-            initialValues={{
-                team: '',
-                gameMode: 'classic',
-                curler1: '',
-                curler2: '',
-                curler3: '',
-                curler4: '',
-                showAlternate: false,
-                alternate: '',
-                categories: [],
-                agreed: false
-            }}
+            initialValues={getInitialValues()}
             validationSchema={newTeamSchema}
             onSubmit={onSubmit}
         >
