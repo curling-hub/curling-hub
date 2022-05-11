@@ -359,7 +359,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                         </Stack>
                         <Field name='sheetofice'>
                           {({field, form}: FieldProps<string>) => (
-                            <FormControl isInvalid={form.errors.sheetofice != undefined && form.touched.sheetofice != true}>
+                            <FormControl isInvalid={form.errors.sheetofice != undefined && form.touched.sheetofice != undefined}>
                             {!schema && (
                             <Select placeholder = 'Sheets of Ice'
                                 borderRadius="full">
