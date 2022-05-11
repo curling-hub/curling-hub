@@ -272,7 +272,8 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                         placeholder="Select Categories..."
                                         closeMenuOnSelect={false}
                                         focusBorderColor="green.400"
-                                        instanceId="multi-item-dropdown"
+                                        id="categories"
+                                        instanceId="categories"
                                         onFocus={() => {form.setFieldTouched("categories", true, true)}}
                                         onChange={
                                             ((newValue: MultiValue<OptionBase>, actionMeta: ActionMeta<OptionBase>) => {
