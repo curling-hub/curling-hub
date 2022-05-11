@@ -418,7 +418,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                 </FormControl>
                             )}
                         </Field>          
-                        <Button
+             {/*           <Button
                             type='submit'
                             isFullWidth
                             bg="primary.green"
@@ -429,7 +429,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                             _focus={{ boxShadow: "lg" }}
                         >
                             Request Account
-                        </Button>
+                        </Button> */}
                         <Divider orientation="horizontal" mt={2} width="100%" />
 
                         <VStack w="100%" spacing="1">
