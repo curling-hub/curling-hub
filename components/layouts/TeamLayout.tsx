@@ -30,7 +30,7 @@ function getNavItems(): NavItem[] {
         },
         {
             label: "Matches",
-            link: 'teams/id/matches',
+            link: '/teams/id/matches',
         },
         {
             label: "Ratings",
