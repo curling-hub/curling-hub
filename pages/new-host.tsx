@@ -15,6 +15,7 @@ import {
     Flex,
     useDisclosure,
 } from '@chakra-ui/react'
+import { AccountType } from '../lib/models/accountType'
 
 
 const NewHost: NextPage = () => {
@@ -105,11 +106,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (signedUp) {
         // not signed up (no `account_type`)
         switch (session.user.account_type) {
-            case 'admin':
+            case AccountType.ADMIN:
                 return serverSideRedirectTo('/admin')
-            case 'curler':
+            case AccountType.TEAM:
                 return serverSideRedirectTo('/team-profile')
-            case 'host':
+            case AccountType.HOST:
                 const hostInfo = await getHostInfoById(session.user.id)
                 const status = hostInfo?.status
                 if (status === 'accepted') {

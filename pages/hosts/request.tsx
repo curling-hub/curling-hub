@@ -13,6 +13,7 @@ import { HostPending, HostRejected } from '../../components/host/status'
 import { getSession } from '../../lib/auth/session'
 import { serverSideRedirectTo } from '../../lib/auth/redirect'
 import { getHostInfoById } from '../../lib/handlers/hosts'
+import { AccountType } from '../../lib/models/accountType'
 
 
 interface HostRequestStatusProps {
@@ -63,9 +64,9 @@ export async function getServerSideProps(context: NextPageContext) {
     }
     switch (session.user.account_type) {
         // incorrect account type
-        case 'admin':
+        case AccountType.ADMIN:
             return serverSideRedirectTo('/admin')
-        case 'curler':
+        case AccountType.TEAM:
             return serverSideRedirectTo('/team-profile')
         case undefined:
         case null:
