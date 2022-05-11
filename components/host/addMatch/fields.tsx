@@ -13,11 +13,8 @@ import {
     FormControl,
     FormLabel,
     Grid,
-    HStack,
     Input,
     Select as ChakraSelect,
-    Stack,
-    Spacer,
     Textarea,
     VStack,
     useRadioGroup,
@@ -25,8 +22,6 @@ import {
 import {
     Select,
     OptionBase,
-    GroupBase,
-    ActionMeta,
 } from 'chakra-react-select'
 
 import schema from './schema'
