@@ -14,6 +14,7 @@ const categories = [
     {categoryId: 6, name: "U5"},
     {categoryId: 7, name: "Junior"},
     {categoryId: 8, name: "Senior"},
+    {categoryId: 9, name: "Doubles"},
 ]
 
 it('New Team Page', () => {
@@ -32,7 +33,6 @@ it('New Team Page', () => {
                             curler2: 'two',
                             curler3: 'three',
                             curler4: 'four',
-                            //alternate: 'alt',
                             //agreed: true,
                         })
                     )
@@ -42,7 +42,7 @@ it('New Team Page', () => {
     )
     cy.get('input[type="checkbox"]').check({force: true})
     cy.get('input[type="radio"]').check("doubles", {force: true})
-    cy.get('input[type="radio"]').check("classic", {force: true})
+    cy.get('input[type="radio"]').check("open", {force: true})
     cy.get('button').contains('Terms of Service').click()
     cy.get('button').contains('Privacy Policy').click()
     // showAlternate might take a while to respond- lift it up from .get('[name="alternate"]')

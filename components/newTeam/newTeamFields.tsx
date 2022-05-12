@@ -28,9 +28,9 @@ import { useRouter } from 'next/router';
 
 
 
-const getInitialValues = () => ({
+const getInitialValues = (otherFields?: any) => ({
     team: '',
-    gameMode: 'classic',
+    gameMode: 'open',
     curler1: '',
     curler2: '',
     curler3: '',
@@ -38,7 +38,8 @@ const getInitialValues = () => ({
     showAlternate: false,
     alternate: '',
     categories: [],
-    agreed: false
+    agreed: false,
+    ...otherFields,
 })
 
 
@@ -67,7 +68,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
     const [alternate, setAlternate] = useState(false)
 
     const modeMap = new Map<boolean, string>([
-        [true, "classic"],
+        [true, "open"],
         [false, "doubles"]
     ])
 
@@ -77,11 +78,11 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         curler2: string().required("Curler Two is required").max(255),
         gameMode: string().required(),
         curler3: string().when("gameMode", {
-            is: 'classic',
+            is: 'open',
             then: string().required("Curler Three is required").max(255)
         }),
         curler4: string().when("gameMode", {
-            is: 'classic',
+            is: 'open',
             then: string().required("Curler Four is required").max(255)
         }),
         showAlternate: boolean().required(),
@@ -97,13 +98,25 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
     
-    const groupedOptions = categories.map((category: Category) => {
-        return {value: category.categoryId, label: category.name}
-    })
+    const groupedOptions = categories
+        .filter((category: Category) => category.name !== 'Open' && category.name !== 'Doubles')
+        .map((category: Category) => ({ value: category.categoryId, label: category.name }))
+    const openCategory = (() => {
+        const matchings = categories.filter((category: Category) => category.name === 'Open')
+        if (matchings.length > 0) {
+            return { label: matchings[0].name, value: matchings[0].categoryId, isFixed: true }
+        }
+    })()
+    const doublesCategory = (() => {
+        const matchings = categories.filter((category: Category) => category.name === 'Doubles')
+        if (matchings.length > 0) {
+            return { label: matchings[0].name, value: matchings[0].categoryId, isFixed: true }
+        }
+    })()
     
     return (
         <Formik
-            initialValues={getInitialValues()}
+            initialValues={getInitialValues(openCategory ? { categories: [openCategory]} : {})}
             validationSchema={newTeamSchema}
             onSubmit={onSubmit}
         >
@@ -129,11 +142,23 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                             {({field, form}: FieldProps<string>) => (
                                 <RadioGroup 
                                     {...field}
-                                    onChange={() => setMode(!mode)} 
+                                    onChange={() => {
+                                        const isDoubleMode = !mode;
+                                        setMode(isDoubleMode); 
+                                        if (!isDoubleMode) {
+                                            form.values.categories = form.values.categories
+                                                .filter((c: CategorySelectOptions) => (c.label !== 'Open'))
+                                            doublesCategory && form.values.categories.unshift(doublesCategory)
+                                        } else {
+                                            form.values.categories = form.values.categories
+                                                .filter((c: CategorySelectOptions) => (c.label !== 'Doubles'))
+                                            openCategory && form.values.categories.unshift(openCategory)
+                                        }
+                                    }} 
                                     value={modeMap.get(mode)}
                                 >
                                     <Stack {...field} direction="row" alignItems="right">
-                                        <Radio {...field} colorScheme="green" value="classic">Classic</Radio>
+                                        <Radio {...field} colorScheme="green" value="open">Open</Radio>
                                         <Radio {...field} colorScheme="green" value="doubles">Doubles</Radio> 
                                     </Stack>
                                 </RadioGroup>
@@ -202,7 +227,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                     </FormControl>      
                                 )}
                             </Field>
-                                {alternate ? 
+                                {alternate ?
                                     <>
                                         <Field name="alternate">
                                             {({field, form}: FieldProps<string>) => (
@@ -252,6 +277,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                 }
                             </>
                         }
+                        {mode && (
                         <FieldArray name="categories">
                             {({form, remove}: FieldArrayRenderProps) => (
                                 <FormControl isInvalid={form.errors.categories != undefined && form.touched.categories != undefined}>
@@ -263,18 +289,32 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                         focusBorderColor="green.400"
                                         id="categories"
                                         instanceId="categories"
+                                        value={form.values.categories}
                                         onFocus={() => {form.setFieldTouched("categories", true, true)}}
                                         onChange={
                                             ((newValue: MultiValue<OptionBase>, actionMeta: ActionMeta<OptionBase>) => {
-                                                form.values.categories = newValue
-                                                form.validateField("categories")
+                                                form.values.categories = newValue;
+                                                if (form.values.categories.length === 0) {
+                                                    if (!mode) {
+                                                        form.values.categories = form.values.categories
+                                                            .filter((c: CategorySelectOptions) => (c.label !== 'Open'))
+                                                        doublesCategory && form.values.categories.unshift(doublesCategory)
+                                                    } else {
+                                                        form.values.categories = form.values.categories
+                                                            .filter((c: CategorySelectOptions) => (c.label !== 'Doubles'))
+                                                        openCategory && form.values.categories.unshift(openCategory)
+                                                    }
+                                                }
+                                                form.validateField("categories");
                                             })
                                         }
                                     />
+
                                     <FormErrorMessage>{form.errors.categories}</FormErrorMessage> 
                                 </FormControl>
                             )}
                         </FieldArray>
+                        )}
                         <HStack>
                         <Field name="agreed">
                             {({field, form}: FieldProps<string>) => (

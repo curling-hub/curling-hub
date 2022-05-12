@@ -45,12 +45,12 @@ function NewTeam(props: NewTeamProps) {
 
         var req = {}
 
-        if (values.gameMode == 'doubles') {
+        if (values.gameMode === 'doubles') {
             req = {
                 team: values.team,
                 curler1: values.curler1,
                 curler2: values.curler2,
-                categories: cats
+                categories: cats.filter((category: {label: string}) => category.label === 'Doubles'),
             }
         } else if (values.showAlternate) {
             req = {
@@ -60,7 +60,7 @@ function NewTeam(props: NewTeamProps) {
                 curler3: values.curler3,
                 curler4: values.curler4,
                 alternate: values.alternate,
-                categories: cats
+                categories: cats,
             }
         } else {
             req = {
@@ -69,7 +69,7 @@ function NewTeam(props: NewTeamProps) {
                 curler2: values.curler2,
                 curler3: values.curler3,
                 curler4: values.curler4,
-                categories: cats
+                categories: cats,
             }
         }
         
@@ -117,7 +117,7 @@ function NewTeam(props: NewTeamProps) {
                                     h="auto"
                                     w="100%"
                                 >
-                                    <Image src="/curlo_Logo.svg" w="60%" h="30%" />
+                                    <Image src="/curlo_Logo.svg" w="60%" h="30%" marginBottom={10} />
                                 </Box>
                                 {/* Sign up container (should only run on client side, e.g mounted) */}
                                 <Box minW="sm" w="100%" h="100%" m={{ base: 0, md: 2 }} p={10} borderRadius="32">
