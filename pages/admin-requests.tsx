@@ -23,6 +23,8 @@ import { useState, Children, useEffect } from 'react';
 import { HostInfo } from '../lib/models';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import AdminLayout from '../components/layouts/AdminLayout';
+import { getSession } from '../lib/auth/session';
+import { serverSideRedirectTo } from '../lib/auth/redirect';
 
 interface ReqProps {
     hosts: HostInfo[]
@@ -33,7 +35,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     const [pageIndex, setPageIndex] = useState(0)
     const [tabIndex, setTabIndex] = useState(0)
     const [refreshKey, setRefreshKey] = useState(0)
-    const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
+    const [isSmallScreen] = useMediaQuery("(max-width: 1000px)")
     
     const tableSize = isSmallScreen ? 4 : 13
 
@@ -90,7 +92,9 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
             <AdminLayout/>
-                <Box paddingBottom={"4rem"}>
+                <Box 
+                    paddingBottom="4rem"
+                >
                     <Box
                         backgroundColor="primary.white"
                         display='flex'
@@ -103,8 +107,9 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                         maxW="100%"
                         textAlign="center"
                         top="0"
-                        marginLeft='4rem'
-                        marginRight='4rem'
+                        marginLeft={isSmallScreen ? '1rem' : '4rem'}
+                        marginRight={isSmallScreen ? '1rem' : '4rem'}
+                        overflow='auto'
                     >
                         <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
                             Host Account Requests
@@ -113,10 +118,10 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                             display='flex'
                             flexDir='row'
                             alignItems='start'
-                            w='100%'
+                            w={isSmallScreen ? '100%' : '70%'}
                         >
                             <Tabs 
-                                
+                                size={isSmallScreen ? 'sm' : 'md'}
                                 marginTop="5px" 
                                 variant='soft-rounded' 
                                 onChange={(index) => {
@@ -157,24 +162,27 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                         </Box>
                         <Box
                             display='flex'
-                            flexDir='row'
-                            alignItems='start'
-                            w='100%'
+                            flexDir='column'
+                            w={isSmallScreen ? '100%' : '70%'}
+                            h='80%'
                             marginTop='1%'
                         >
                             <TableContainer 
                                 marginTop="5px"
                                 width='100%'
-                                height='80%'
+                                height='100%'
                             >
-                                <Table variant='simple' size="sm">
+                                <Table 
+                                    variant='simple' 
+                                    size="sm"
+                                >
                                     <Thead textAlign="center">
                                         <Tr>
                                             <Td fontWeight="bold">Name</Td>
                                             {!isSmallScreen && <Td fontWeight="bold">Phone Number</Td>}
                                             {!isSmallScreen && <Td fontWeight="bold">Email</Td>}
                                             {!isSmallScreen && <Td fontWeight="bold">Website</Td>}
-                                            <Td></Td>
+                                            
                                         </Tr>
                                         {Children.toArray(pages[pageIndex]?.map((host: HostInfo, index) => 
                                             <Tr
@@ -218,16 +226,16 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                     </Tbody>
                                 </Table>    
                             </TableContainer>
-                            {pages.length > 1 && 
+                            {pages.length == 1 && 
                                 <Box
                                     aria-label="Page navigation " 
                                     display='flex'
                                     flexDirection='row'
-                                    justifyContent='center'
-                                    w='100%'
+                                    justifyContent='space-between'
+                                    marginTop='5px'
                                 >
                                         <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
-                                        <Box w='80%'/>
+                                        
                                         <HStack
                                             spacing={2}
                                         >   
@@ -264,7 +272,17 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     var hosts: HostInfo[] | null = []
     try {
-    hosts = await getPendingHosts()
+        hosts = await getPendingHosts()
+        const sessionWrapper = await getSession(context)
+        const { signedIn, signedUp, session } = sessionWrapper
+
+        if (!signedIn || !session) {
+            return serverSideRedirectTo('/login')
+        }
+
+        if (session.user.account_type != 'admin') {
+            return serverSideRedirectTo('/')
+        }
     } catch (e: any) {
         console.log(e)
     }
