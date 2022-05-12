@@ -23,7 +23,7 @@ it('New Host Page', () => {
     cy.get('#state').select('New York')
     cy.get('#zip').type('55555')
     cy.get('#country').select('USA')
-    cy.get('#iceSheets').type('A{enter}B{enter}C{enter}D{enter}')
+    cy.get('#iceSheets').type('5{enter}')
     cy.get('input[type="checkbox"]').check({force: true})
     cy.get('button').contains('Request Account').click().then(() => {
         expect(clicked).to.be.true

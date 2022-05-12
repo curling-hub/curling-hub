@@ -28,6 +28,7 @@ import {
     MultiValue,
     OptionBase,
     Select as ChakraReactSelect,
+    SingleValue,
 } from 'chakra-react-select';
 
 
@@ -316,24 +317,25 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                 </Field>
                             </HStack>
                         </Stack>
-                        <Field name="iceSheets">
+                        <Field name="iceSheetCount">
                             {({field, form}: FieldProps<string[]>) => (
                                 <FormControl>
-                                    <ChakraReactSelect<IceSheetSelectOptions, true, GroupBase<IceSheetSelectOptions>>
-                                        isMulti
-                                        options={getIceSheetsSelectionOptions(form.values.namingScheme)}
-                                        closeMenuOnSelect={false}
-                                        placeholder="Select ice sheets"
+                                    <ChakraReactSelect<IceSheetSelectOptions, false, GroupBase<IceSheetSelectOptions>>
+                                        options={getIceSheetsSelectionOptions()}
+                                        placeholder="Number of ice sheets"
                                         focusBorderColor="green.400"
-                                        instanceId="iceSheets"
-                                        id="iceSheets"
-                                        onFocus={() => {form.setFieldTouched("iceSheets", true, true)}}
-                                        value={form.values.iceSheets.map((iceSheet: string) => ({ label: iceSheet, value: iceSheet }))}
+                                        instanceId="iceSheetCount"
+                                        id="iceSheetCount"
+                                        onFocus={() => {form.setFieldTouched("iceSheetCount", true, true)}}
                                         onChange={
-                                            ((newValue: MultiValue<IceSheetSelectOptions>, actionMeta: ActionMeta<IceSheetSelectOptions>) => {
-                                                form.values.iceSheets = Array.from(newValue.values()).map((v) => v.value);
+                                            (newValue: SingleValue<IceSheetSelectOptions>, actionMeta: ActionMeta<IceSheetSelectOptions>) => {
+                                                const startingChar = form.values.namingScheme === 'ABC' ? 'A' : '1'
+                                                const startingCode = startingChar.charCodeAt(0)
+                                                form.values.iceSheets = Array(newValue?.value || 0)
+                                                    .fill(0)
+                                                    .map((_, i) => String.fromCharCode(startingCode + i))
                                                 form.validateField("iceSheets");
-                                            })
+                                            }
                                         }
                                     />
                                 </FormControl>
@@ -425,13 +427,10 @@ export default NewHostFields
 
 interface IceSheetSelectOptions extends OptionBase {
     label: string
-    value: string
+    value: number
 }
 
-const getIceSheetsSelectionOptions = (namingScheme: string): IceSheetSelectOptions[] => {
-    const iceSheetOptions = (namingScheme === '123' ?
-        ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] :
-        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
-    )
-    return iceSheetOptions.map((option) => ({ label: option, value: option }))
+const getIceSheetsSelectionOptions = (): IceSheetSelectOptions[] => {
+    const iceSheetOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    return iceSheetOptions.map((option) => ({ label: `${option}`, value: option }))
 }
