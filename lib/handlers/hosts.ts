@@ -85,6 +85,12 @@ export async function createHost(form: HostCreationForm): Promise<HostInfo> {
             country: form.country,
             status: 'pending',
         }, { transaction: t })
+
+        // 3. Create ice sheets
+        await DbModels.IceSheetModel.bulkCreate(form.iceSheets.map((iceSheet: string) => ({
+            hostId: hostInfo.hostId,
+            name: iceSheet,
+        })), { transaction: t })
         return hostInfo.toJSON()
     })
     return hostInfo

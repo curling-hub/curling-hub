@@ -14,6 +14,8 @@ const hostSignupSchema = yup.object({
     state: yup.string().required(),
     zip: yup.string().matches(zipRE, 'Invalid zip code').required(),
     country: yup.string().required(),
+    iceSheets: yup.array(yup.string().required()).required(),
+    namingScheme: yup.string().required(),
     agreed: yup.boolean().required().isTrue("Please agree to the terms of service and privacy policy"),
 })
 
