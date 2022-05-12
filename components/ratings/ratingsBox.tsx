@@ -177,12 +177,12 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                 aria-label="Page navigation " 
                                 display='flex'
                                 flexDirection='row'
-                                justifyContent='center'
+                                justifyContent='space-between'
                                 w='100%'
                                 marginBottom='5px'
                             >
                                 <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
-                                <Box w='75%'/>
+                                
                                 <HStack
                                     spacing={2}
                                 >   

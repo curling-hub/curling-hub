@@ -58,7 +58,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
     const isSmallScreen = width && width < 750 ? true : false
     const [mounted, setMounted] = useState(false)
     useEffect(() => { setMounted(true) }, [])
-    const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 4) : 10
+    const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 3) : 10
     
     return (
         <>
