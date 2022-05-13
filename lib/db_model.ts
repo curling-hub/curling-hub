@@ -7,7 +7,7 @@ import type { AdapterUser } from 'next-auth/adapters'
 import { Category, HostInfoBase, TeamInfo, TeamMember } from './models'
 import { MatchResult, MatchResultDetails } from './models/match'
 import { TeamInfoRatings } from './models/team'
-import { RatingPeriod, TeamGlickoInfo } from './models/glicko'
+import { GlickoVariable, RatingPeriod, TeamGlickoInfo } from './models/glicko'
 import { RatingPeriodExt } from './models/teams'
 import { AccountType } from './models/accountType'
 
@@ -68,6 +68,8 @@ interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, H
 }
 
 interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod { }
+
+interface GlickoVariableInstance extends Model<GlickoVariable, Partial<GlickoVariable>>, GlickoVariable {}
 
 
 /**
@@ -526,7 +528,7 @@ export const RatingPeriodModel = sequelize.define<RatingPeriodInstance>('RatingP
 })
 
 
-export const GlickoVariableModel = sequelize.define('GlickoVariable', {
+export const GlickoVariableModel = sequelize.define<GlickoVariableInstance>('GlickoVariable', {
     id: {
         type: DataTypes.BIGINT,
         primaryKey: true,

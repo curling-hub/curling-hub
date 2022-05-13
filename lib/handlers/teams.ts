@@ -9,6 +9,7 @@ import type { Category, TeamInfo } from '../models'
 import type { TeamCreationForm, TeamMember } from '../models/team'
 import type { TeamMatch, TeamRanking, TeamWithMembersAndRatings } from '../models/teams'
 import { AccountType } from '../models/accountType'
+import { getCurrentSettings } from './rating'
 
 export async function teams() {
     return 0
@@ -207,9 +208,10 @@ export async function createTeam(form: TeamCreationForm): Promise<any> {
         }, { transaction: t })
 
         // 2. Create team
+        const current_glicko = await getCurrentSettings();
         const team = await DbModels.TeamInfoModel.create({
             name: form.name,
-            rating: '700',  // TODO: choose a default rating
+            rating: current_glicko?.defaultRating.toString(),
         }, {
             transaction: t,
         })

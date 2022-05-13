@@ -3,7 +3,7 @@ import moment from 'moment'
 
 import { sequelize } from '../db'
 import * as DbModels from '../db_model'
-import { RatingPeriod, TeamGlickoInfo } from '../models/glicko'
+import { GlickoVariable, RatingPeriod, TeamGlickoInfo } from '../models/glicko'
 import { MatchResult, MatchResultDetails } from '../models/match'
 import { TeamInfoRatings } from '../models/team'
 
@@ -46,18 +46,13 @@ export async function getAllRatingPeriods() {
     const ratingPeriods = await DbModels.RatingPeriodModel.findAll()
     const r = await Promise.all(ratingPeriods.map(async (r) => {
         // Newest glicko variables before rating period end
-        const glicko = await sequelize.query(`
-            SELECT glicko_variables.*
-            FROM glicko_variables
-            JOIN rating_periods
-            ON glicko_variables.created_at < rating_periods.end_date
-            WHERE rating_periods.rating_period_id = ?
-            ORDER BY glicko_variables.id DESC
-        `, {
-            replacements: [r.getDataValue('ratingPeriodId')],
-            plain: true,
-            model: DbModels.GlickoVariableModel,
-            mapToModel: true
+        const glicko = await DbModels.GlickoVariableModel.findOne({
+            where: {
+                createdAt: {
+                    [Op.lt]: r.endDate
+                }
+            },
+            order: [["createdAt", "DESC"]],
         })
         return {'ratingPeriod': r.toJSON(), 'glickoVariable': glicko?.toJSON()}
     }))
@@ -92,7 +87,9 @@ export async function getAllTeamRatings(): Promise<TeamInfoRatings[]> {
     }
  */
 export async function getCurrentSettings() {
-    const currentR = await DbModels.GlickoVariableModel.findOne()
+    const currentR = await DbModels.GlickoVariableModel.findOne({
+        order: [["createdAt", "DESC"]],
+    })
     return currentR?.toJSON()
 }
 
