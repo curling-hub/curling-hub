@@ -25,7 +25,7 @@ import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import AdminLayout from '../components/layouts/AdminLayout';
 import { getSession } from '../lib/auth/session';
 import { serverSideRedirectTo } from '../lib/auth/redirect';
-
+//import { AccountType } from '../../lib/models/accountType'
 interface ReqProps {
     hosts: HostInfo[]
 }
@@ -280,9 +280,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             return serverSideRedirectTo('/login')
         }
 
-        if (session.user.account_type != 'admin') {
-            return serverSideRedirectTo('/')
-        }
+       // if (session.user.account_type == AcountType.Admin) {
+          //  return serverSideRedirectTo('/')
+       // }
     } catch (e: any) {
         console.log(e)
     }
