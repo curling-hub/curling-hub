@@ -51,6 +51,10 @@ const postHandler: NextApiHandler = async (req, res) => {
             return
         }
         // 4. Compute ratings (not async because no I/O)
+        if (!glickoVariable) {
+            res.status(500).json({ error: 'No glicko variable'})
+            return
+        }
         const ratings = computeRatings(matches, teamRatings, glickoVariable)
         // 5. Update rating history
         await createRatingAndPeriod({startDate, endDate}, ratings)
