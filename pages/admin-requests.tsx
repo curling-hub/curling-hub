@@ -26,6 +26,7 @@ import AdminLayout from '../components/layouts/AdminLayout'
 import { getSession } from '../lib/auth/session'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import { AccountType } from '../lib/models/accountType'
+import HostInfoModal from '../components/modals/HostInfoModal'
 
 interface ReqProps {
     hosts: HostInfo[]
@@ -33,10 +34,13 @@ interface ReqProps {
 
 const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     const [hosts, setHosts] = useState(props.hosts)
+    const [modalHost, setModalHost] = useState(props.hosts[0])
     const [pageIndex, setPageIndex] = useState(0)
     const [tabIndex, setTabIndex] = useState(0)
     const [refreshKey, setRefreshKey] = useState(0)
     const [isSmallScreen] = useMediaQuery("(max-width: 1000px)")
+    const [isTinyScreen] = useMediaQuery("(max-width: 465px)")
+    const [modalState, setModalState] = useState(false)
     
     const tableSize = isSmallScreen ? 4 : 13
 
@@ -112,7 +116,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                         marginRight={isSmallScreen ? '1rem' : '4rem'}
                         overflow='auto'
                     >
-                        <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+                        <Text fontSize={isSmallScreen ? '1.5rem' : '2.5rem'} marginTop="5px" fontWeight="bold">
                             Host Account Requests
                         </Text>
                         <Box
@@ -179,20 +183,34 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                 >
                                     <Thead textAlign="center">
                                         <Tr>
-                                            <Td fontWeight="bold">Name</Td>
-                                            {!isSmallScreen && <Td fontWeight="bold">Phone Number</Td>}
-                                            {!isSmallScreen && <Td fontWeight="bold">Email</Td>}
-                                            {!isSmallScreen && <Td fontWeight="bold">Website</Td>}
-                                            
+                                            <Td fontWeight="bold">Host Info</Td>
+                                            {!isTinyScreen && !isSmallScreen && <Td fontWeight="bold">Phone Number</Td>}
+                                            {!isTinyScreen && !isSmallScreen && <Td fontWeight="bold">Email</Td>}
+                                            {!isTinyScreen && !isSmallScreen && <Td fontWeight="bold">Website</Td>}
+                                            { tabIndex == 0 && <Td></Td>}
                                         </Tr>
                                         {Children.toArray(pages[pageIndex]?.map((host: HostInfo, index) => 
+                                        <>
                                             <Tr
                                                 key={index}
                                             >
-                                                <Td>{host.organization}</Td>
-                                                {!isSmallScreen && <Td>{host.phoneNumber}</Td>}
-                                                {!isSmallScreen && <Td>{host.email}</Td>}
-                                                {!isSmallScreen && <Td>{host.website}</Td>}
+                                                {isTinyScreen && 
+                                                    <Td>
+                                                        <Button
+                                                            onClick={() => {
+                                                                setModalHost(host)
+                                                                setModalState(!modalState)
+                                                            }
+                                                            }
+                                                        >
+                                                            Reveal
+                                                        </Button>
+                                                    </Td>
+                                                }
+                                                {!isTinyScreen && !isSmallScreen && <Td>{host.organization}</Td>}
+                                                {!isTinyScreen && !isSmallScreen && <Td>{host.phoneNumber}</Td>}
+                                                {!isTinyScreen && !isSmallScreen && <Td>{host.email}</Td>}
+                                                {!isTinyScreen && !isSmallScreen && <Td>{host.website}</Td>}
                                                 { tabIndex == 0 &&
                                                     <Td>
                                                         <HStack
@@ -220,6 +238,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                                     </Td>
                                                 }
                                             </Tr>
+                                            </>
                                         ))}
                                     </Thead>
                                     <Tbody>
@@ -263,6 +282,14 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                             }
                         </Box>
                     </Box>
+                    <HostInfoModal
+                        isOpen={modalState}
+                        onClose={() => setModalState(!modalState)}
+                        name={modalHost?.organization}
+                        email={modalHost?.email}
+                        phoneNumber={modalHost?.phoneNumber}
+                        website={modalHost?.website}
+                    />
                 </Box>
                 <Footer />
             </Box >
