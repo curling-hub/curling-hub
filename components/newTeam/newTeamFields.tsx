@@ -61,9 +61,9 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         onOpenPrivacyPolicy,
         onOpenTermsOfService,
         categories,
-        onSubmit = async () => {},
+        onSubmit = async () => { },
     } = props
-   
+
     const [mode, setMode] = useState(true)
     const [alternate, setAlternate] = useState(false)
 
@@ -91,13 +91,13 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
             then: string().required("Alternate is required")
         }),
         categories: array()
-                    .of(object({
-                        value: number(),
-                        label: string().required()
-                    })).min(1, "Please select at least one category"),
+            .of(object({
+                value: number(),
+                label: string().required()
+            })).min(1, "Please select at least one category"),
         agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
-    
+
     const groupedOptions = categories
         .filter((category: Category) => category.name !== 'Open' && category.name !== 'Doubles')
         .map((category: Category) => ({ value: category.categoryId, label: category.name }))
@@ -113,38 +113,38 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
             return { label: matchings[0].name, value: matchings[0].categoryId, isFixed: true }
         }
     })()
-    
+
     return (
         <Formik
-            initialValues={getInitialValues(openCategory ? { categories: [openCategory]} : {})}
+            initialValues={getInitialValues(openCategory ? { categories: [openCategory] } : {})}
             validationSchema={newTeamSchema}
             onSubmit={onSubmit}
         >
-            {( props ) => (
+            {(props) => (
                 <Form>
                     <VStack alignItems="center" spacing="4">
                         <Field name="team">
-                            {({field, form}: FieldProps<string>) => (
+                            {({ field, form }: FieldProps<string>) => (
                                 <FormControl isInvalid={form.errors.team != undefined && form.touched.team != undefined}>
-                                <Input
-                                    {...field}
-                                    borderRadius="full"
-                                    focusBorderColor="green.400"
-                                    shadow="sm"
-                                    placeholder="Team Name"
-                                    onChange={props.handleChange('team')}
-                                />
-                                <FormErrorMessage>{form.errors.team}</FormErrorMessage>
+                                    <Input
+                                        {...field}
+                                        borderRadius="full"
+                                        focusBorderColor="green.400"
+                                        shadow="sm"
+                                        placeholder="Team Name"
+                                        onChange={props.handleChange('team')}
+                                    />
+                                    <FormErrorMessage>{form.errors.team}</FormErrorMessage>
                                 </FormControl>
                             )}
                         </Field>
                         <Field name="gameMode">
-                            {({field, form}: FieldProps<string>) => (
-                                <RadioGroup 
+                            {({ field, form }: FieldProps<string>) => (
+                                <RadioGroup
                                     {...field}
                                     onChange={() => {
                                         const isDoubleMode = !mode;
-                                        setMode(isDoubleMode); 
+                                        setMode(isDoubleMode);
                                         if (!isDoubleMode) {
                                             form.values.categories = form.values.categories
                                                 .filter((c: CategorySelectOptions) => (c.label !== 'Open'))
@@ -154,18 +154,18 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                                 .filter((c: CategorySelectOptions) => (c.label !== 'Doubles'))
                                             openCategory && form.values.categories.unshift(openCategory)
                                         }
-                                    }} 
+                                    }}
                                     value={modeMap.get(mode)}
                                 >
                                     <Stack {...field} direction="row" alignItems="right">
                                         <Radio {...field} colorScheme="green" value="open">Open</Radio>
-                                        <Radio {...field} colorScheme="green" value="doubles">Doubles</Radio> 
+                                        <Radio {...field} colorScheme="green" value="doubles">Doubles</Radio>
                                     </Stack>
                                 </RadioGroup>
                             )}
                         </Field>
                         <Field name="curler1">
-                            {({field, form}: FieldProps<string>) => (
+                            {({ field, form }: FieldProps<string>) => (
                                 <FormControl isInvalid={form.errors.curler1 != undefined && form.touched.curler1 != undefined}>
                                     <Input
                                         {...field}
@@ -176,12 +176,12 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                         onChange={props.handleChange('curler1')}
                                     />
                                     <FormErrorMessage>{form.errors.curler1}</FormErrorMessage>
-                                    </FormControl>
+                                </FormControl>
                             )}
                         </Field>
                         <Field name="curler2">
-                            {({field, form}: FieldProps<string>) => (
-                                    <FormControl isInvalid={form.errors.curler2 != undefined && form.touched.curler2 != undefined}>
+                            {({ field, form }: FieldProps<string>) => (
+                                <FormControl isInvalid={form.errors.curler2 != undefined && form.touched.curler2 != undefined}>
                                     <Input
                                         {...field}
                                         borderRadius="full"
@@ -191,67 +191,67 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                         onChange={props.handleChange('curler2')}
                                     />
                                     <FormErrorMessage>{form.errors.curler2}</FormErrorMessage>
-                                    </FormControl> 
-                                )}
+                                </FormControl>
+                            )}
                         </Field>
-                        { mode && 
+                        {mode &&
                             <>
-                            <Field name="curler3">
-                                {({field, form}: FieldProps<string>) => (
-                                    <FormControl isInvalid={form.errors.curler3 != undefined && form.touched.curler3 != undefined}>
-                                    <Input
-                                        {...field}
-                                        borderRadius="full"
-                                        focusBorderColor="green.400"
-                                        shadow="sm"
-                                        placeholder="Curler Three"
-                                        onChange={props.handleChange('curler3')}
-                                    />
-                                    <FormErrorMessage>{form.errors.curler3}</FormErrorMessage>    
-                                    </FormControl>
-                                )}
-                            </Field>
+                                <Field name="curler3">
+                                    {({ field, form }: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.curler3 != undefined && form.touched.curler3 != undefined}>
+                                            <Input
+                                                {...field}
+                                                borderRadius="full"
+                                                focusBorderColor="green.400"
+                                                shadow="sm"
+                                                placeholder="Curler Three"
+                                                onChange={props.handleChange('curler3')}
+                                            />
+                                            <FormErrorMessage>{form.errors.curler3}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
 
-                            <Field name="curler4">
-                                {({field, form}: FieldProps<string>) => (
-                                    <FormControl isInvalid={form.errors.curler4 != undefined && form.touched.curler4 != undefined}>
-                                    <Input
-                                        {...field}
-                                        borderRadius="full"
-                                        focusBorderColor="green.400"
-                                        shadow="sm"
-                                        placeholder="Curler Four"
-                                        onChange={props.handleChange('curler4')}
-                                    />
-                                    <FormErrorMessage>{form.errors.curler4}</FormErrorMessage>    
-                                    </FormControl>      
-                                )}
-                            </Field>
+                                <Field name="curler4">
+                                    {({ field, form }: FieldProps<string>) => (
+                                        <FormControl isInvalid={form.errors.curler4 != undefined && form.touched.curler4 != undefined}>
+                                            <Input
+                                                {...field}
+                                                borderRadius="full"
+                                                focusBorderColor="green.400"
+                                                shadow="sm"
+                                                placeholder="Curler Four"
+                                                onChange={props.handleChange('curler4')}
+                                            />
+                                            <FormErrorMessage>{form.errors.curler4}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
                                 {alternate ?
                                     <>
                                         <Field name="alternate">
-                                            {({field, form}: FieldProps<string>) => (
+                                            {({ field, form }: FieldProps<string>) => (
                                                 <FormControl isInvalid={form.errors.alternate != undefined && form.touched.alternate != undefined}>
-                                                <Input
-                                                    {...field}
-                                                    borderRadius="full"
-                                                    focusBorderColor="green.400"
-                                                    shadow="sm"
-                                                    placeholder="Alternate"
-                                                    onChange={props.handleChange('alternate')}
-                                                />
-                                                <FormErrorMessage>{form.errors.alternate}</FormErrorMessage>
+                                                    <Input
+                                                        {...field}
+                                                        borderRadius="full"
+                                                        focusBorderColor="green.400"
+                                                        shadow="sm"
+                                                        placeholder="Alternate"
+                                                        onChange={props.handleChange('alternate')}
+                                                    />
+                                                    <FormErrorMessage>{form.errors.alternate}</FormErrorMessage>
                                                 </FormControl>
                                             )}
                                         </Field>
                                         <Field name="showAlternate">
-                                            {({field, form}: FieldProps<string>) => (
-                                                <Button 
+                                            {({ field, form }: FieldProps<string>) => (
+                                                <Button
                                                     {...field}
-                                                    onClick={() => {setAlternate(!alternate), form.values.showAlternate = false}}
-                                                    onChange={props.handleChange('showAlternate')} 
-                                                    variant="link" 
-                                                    color="black" 
+                                                    onClick={() => { setAlternate(!alternate), form.values.showAlternate = false }}
+                                                    onChange={props.handleChange('showAlternate')}
+                                                    variant="link"
+                                                    color="black"
                                                     size="xs"
                                                 >
                                                     Remove Alternate
@@ -259,15 +259,15 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                             )}
                                         </Field>
                                     </>
-                                : 
+                                    :
                                     <Field name="showAlternate">
-                                        {({field, form}: FieldProps<string>) => (
-                                            <Button 
+                                        {({ field, form }: FieldProps<string>) => (
+                                            <Button
                                                 {...field}
-                                                onClick={() => {setAlternate(!alternate), form.values.showAlternate = true}} 
-                                                onChange={props.handleChange('showAlternate')} 
-                                                variant="link" 
-                                                color="black" 
+                                                onClick={() => { setAlternate(!alternate), form.values.showAlternate = true }}
+                                                onChange={props.handleChange('showAlternate')}
+                                                variant="link"
+                                                color="black"
                                                 size="xs"
                                             >
                                                 Add Alternate
@@ -278,78 +278,72 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                             </>
                         }
                         {mode && (
-                        <FieldArray name="categories">
-                            {({form, remove}: FieldArrayRenderProps) => (
-                                <FormControl isInvalid={form.errors.categories != undefined && form.touched.categories != undefined}>
-                                    <Select<CategorySelectOptions, true, GroupBase<CategorySelectOptions>>
-                                        isMulti
-                                        options={groupedOptions}
-                                        placeholder="Select Categories..."
-                                        closeMenuOnSelect={false}
-                                        focusBorderColor="green.400"
-                                        id="categories"
-                                        instanceId="categories"
-                                        value={form.values.categories}
-                                        onFocus={() => {form.setFieldTouched("categories", true, true)}}
-                                        onChange={
-                                            ((newValue: MultiValue<OptionBase>, actionMeta: ActionMeta<OptionBase>) => {
-                                                form.values.categories = newValue;
-                                                if (form.values.categories.length === 0) {
-                                                    if (!mode) {
-                                                        form.values.categories = form.values.categories
-                                                            .filter((c: CategorySelectOptions) => (c.label !== 'Open'))
-                                                        doublesCategory && form.values.categories.unshift(doublesCategory)
-                                                    } else {
+                            <FieldArray name="categories">
+                                {({ form, remove }: FieldArrayRenderProps) => (
+                                    <FormControl isInvalid={form.errors.categories != undefined && form.touched.categories != undefined}>
+                                        <Select<CategorySelectOptions, true, GroupBase<CategorySelectOptions>>
+                                            isMulti
+                                            options={groupedOptions}
+                                            placeholder="Select Categories..."
+                                            closeMenuOnSelect={false}
+                                            focusBorderColor="green.400"
+                                            id="categories"
+                                            instanceId="categories"
+                                            value={form.values.categories}
+                                            onFocus={() => { form.setFieldTouched("categories", true, true) }}
+                                            onChange={
+                                                ((newValue: MultiValue<OptionBase>, actionMeta: ActionMeta<OptionBase>) => {
+                                                    form.values.categories = newValue;
+                                                    if (form.values.categories.length === 0) {
                                                         form.values.categories = form.values.categories
                                                             .filter((c: CategorySelectOptions) => (c.label !== 'Doubles'))
                                                         openCategory && form.values.categories.unshift(openCategory)
                                                     }
-                                                }
-                                                form.validateField("categories");
-                                            })
-                                        }
-                                    />
+                                                    form.validateField("categories");
+                                                })
+                                            }
+                                        />
 
-                                    <FormErrorMessage>{form.errors.categories}</FormErrorMessage> 
-                                </FormControl>
-                            )}
-                        </FieldArray>
+                                        <FormErrorMessage>{form.errors.categories}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </FieldArray>
                         )}
                         <HStack>
-                        <Field name="agreed">
-                            {({field, form}: FieldProps<string>) => (
-                                <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
-                                    <HStack>
-                                        <Checkbox
-                                            {...field}
-                                            name="agree-box"
-                                            aria-label=""
-                                            checked={form.values.agree}
-                                            size="sm"
-                                            borderRadius="50%"
-                                            colorScheme="teal"
-                                            onChange={props.handleChange('agreed')}
-                                            css={`
+                            <Field name="agreed">
+                                {({ field, form }: FieldProps<string>) => (
+                                    <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
+                                        <HStack>
+                                            <Checkbox
+                                                {...field}
+                                                name="agree-box"
+                                                aria-label=""
+                                                checked={form.values.agree}
+                                                size="sm"
+                                                borderRadius="50%"
+                                                colorScheme="teal"
+                                                onChange={props.handleChange('agreed')}
+                                                css={`
                                                 > span:first-of-type {
                                                     box-shadow: unset;
                                                 }
                                             `}
-                                        />
-                                        <Text fontSize="12">
-                                        {" "}I agree to the {" "}
-                                        <Button variant="link" size="12" onClick={onOpenTermsOfService}>
-                                            Terms of Service
-                                        </Button>
-                                        {" "}and{" "}
-                                        <Button variant="link" size="12" onClick={onOpenPrivacyPolicy}>
-                                            Privacy Policy
-                                        </Button>
-                                        </Text>
-                                    </HStack>
-                                    <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
-                                </FormControl>
-                            )}
-                        </Field>
+                                            />
+                                            <Text fontSize="12">
+                                                {" "}I agree to the {" "}
+                                                <Button variant="link" size="12" onClick={onOpenTermsOfService}>
+                                                    Terms of Service
+                                                </Button>
+                                                {" "}and{" "}
+                                                <Button variant="link" size="12" onClick={onOpenPrivacyPolicy}>
+                                                    Privacy Policy
+                                                </Button>
+                                            </Text>
+                                        </HStack>
+                                        <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>
                         </HStack>
                         <Button
                             type='submit'

@@ -41,7 +41,7 @@ function NewTeam(props: NewTeamProps) {
     const router = useRouter()
 
     const onSubmit = async (values: any) => {
-        const cats = values.categories.map((category: {value: number}) => category.value)
+        const cats = values.categories.map((category: { value: number }) => category.value)
 
         var req = {}
 
@@ -50,7 +50,7 @@ function NewTeam(props: NewTeamProps) {
                 team: values.team,
                 curler1: values.curler1,
                 curler2: values.curler2,
-                categories: cats.filter((category: {label: string}) => category.label === 'Doubles'),
+                categories: values.categories.filter((category: { label: string }) => category.label === 'Doubles').map((category: { value: number }) => category.value),
             }
         } else if (values.showAlternate) {
             req = {
@@ -72,7 +72,7 @@ function NewTeam(props: NewTeamProps) {
                 categories: cats,
             }
         }
-        
+
         const res = await fetch('/api/team/create', {
             body: JSON.stringify(req),
             headers: {
@@ -80,13 +80,13 @@ function NewTeam(props: NewTeamProps) {
             },
             method: 'POST'
         })
-        
+
         if (res.status == 200) {
             router.push('/team-profile')
         } else {
             const result = await res.json()
-            alert("error: "+result.error)
-        } 
+            alert("error: " + result.error)
+        }
     }
 
     return (
