@@ -3,7 +3,7 @@ import moment from 'moment'
 
 import { sequelize } from '../db'
 import * as DbModels from '../db_model'
-import { RatingPeriod, TeamGlickoInfo } from '../models/glicko'
+import { GlickoVariable, RatingPeriod, TeamGlickoInfo } from '../models/glicko'
 import { MatchResult, MatchResultDetails } from '../models/match'
 import { TeamInfoRatings } from '../models/team'
 
@@ -52,7 +52,7 @@ export async function getAllRatingPeriods() {
                     [Op.lt]: r.endDate
                 }
             },
-            order: [["id", "DESC"]],
+            order: [["createdAt", "DESC"]],
         })
         return {'ratingPeriod': r.toJSON(), 'glickoVariable': glicko?.toJSON()}
     }))
@@ -87,7 +87,9 @@ export async function getAllTeamRatings(): Promise<TeamInfoRatings[]> {
     }
  */
 export async function getCurrentSettings() {
-    const currentR = await DbModels.GlickoVariableModel.findOne()
+    const currentR = await DbModels.GlickoVariableModel.findOne({
+        order: [["createdAt", "DESC"]],
+    })
     return currentR?.toJSON()
 }
 
