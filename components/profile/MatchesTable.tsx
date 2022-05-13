@@ -38,7 +38,6 @@ export default function MatchesTable(props: MatchesTableProps) {
             <Box h={{ base: "75%", md: "78%" }}>
                 <TableContainer /* padding=" 0 5px" */>
                     <Table variant='simple' size="sm">
-                        <TableCaption>Most recent matches</TableCaption>
                         <Thead textAlign="center">
                             <Tr>
                                 <Td fontWeight="bold">Date</Td>
