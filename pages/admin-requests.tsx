@@ -227,7 +227,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                     </Tbody>
                                 </Table>    
                             </TableContainer>
-                            {pages.length == 1 && 
+                            {pages.length > 1 && 
                                 <Box
                                     aria-label="Page navigation " 
                                     display='flex'
