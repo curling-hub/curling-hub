@@ -19,13 +19,14 @@ import {
     useMediaQuery,
 } from '@chakra-ui/react'
 import { getPendingHosts } from '../lib/handlers/hosts'
-import { useState, Children, useEffect } from 'react';
-import { HostInfo } from '../lib/models';
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
-import AdminLayout from '../components/layouts/AdminLayout';
-import { getSession } from '../lib/auth/session';
-import { serverSideRedirectTo } from '../lib/auth/redirect';
-//import { AccountType } from '../../lib/models/accountType'
+import { useState, Children, useEffect } from 'react'
+import { HostInfo } from '../lib/models'
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
+import AdminLayout from '../components/layouts/AdminLayout'
+import { getSession } from '../lib/auth/session'
+import { serverSideRedirectTo } from '../lib/auth/redirect'
+import { AccountType } from '../lib/models/accountType'
+
 interface ReqProps {
     hosts: HostInfo[]
 }
@@ -270,22 +271,14 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    var hosts: HostInfo[] | null = []
-    try {
-        hosts = await getPendingHosts()
-        const sessionWrapper = await getSession(context)
-        const { signedIn, signedUp, session } = sessionWrapper
+    const hosts = await getPendingHosts()
+    const sessionWrapper = await getSession(context)
+    const session = sessionWrapper.session
 
-        if (!signedIn || !session) {
-            return serverSideRedirectTo('/login')
-        }
-
-       // if (session.user.account_type == AcountType.Admin) {
-          //  return serverSideRedirectTo('/')
-       // }
-    } catch (e: any) {
-        console.log(e)
+    if (!session || session.user.account_type != AccountType.ADMIN) {
+        return serverSideRedirectTo('/')
     }
+    
     return {
         props: {
             hosts: hosts
