@@ -119,7 +119,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                             display='flex'
                             flexDir='row'
                             alignItems='start'
-                            w={isSmallScreen ? '100%' : '70%'}
+                            w={isSmallScreen ? '100%' : '80%'}
                         >
                             <Tabs 
                                 size={isSmallScreen ? 'sm' : 'md'}
@@ -164,7 +164,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                         <Box
                             display='flex'
                             flexDir='column'
-                            w={isSmallScreen ? '100%' : '70%'}
+                            w={isSmallScreen ? '100%' : '80%'}
                             h='80%'
                             marginTop='1%'
                         >
