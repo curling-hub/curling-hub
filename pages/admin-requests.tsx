@@ -278,7 +278,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!session || session.user.account_type != AccountType.ADMIN) {
         return serverSideRedirectTo('/')
     }
-    
+
     return {
         props: {
             hosts: hosts
