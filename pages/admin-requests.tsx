@@ -122,7 +122,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                         <Box
                             display='flex'
                             flexDir='row'
-                            alignItems='start'
+                            alignItems={'start'}
                             w={isSmallScreen ? '100%' : '80%'}
                         >
                             <Tabs 
@@ -183,7 +183,8 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                 >
                                     <Thead textAlign="center">
                                         <Tr>
-                                            <Td fontWeight="bold">Host Info</Td>
+                                            {isTinyScreen && <Td fontWeight="bold">Host Info</Td>}
+                                            {!isTinyScreen && <Td fontWeight="bold">Name</Td>}
                                             {!isTinyScreen && !isSmallScreen && <Td fontWeight="bold">Phone Number</Td>}
                                             {!isTinyScreen && !isSmallScreen && <Td fontWeight="bold">Email</Td>}
                                             {!isTinyScreen && !isSmallScreen && <Td fontWeight="bold">Website</Td>}
@@ -207,7 +208,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                                         </Button>
                                                     </Td>
                                                 }
-                                                {!isTinyScreen && !isSmallScreen && <Td>{host.organization}</Td>}
+                                                {!isTinyScreen && <Td>{host.organization}</Td>}
                                                 {!isTinyScreen && !isSmallScreen && <Td>{host.phoneNumber}</Td>}
                                                 {!isTinyScreen && !isSmallScreen && <Td>{host.email}</Td>}
                                                 {!isTinyScreen && !isSmallScreen && <Td>{host.website}</Td>}
