@@ -9,13 +9,14 @@ import { MatchResult, MatchResultDetails } from './models/match'
 import { TeamInfoRatings } from './models/team'
 import { RatingPeriod, TeamGlickoInfo } from './models/glicko'
 import { RatingPeriodExt } from './models/teams'
+import { AccountType } from './models/accountType'
 
 /**
  * Redefine next-auth's User instance
  */
 interface UserInstance extends
         Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
-    account_type?: String
+    account_type?: string
 }
 
 interface AccountInstance extends
@@ -24,7 +25,7 @@ interface AccountInstance extends
 declare module 'next-auth' {
     interface UserInstance extends
             Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
-        account_type?: String
+        account_type?: string
     }
 }
 
@@ -74,8 +75,12 @@ interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>
  */
 export const UserModel = sequelize.define<UserInstance>('users', {
     ...models.User,
-    // account_type is one of: ['curler', 'team', 'admin']
-    account_type: DataTypes.STRING(256),
+    // account_type is one of: ['team', 'host', 'admin']
+    account_type: DataTypes.ENUM<string>(
+        AccountType.TEAM,
+        AccountType.HOST,
+        AccountType.ADMIN,
+    ),
 })
 
 

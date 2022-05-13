@@ -12,6 +12,8 @@ import type { HostInfo, TeamInfo } from '../../lib/models'
 import { getHostInfoById } from '../../lib/handlers/hosts'
 import { getAllTeams } from '../../lib/handlers/teams'
 import { getSession, getSessionServerSideResult } from '../../lib/auth/session'
+import { AccountType } from '../../lib/models/accountType'
+import { serverSideRedirectTo } from '../../lib/auth/redirect'
 
 
 interface HostAddMatchProps {
@@ -79,9 +81,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!signedIn || !signedUp || !session) {
         return getSessionServerSideResult(sessionWrapper)
     }
-    if (session.user.account_type !== 'host') {
-        // TODO: uncomment next line for real checking
-        //return { notFound: true }
+    switch (session.user.account_type) {
+        case AccountType.TEAM:
+            return serverSideRedirectTo('/team-profile')
     }
     const hostId = session.user.id
     // TODO: redirect on error?

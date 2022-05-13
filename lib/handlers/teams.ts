@@ -8,6 +8,7 @@ import * as DbModels from '../db_model'
 import type { Category, TeamInfo } from '../models'
 import type { TeamCreationForm, TeamMember } from '../models/team'
 import type { TeamMatch, TeamRanking, TeamWithMembersAndRatings } from '../models/teams'
+import { AccountType } from '../models/accountType'
 
 export async function teams() {
     return 0
@@ -193,7 +194,7 @@ export async function getTeamEmailById(teamId: number): Promise<string | null> {
 
 export async function createTeam(form: TeamCreationForm): Promise<any> {
     const result = await sequelize.transaction(async (t) => {
-        // 1. Update the account type to `curler`
+        // 1. Update account type
         const user = await DbModels.UserModel.findOne({
             where: { email: form.email },
             transaction: t,
@@ -202,7 +203,7 @@ export async function createTeam(form: TeamCreationForm): Promise<any> {
             throw new Error('User not found')
         }
         await user.update({
-            account_type: 'curler',
+            account_type: AccountType.TEAM,
         }, { transaction: t })
 
         // 2. Create team

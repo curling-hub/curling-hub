@@ -1,6 +1,6 @@
 # Curling Hub
 
-[![CI](https://github.com/curling-hub/curling-hub/actions/workflows/test-cypress.yml/badge.svg)](https://github.com/curling-hub/curling-hub/actions/workflows/test-build-docker.yml)
+[![CI](https://github.com/curling-hub/curling-hub/actions/workflows/test-cypress.yaml/badge.svg)](https://github.com/curling-hub/curling-hub/actions/workflows/test-cypress.yaml)
 
 ## Introduction
 The purpose of this web application is to unite non-elite Curling teams under a single score-tracking hub. This hub allows amateur teams all over the U.S. to compete with each other in various categories, with the ultimate goal of selecting contenders for national championships. 

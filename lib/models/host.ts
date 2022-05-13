@@ -31,6 +31,7 @@ export interface HostCreationForm {
     state: string
     zip: string
     country: string
+    iceSheets: string[]
 }
 
 export interface CurrentHostInfo {

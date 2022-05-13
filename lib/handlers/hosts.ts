@@ -2,6 +2,7 @@ import * as DbModels from '../db_model'
 import { HostInfo } from '../models'
 import { sequelize } from '../db'
 import type { HostCreationForm } from '../models/host'
+import { AccountType } from '../models/accountType'
 
 
 export async function hosts() {
@@ -64,7 +65,7 @@ export async function createHost(form: HostCreationForm): Promise<HostInfo> {
     const hostInfo = await sequelize.transaction(async (t) => {
         // 1. Update `account_type`
         await DbModels.UserModel.update({
-            account_type: 'host',
+            account_type: AccountType.HOST,
         }, {
             where: { id: form.hostId },
             transaction: t,
@@ -84,6 +85,12 @@ export async function createHost(form: HostCreationForm): Promise<HostInfo> {
             country: form.country,
             status: 'pending',
         }, { transaction: t })
+
+        // 3. Create ice sheets
+        await DbModels.IceSheetModel.bulkCreate(form.iceSheets.map((iceSheet: string) => ({
+            hostId: hostInfo.hostId,
+            name: iceSheet,
+        })), { transaction: t })
         return hostInfo.toJSON()
     })
     return hostInfo
@@ -133,9 +140,8 @@ export async function getAcceptedHosts(): Promise<HostInfo[] | null> {
             attributes: ['email']
         }],
     })
-    var prtlHosts = hosts?.map((host) => host.get() as HostInfo) 
-    var finalHosts = prtlHosts.map((host) => {
-        return ({
+    const prtlHosts = hosts?.map((host) => host.toJSON() as HostInfo)
+    const finalHosts = prtlHosts.map((host) => ({
             email: host.user?.email,
             hostId: host.hostId,
             organization: host.organization,
@@ -147,7 +153,7 @@ export async function getAcceptedHosts(): Promise<HostInfo[] | null> {
             zip: host.zip,
             country: host.country,
             status: host.status,
-    })})
+    }))
     return finalHosts
 }
 

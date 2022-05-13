@@ -5,13 +5,6 @@ import { useRouter } from 'next/router'
 import { object, string, boolean } from 'yup';
 import { Field, Form, Formik, FieldProps } from 'formik';
 import hostSignupSchema from '../host/create/schema';
-
-const MyInput = ({ ...props }) => {
-
-    return <input {...props} />;
- 
-};
-
 import {
     Button,
     Checkbox,
@@ -21,12 +14,40 @@ import {
     Link as ChakraLink,
     Input,
     Text,
+    Radio,
+    RadioGroup,
     Stack,
     VStack,
     Select,
     FormErrorMessage,
     FormLabel,
 } from '@chakra-ui/react'
+import {
+    ActionMeta,
+    GroupBase,
+    MultiValue,
+    OptionBase,
+    Select as ChakraReactSelect,
+    SingleValue,
+} from 'chakra-react-select';
+
+
+const getFormInitialValues = () => ({
+    organization: '',
+    website: '',
+    phone: '',
+    countryCode: '',
+    address: '',
+    address2: '',
+    city: '',
+    state: '',
+    zip: '',
+    country: '',
+    agreed: false,
+    iceSheets: [] as string[],
+    namingScheme: 'ABC',
+})
+
 
 interface NewHostFieldsProps {
     countryCode: string;
@@ -35,68 +56,27 @@ interface NewHostFieldsProps {
     onIsAgreedPPChange: () => void;
     onOpenPrivacyPolicy: () => void;
     onOpenTermsOfService: () => void;
+    onSubmit?: (v: ReturnType<typeof getFormInitialValues>) => Promise<void>;
 }
 
-export default function NewHostFields(props: NewHostFieldsProps) {
+const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
     const {
         countryCode,
         onCountryCodeChange,
         isAgreedPP,
         onIsAgreedPPChange,
         onOpenPrivacyPolicy,
-        onOpenTermsOfService
+        onOpenTermsOfService,
+        onSubmit = async () => {},
     } = props
     const router = useRouter()
-
-    // TODO: `submit` function should be passed in as props
-    // Eventually we will call the auth signup method here
-    const submit = async (values: {
-            organization: string;
-            website: string;
-            phone: string;
-            countryCode: string;
-            address: string;
-            address2: string;
-            city: string;
-            state: string;
-            zip: string;
-            country: string;
-            agreed: boolean;
-    }) => {
-        console.log(values)
-        const urlparams = new URLSearchParams(values as any)
-        const res = await fetch('/api/host/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: urlparams.toString(),
-        })
-        if (res.status !== 200) {
-            const { error } = await res.json()
-            // TODO: set error message
-            console.error(error)
-            return
-        }
-        router.push('/hosts/request')
-    }
 
     const helperTextFontSize = "12";
     return (
         <Formik
-            initialValues={{
-                organization: '',
-                website: '',
-                phone: '',
-                countryCode: '',
-                address: '',
-                address2: '',
-                city: '',
-                state: '',
-                zip: '',
-                country: '',
-                agreed: false
-            }}
+            initialValues={getFormInitialValues()}
             validationSchema={hostSignupSchema}
-            onSubmit={(values) => submit(values)} // Eventually do auth stuff here
+            onSubmit={onSubmit} // Eventually do auth stuff here
         >
             {( props ) => (
                 <Form>
@@ -336,6 +316,50 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                     )}
                                 </Field>
                             </HStack>
+                        </Stack>
+                        <Field name="iceSheetCount">
+                            {({field, form}: FieldProps<string[]>) => (
+                                <FormControl>
+                                    <ChakraReactSelect<IceSheetSelectOptions, false, GroupBase<IceSheetSelectOptions>>
+                                        options={getIceSheetsSelectionOptions()}
+                                        placeholder="Number of ice sheets"
+                                        focusBorderColor="green.400"
+                                        instanceId="iceSheetCount"
+                                        id="iceSheetCount"
+                                        onFocus={() => {form.setFieldTouched("iceSheetCount", true, true)}}
+                                        onChange={
+                                            (newValue: SingleValue<IceSheetSelectOptions>, actionMeta: ActionMeta<IceSheetSelectOptions>) => {
+                                                const startingChar = form.values.namingScheme === 'ABC' ? 'A' : '1'
+                                                const startingCode = startingChar.charCodeAt(0)
+                                                form.values.iceSheets = Array(newValue?.value || 0)
+                                                    .fill(0)
+                                                    .map((_, i) => String.fromCharCode(startingCode + i))
+                                                form.validateField("iceSheets");
+                                            }
+                                        }
+                                    />
+                                </FormControl>
+                            )}
+                        </Field>
+                        <Field name="namingScheme">
+                            {({field, form}: FieldProps<string>) => (
+                                <FormControl>
+                                    <RadioGroup
+                                        {...field}
+                                        onChange={() => {
+                                            form.values.iceSheets = []
+                                        }}
+                                    >
+                                        <Stack direction="row">
+                                            <Text>Naming scheme:</Text>
+                                            <Radio {...field} value="ABC">ABC...</Radio>
+                                            <Radio {...field} value="123">123...</Radio>
+                                        </Stack>
+                                    </RadioGroup>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <VStack w="100%" spacing={1}>
                             <Field name="agreed">
                                 {({field, form}: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
@@ -369,7 +393,7 @@ export default function NewHostFields(props: NewHostFieldsProps) {
                                     </FormControl>
                                 )}
                             </Field>
-                        </Stack>
+                        </VStack>
                         <Button
                             type='submit'
                             isFullWidth
@@ -395,4 +419,18 @@ export default function NewHostFields(props: NewHostFieldsProps) {
             )}
         </Formik>
     )
+}
+
+export default NewHostFields
+
+
+
+interface IceSheetSelectOptions extends OptionBase {
+    label: string
+    value: number
+}
+
+const getIceSheetsSelectionOptions = (): IceSheetSelectOptions[] => {
+    const iceSheetOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    return iceSheetOptions.map((option) => ({ label: `${option}`, value: option }))
 }

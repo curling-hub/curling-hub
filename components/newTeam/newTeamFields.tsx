@@ -23,85 +23,45 @@ import {
 } from "chakra-react-select"
 import { object, string, boolean, number, array } from 'yup';
 import { Field, Form, Formik, FieldProps, FieldArray, FieldArrayRenderProps } from 'formik';
-import { RowDataPacket } from 'mysql2';
+import type { Category } from '../../lib/models';
 import { useRouter } from 'next/router';
+
+
+
+const getInitialValues = (otherFields?: any) => ({
+    team: '',
+    gameMode: 'open',
+    curler1: '',
+    curler2: '',
+    curler3: '',
+    curler4: '',
+    showAlternate: false,
+    alternate: '',
+    categories: [],
+    agreed: false,
+    ...otherFields,
+})
+
+
+interface CategorySelectOptions extends OptionBase {
+    label: string
+    value: number
+}
+
 
 interface NewTeamFieldsProps {
     onOpenPrivacyPolicy: () => void;
     onOpenTermsOfService: () => void;
-    categories: RowDataPacket
+    categories: Category[];
+    onSubmit?: (values: ReturnType<typeof getInitialValues>) => Promise<void>
 }
 
 export default function NewTeamFields(props: NewTeamFieldsProps) {
-    const router = useRouter()
-
-    const submit = async (values: {
-        team: string,
-        gameMode: string,
-        curler1: string,
-        curler2: string,
-        curler3: string,
-        curler4: string,
-        showAlternate: boolean,
-        alternate: string,
-        categories: Array<{value: number, label: string}>,
-        agreed: boolean
-    }) => {
-        var cats = values.categories.map((category) => {return category.value})
-        
-        var req = {}
-
-        if (values.gameMode == 'doubles') {
-            cats = [9]
-            req = {
-                team: values.team,
-                curler1: values.curler1,
-                curler2: values.curler2,
-                categories: cats
-            }
-        } else if (values.showAlternate) {
-            cats.push(1)
-            req = {
-                team: values.team,
-                curler1: values.curler1,
-                curler2: values.curler2,
-                curler3: values.curler3,
-                curler4: values.curler4,
-                alternate: values.alternate,
-                categories: cats
-            }
-        } else {
-            cats.push(1)
-            req = {
-                team: values.team,
-                curler1: values.curler1,
-                curler2: values.curler2,
-                curler3: values.curler3,
-                curler4: values.curler4,
-                categories: cats
-            }
-        }
-        
-        const res = await fetch('/api/team/create', {
-            body: JSON.stringify(req),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'POST'
-        })
-        
-        if (res.status == 200) {
-            router.push('/team-profile')
-        } else {
-            const result = await res.json()
-            alert("error: "+result.error)
-        } 
-    }
-
     const {
         onOpenPrivacyPolicy,
         onOpenTermsOfService,
-        categories
+        categories,
+        onSubmit = async () => {},
     } = props
    
     const [mode, setMode] = useState(true)
@@ -132,35 +92,33 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         }),
         categories: array()
                     .of(object({
-                        value: number().min(categories[0].category_id)
-                                       .max(categories[categories.length-1].category_id),
+                        value: number(),
                         label: string().required()
                     })).min(1, "Please select at least one category"),
         agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
     
-    const filteredCategories = categories.filter((category: RowDataPacket) => category.category_id != 1 && category.category_id != 9);
-
-    const groupedOptions = filteredCategories.map((category: RowDataPacket) => {
-        return {value: category.category_id, label: category.name};
-    })
+    const groupedOptions = categories
+        .filter((category: Category) => category.name !== 'Open' && category.name !== 'Doubles')
+        .map((category: Category) => ({ value: category.categoryId, label: category.name }))
+    const openCategory = (() => {
+        const matchings = categories.filter((category: Category) => category.name === 'Open')
+        if (matchings.length > 0) {
+            return { label: matchings[0].name, value: matchings[0].categoryId, isFixed: true }
+        }
+    })()
+    const doublesCategory = (() => {
+        const matchings = categories.filter((category: Category) => category.name === 'Doubles')
+        if (matchings.length > 0) {
+            return { label: matchings[0].name, value: matchings[0].categoryId, isFixed: true }
+        }
+    })()
     
     return (
         <Formik
-            initialValues={{
-                team: '',
-                gameMode: 'open',
-                curler1: '',
-                curler2: '',
-                curler3: '',
-                curler4: '',
-                showAlternate: false,
-                alternate: '',
-                categories: [],
-                agreed: false
-            }}
+            initialValues={getInitialValues(openCategory ? { categories: [openCategory]} : {})}
             validationSchema={newTeamSchema}
-            onSubmit={async (values) => await submit(values)} // Eventually do auth stuff here
+            onSubmit={onSubmit}
         >
             {( props ) => (
                 <Form>
@@ -185,10 +143,17 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                 <RadioGroup 
                                     {...field}
                                     onChange={() => {
-                                        setMode(!mode); 
-                                        // form.values.categories = (mode ? {value: 9, lablel: "Doubles"} : {value: 1, lablel: "Open"});
-                                        // form.validateField("categories");
-                                        // console.log("In the radio button change",form.values.categories);
+                                        const isDoubleMode = !mode;
+                                        setMode(isDoubleMode); 
+                                        if (!isDoubleMode) {
+                                            form.values.categories = form.values.categories
+                                                .filter((c: CategorySelectOptions) => (c.label !== 'Open'))
+                                            doublesCategory && form.values.categories.unshift(doublesCategory)
+                                        } else {
+                                            form.values.categories = form.values.categories
+                                                .filter((c: CategorySelectOptions) => (c.label !== 'Doubles'))
+                                            openCategory && form.values.categories.unshift(openCategory)
+                                        }
                                     }} 
                                     value={modeMap.get(mode)}
                                 >
@@ -262,7 +227,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                     </FormControl>      
                                 )}
                             </Field>
-                                {alternate ? 
+                                {alternate ?
                                     <>
                                         <Field name="alternate">
                                             {({field, form}: FieldProps<string>) => (
@@ -316,19 +281,30 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         <FieldArray name="categories">
                             {({form, remove}: FieldArrayRenderProps) => (
                                 <FormControl isInvalid={form.errors.categories != undefined && form.touched.categories != undefined}>
-                                
-                                    <Select<OptionBase, true, GroupBase<OptionBase>>
-                                       // defaultValue={[groupedOptions[0], groupedOptions[8]]}
+                                    <Select<CategorySelectOptions, true, GroupBase<CategorySelectOptions>>
                                         isMulti
                                         options={groupedOptions}
                                         placeholder="Select Categories..."
                                         closeMenuOnSelect={false}
                                         focusBorderColor="green.400"
-                                        instanceId="multi-item-dropdown"
+                                        id="categories"
+                                        instanceId="categories"
+                                        value={form.values.categories}
                                         onFocus={() => {form.setFieldTouched("categories", true, true)}}
                                         onChange={
                                             ((newValue: MultiValue<OptionBase>, actionMeta: ActionMeta<OptionBase>) => {
                                                 form.values.categories = newValue;
+                                                if (form.values.categories.length === 0) {
+                                                    if (!mode) {
+                                                        form.values.categories = form.values.categories
+                                                            .filter((c: CategorySelectOptions) => (c.label !== 'Open'))
+                                                        doublesCategory && form.values.categories.unshift(doublesCategory)
+                                                    } else {
+                                                        form.values.categories = form.values.categories
+                                                            .filter((c: CategorySelectOptions) => (c.label !== 'Doubles'))
+                                                        openCategory && form.values.categories.unshift(openCategory)
+                                                    }
+                                                }
                                                 form.validateField("categories");
                                             })
                                         }

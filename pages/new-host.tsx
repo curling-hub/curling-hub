@@ -1,4 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { getSession } from '../lib/auth/session'
@@ -9,6 +10,7 @@ import NewHostFields from '../components/newHost/newHostFields'
 import Footer from "../components/footer/footer";
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import { getHostInfoById } from '../lib/handlers/hosts'
+import { AccountType } from '../lib/models/accountType'
 import {
     Box,
     Container,
@@ -33,6 +35,39 @@ const NewHost: NextPage = () => {
     } = useDisclosure()
     const signupContainerHeight = "630"
     const popoverHeight = "450"
+
+    const router = useRouter()
+
+    const onSubmit = async (values: {
+            organization: string;
+            website: string;
+            phone: string;
+            countryCode: string;
+            address: string;
+            address2: string;
+            city: string;
+            state: string;
+            zip: string;
+            country: string;
+            agreed: boolean;
+            iceSheets: string[];
+            namingScheme: string;
+    }) => {
+        const body = JSON.stringify(values)
+        const res = await fetch('/api/host/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: body,
+        })
+        if (res.status !== 200) {
+            const { error } = await res.json()
+            // TODO: set error message
+            console.error(error)
+            alert(error.message)
+            return
+        }
+        router.push('/hosts/request')
+    }
 
     useEffect(() => { setMounted(true) }, [])
 
@@ -83,6 +118,7 @@ const NewHost: NextPage = () => {
                                                 onIsAgreedPPChange={() => setIsAgreedPP(!isAgreedPP)}
                                                 onOpenPrivacyPolicy={() => { privacyPolicyOnOpen() }}
                                                 onOpenTermsOfService={() => { termsOfServiceOnOpen() }}
+                                                onSubmit={onSubmit}
                                             />
                                         </>
                                     )}
@@ -105,11 +141,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (signedUp) {
         // not signed up (no `account_type`)
         switch (session.user.account_type) {
-            case 'admin':
+            case AccountType.ADMIN:
                 return serverSideRedirectTo('/admin')
-            case 'curler':
+            case AccountType.TEAM:
                 return serverSideRedirectTo('/team-profile')
-            case 'host':
+            case AccountType.HOST:
                 const hostInfo = await getHostInfoById(session.user.id)
                 const status = hostInfo?.status
                 if (status === 'accepted') {
