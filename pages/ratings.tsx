@@ -11,7 +11,7 @@ import RatingsBox from '../components/ratings/ratingsBox'
 import RatingsBoxSmall from '../components/ratings/ratingsBoxSmall'
 import { getAllCategories } from '../lib/handlers/categories'
 import { Category } from '../lib/models/category'
-import { getAllRankingsSimple } from '../lib/handlers/teams'
+import { getAllRankingsSimple, getRankingsByCategorySimple } from '../lib/handlers/teams'
 import { TeamRanking } from '../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { sequelize } from '../lib/db'
@@ -23,61 +23,97 @@ interface RatingsProps {
     rankings: TeamRanking[]
 }
 
+function useWindowDimensions() {
+
+    const hasWindow = typeof window !== 'undefined';
+    
+    function getWindowDimensions() {
+        const width = hasWindow ? window.innerWidth : null;
+        const height = hasWindow ? window.innerHeight : null;
+        return {
+        width,
+        height,
+        };
+    }
+
+    function handleResize() {
+        setWindowDimensions(getWindowDimensions());
+    }
+
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+    
+    useEffect(() => {
+        if (hasWindow) {
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }
+    }, [hasWindow]);
+    
+    return windowDimensions;
+}
+  
+
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
-    const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
+    const {height, width} = useWindowDimensions()
+    const isSmallScreen = width && width < 750 ? true : false
     const [mounted, setMounted] = useState(false)
     useEffect(() => { setMounted(true) }, [])
-
+    const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 3) : 10
+    
     return (
         <>
             <Head>
                 <title>Ratings | curlo</title>
             </Head>
             <Box
-                position="absolute"
+                position="relative"
                 w="100%"
-                h="100vh"
+                minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 {
                     mounted && !isSmallScreen && props.user &&
-                    <TeamLayout>
+                    <>
+                        <TeamLayout/>
                         <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
-                            tableSize={20}
+                            tableSize={pageNum}
                         />
-                    </TeamLayout>
+                    </>     
                 }
                 {mounted && !isSmallScreen && !props.user &&
-                    <StandardLayout>
+                    <>
+                        <StandardLayout/>
                         <RatingsBox
                             categories={props.categories}
                             teamRanking={props.rankings}
-                            tableSize={20}
+                            tableSize={pageNum}
                         />
-                    </StandardLayout>
+                    </>     
                 }
                 {
                     mounted && isSmallScreen && props.user &&
-                    <TeamLayout>
+                    <>
+                        <TeamLayout/>
                         <RatingsBoxSmall
                             categories={props.categories}
                             teamRanking={props.rankings}
-                            tableSize={8}
+                            tableSize={pageNum}
                         />
-                    </TeamLayout>
+                    </>     
                 }
                 {mounted && isSmallScreen && !props.user &&
-                    <StandardLayout>
+                    <>
+                        <StandardLayout/>
                         <RatingsBoxSmall
                             categories={props.categories}
                             teamRanking={props.rankings}
-                            tableSize={8}
+                            tableSize={pageNum}
                         />
-                    </StandardLayout>
+                    </>    
                 }
-                <Footer />
+            <Footer />
             </Box>
         </>
     )
@@ -89,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
     const { signedUp, signedIn, session } = await getSession(context)
     const categories = await getAllCategories()
-    const rankings = await getAllRankingsSimple()
+    const rankings = await getRankingsByCategorySimple(1)
 
     if (!session || !signedIn) {
         // not signed in / signed up

@@ -26,6 +26,4 @@ it('New Team Page', () => {
     )
     cy.get('[name="search-bar"]').type('1200')
     cy.get('[name="category-dropdown"]').select(3)
-    cy.get('[aria-label="page-left"]').click()
-    cy.get('[aria-label="page-right"]').click()
 })
