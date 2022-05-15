@@ -117,13 +117,13 @@ export async function createHost(form: HostCreationForm): Promise<HostInfo> {
             status: 'pending',
         }, { transaction: t })
 
-        // 3. Craete association `host_profile` -> `host_admin
+        // 3. Create association `host_profile` -> `host_admin
         await DbModels.HostAdminModel.create({
             userId: form.userId,
             hostId: hostInfo.hostId,
         }, { transaction: t })
 
-        // 3. Create ice sheets
+        // 4. Create ice sheets
         await DbModels.IceSheetModel.bulkCreate(form.iceSheets.map((iceSheet: string) => ({
             hostId: hostInfo.hostId,
             name: iceSheet,
