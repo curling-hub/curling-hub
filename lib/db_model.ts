@@ -339,7 +339,7 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
 
 export const IceSheetModel = sequelize.define('Ice Sheet', {
     hostId: {
-        type: DataTypes.UUID,
+        type: DataTypes.BIGINT,
         field: 'host_id',
         primaryKey: true,
         references: {
@@ -370,7 +370,6 @@ export const HostAdminModel = sequelize.define('HostAdmin', {
     userId: {
         type: DataTypes.UUID,
         primaryKey: true,
-        field: 'user_id',
         references: {
             model: UserModel,
             key: 'id',
