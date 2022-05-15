@@ -25,7 +25,7 @@ export default async function handler(
         const hostCreationForm: HostCreationForm = {
             ...form,
             email: email as string,
-            hostId: id,
+            userId: id,
             phoneNumber: form.countryCode + form.phone,
             streetAddress: form.address,
         }

@@ -179,8 +179,7 @@ describe('Team operations', () => {
             { name: 'Team A' },
             { name: 'Team B' },
         ]
-        const hostData: HostInfoBase = {
-            hostId: userData.id,
+        const hostData = {
             organization: 'Husky',
             website: 'http://example.com',
             phoneNumber: '(555) 555-5555',
@@ -191,14 +190,14 @@ describe('Team operations', () => {
             country: 'US',
             status: 'accepted',
         }
-        const [ hostUser, teams ] = await Promise.all([
+        const [ hostUser, teams, hostInfo ] = await Promise.all([
             DbModels.UserModel.create(userData),
             DbModels.TeamInfoModel.bulkCreate(teamData),
+            DbModels.HostInfoModel.create(hostData),
         ])
-        const hostInfo = await DbModels.HostInfoModel.create(hostData)
         const matchData = [
             {
-                hostId: hostData.hostId,
+                hostId: hostInfo.hostId,
                 teamId1: teams[0].teamId,
                 teamId2: teams[1].teamId,
                 winner: 'team_id_1',
@@ -207,7 +206,7 @@ describe('Team operations', () => {
                 date: new Date('2022-05-02'),
             },
             {
-                hostId: hostData.hostId,
+                hostId: hostInfo.hostId,
                 teamId1: teams[0].teamId,
                 teamId2: teams[1].teamId,
                 winner: 'team_id_2',

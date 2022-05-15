@@ -6,7 +6,7 @@ const addMatchSchema = yup.object({
     team2: yup.number().required(),
     matchResult: yup.string().required(),
     date: yup.date().required(),
-    location: yup.string().required(),
+    location: yup.number().required(),
     sheetOfIce: yup.string().required(),
     comments: yup.string().optional(),
 })
