@@ -13,11 +13,8 @@ import {
     FormControl,
     FormLabel,
     Grid,
-    HStack,
     Input,
     Select as ChakraSelect,
-    Stack,
-    Spacer,
     Textarea,
     VStack,
     useRadioGroup,
@@ -25,8 +22,6 @@ import {
 import {
     Select,
     OptionBase,
-    GroupBase,
-    ActionMeta,
 } from 'chakra-react-select'
 
 import schema from './schema'
@@ -84,6 +79,11 @@ const Fields = (props: FieldsProps): JSX.Element => {
         value: t.teamId,
         label: t.name,
     }))
+ {/*}   const team2Options = teams
+        .filter((teams:TeamSelectOptions) => teams.value !== team1.teamId)
+        .map((teams:TeamSelectOptions) => ({value: teams.teamId, label: teams.name})) */}
+    
+
     const iceSheetsOptions = [...iceSheets, 'other'].map((iceSheet) => ({
         value: iceSheet,
         label: iceSheet,
@@ -179,10 +179,12 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 id="team1"
                                                 instanceId="team1"
                                                 onFocus={() => form.setFieldTouched("team1", true, true)}
+                                                isOptionDisabled={(teams) => teams.value === form.values.team2}
                                                 onChange={
                                                     (newValue, actionMeta) => {
                                                         form.values.team1 = newValue?.value
                                                         form.validateField("team1")
+                                                        
                                                     }
                                                 }
                                             />
@@ -205,6 +207,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 focusBorderColor="blue.500"
                                                 id="team2"
                                                 instanceId="team2"
+                                                isOptionDisabled={(teams) => teams.value === form.values.team1}
                                                 onFocus={() => form.setFieldTouched("team2", true, true)}
                                                 onChange={
                                                     (newValue, actionMeta) => {
