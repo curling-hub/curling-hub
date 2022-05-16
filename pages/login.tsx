@@ -8,7 +8,7 @@ import AuthLayout from '../components/layouts/AuthLayout'
 import NewHostFields from '../components/newHost/newHostFields'
 import LoginFields from '../components/login/LoginBox'
 import Footer from "../components/footer/footer";
-import { getSession } from '../lib/auth/session'
+import { getSession, getSessionServerSideResult } from '../lib/auth/session'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import {
     Box,
@@ -16,6 +16,7 @@ import {
     Flex,
     useDisclosure,
 } from '@chakra-ui/react'
+import { AccountType } from '../lib/models/accountType'
 
 
 const NewHost: NextPage = () => {
@@ -88,7 +89,7 @@ const NewHost: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const sessionWrapper = await getSession(context)
-    const { signedIn, signedUp } = sessionWrapper
+    const { signedIn, signedUp, session } = sessionWrapper
     if (!signedIn) {
         return { props: {} }
     }
@@ -96,8 +97,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         // has not completed sign up
         return serverSideRedirectTo('/new-team')
     }
+    if (!session) {
+        return getSessionServerSideResult(sessionWrapper)
+    }
+    const id = session.user.id
+    switch (session.user.account_type) {
+        // incorrect account type
+        case AccountType.ADMIN:
+            return serverSideRedirectTo('/admin-requests')
+        case AccountType.TEAM:
+            return serverSideRedirectTo(`/teams/98/profile`)
+        case AccountType.HOST:
+            return serverSideRedirectTo(`/hosts/${session.user.id}/profile`)
+        case undefined:
+            return serverSideRedirectTo('/')
+        case null:
+            return serverSideRedirectTo('/new-team')
+    }
     // already signed in, redirect
-    return serverSideRedirectTo('/team-profile')
+    return serverSideRedirectTo('/team-profile') //BENNETTTODO
 }
 
 export default NewHost

@@ -4,16 +4,16 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Box, Center, Text } from '@chakra-ui/react'
 
-import HostLayout from '../../components/layouts/HostLayout'
-import AddMatch from '../../components/host/addMatch'
-import AddMatchFields from '../../components/host/addMatch/fields'
-import AddMatchTitle from '../../components/host/addMatch/title'
-import type { HostInfo, TeamInfo } from '../../lib/models'
-import { getHostInfoById } from '../../lib/handlers/hosts'
-import { getAllTeams } from '../../lib/handlers/teams'
-import { getSession, getSessionServerSideResult } from '../../lib/auth/session'
-import { AccountType } from '../../lib/models/accountType'
-import { serverSideRedirectTo } from '../../lib/auth/redirect'
+import HostLayout from '../../../components/layouts/HostLayout'
+import AddMatch from '../../../components/host/addMatch'
+import AddMatchFields from '../../../components/host/addMatch/fields'
+import AddMatchTitle from '../../../components/host/addMatch/title'
+import type { HostInfo, TeamInfo } from '../../../lib/models'
+import { getHostInfoById } from '../../../lib/handlers/hosts'
+import { getAllTeams } from '../../../lib/handlers/teams'
+import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { AccountType } from '../../../lib/models/accountType'
+import { serverSideRedirectTo } from '../../../lib/auth/redirect'
 
 
 interface HostAddMatchProps {
@@ -27,7 +27,7 @@ const HostAddMatchPage: NextPage<HostAddMatchProps> = (props): JSX.Element => {
         hostInfo,
         teams = [],
     } = props
-    const [ submissionError, setSubmissionError ] = useState('')
+    const [submissionError, setSubmissionError] = useState('')
     const formOnSubmit = async (values: any) => {
         console.log(values)
         const res = await fetch('/api/host/match/add', {
@@ -76,6 +76,7 @@ const HostAddMatchPage: NextPage<HostAddMatchProps> = (props): JSX.Element => {
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const id = context.params?.id ? context.params.id.toString() : "1"
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
     if (!signedIn || !signedUp || !session) {
@@ -85,12 +86,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         case AccountType.TEAM:
             return serverSideRedirectTo('/team-profile')
     }
-    const hostId = session.user.id
     // TODO: redirect on error?
     try {
-        const [ teams, hostInfo ] = await Promise.all([
+        const [teams, hostInfo] = await Promise.all([
             getAllTeams(),
-            getHostInfoById(hostId),
+            getHostInfoById(id),
         ])
         //console.log({ teams, hostInfo })
         return {

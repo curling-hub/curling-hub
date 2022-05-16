@@ -14,6 +14,8 @@ import type { HostMatchResult } from '../../../lib/models/match'
 import { getHostEmailById, getHostInfoById } from '../../../lib/handlers/hosts';
 import { getHostMatchesById } from '../../../lib/handlers/matches'
 import { getTeamById } from '../../../lib/handlers/teams';
+import { AccountType } from '../../../lib/models/accountType';
+import { serverSideRedirectTo } from '../../../lib/auth/redirect';
 
 interface HostProfileProps {
     currentHost: CurrentHostInfo
@@ -53,17 +55,24 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    // Redirect if not authentiated
-    if (!context.params) {
-        return {
-            props: {}
-        }
-    }
-    const id = context.params?.id ? context.params.id : 1
+    const contextId = context.params?.id ? context.params.id.toString() : "1"
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    const hostEmail = await getHostEmailById(id.toString()) || undefined
-    const tempHost = await getHostInfoById(id.toString())
+    if (!signedIn || !signedUp || !session) {
+        return getSessionServerSideResult(sessionWrapper)
+    }
+    switch (session.user.account_type) {
+        case AccountType.TEAM:
+            return serverSideRedirectTo(`/team-profile`) //BENNETTTODO
+        case AccountType.ADMIN:
+            return serverSideRedirectTo(`/admin-requests`)
+    }
+    const sessionId = session.user.id //CH104 TODO
+    if (sessionId !== contextId) {
+        return serverSideRedirectTo(`/hosts/${sessionId}/profile`)
+    }
+    const hostEmail = await getHostEmailById(contextId) || undefined
+    const tempHost = await getHostInfoById(contextId)
     if (!tempHost) {
         return {
             props: {}
@@ -81,7 +90,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         country: tempHost.country,
         iceSheets: tempHost.iceSheets,
     }
-    const tempMatches = await getHostMatchesById(id.toString())
+    const tempMatches = await getHostMatchesById(contextId)
     // Format hosts for page and serialization
     const hostMatches = await Promise.all(tempMatches.map(async (match) => {
         const convert: HostMatchResult = {
@@ -94,33 +103,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
         return convert
     }))
-    if (!session || !session["user"]) {
-        // not signed in / signed up
-        return {
-            props: {
-                user: null,
-                // TODO: Remove props when not signed in
-                currentHost: currentHost,
-                hostMatches: hostMatches,
-                hostEmail: hostEmail,
-            }
-        }
-    }
-
-    const user = session["user"]
-    if (!user["account_type"]) {
-        // has not completed sign up up
-        return {
-            props: {
-                user: null,
-                // TODO: Remove props when not signed in
-                currentHost: currentHost,
-                hostMatches: hostMatches,
-                hostEmail: hostEmail,
-            },
-        }
-    }
-
     // signed in, share session with component
     return {
         props: {

@@ -1,4 +1,4 @@
-import type { NextPage, NextPageContext } from 'next'
+import type { GetServerSideProps, NextPage, NextPageContext } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import {
@@ -8,12 +8,13 @@ import {
     VStack,
 } from '@chakra-ui/react'
 
-import HostLayout from '../../components/layouts/HostLayout'
-import { HostPending, HostRejected } from '../../components/host/status'
-import { getSession } from '../../lib/auth/session'
-import { serverSideRedirectTo } from '../../lib/auth/redirect'
-import { getHostInfoById } from '../../lib/handlers/hosts'
-import { AccountType } from '../../lib/models/accountType'
+import HostLayout from '../../../components/layouts/HostLayout'
+import { HostPending, HostRejected } from '../../../components/host/status'
+import { getSession } from '../../../lib/auth/session'
+import { serverSideRedirectTo } from '../../../lib/auth/redirect'
+import { getHostInfoById } from '../../../lib/handlers/hosts'
+import { AccountType } from '../../../lib/models/accountType'
+import { GetSessionParams } from 'next-auth/react'
 
 
 interface HostRequestStatusProps {
@@ -51,8 +52,8 @@ function getBoxByStatus(status: string): JSX.Element {
     // shouldn't happen
     return (<></>)
 }
-
-export async function getServerSideProps(context: NextPageContext) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const contextId = context.params?.id ? context.params.id.toString() : "1"
     const { signedIn, signedUp, session } = await getSession(context)
     if (!signedIn || !session) {
         // not signed in
@@ -65,18 +66,22 @@ export async function getServerSideProps(context: NextPageContext) {
     switch (session.user.account_type) {
         // incorrect account type
         case AccountType.ADMIN:
-            return serverSideRedirectTo('/admin')
+            return serverSideRedirectTo('/admin-requests')
         case AccountType.TEAM:
-            return serverSideRedirectTo('/team-profile')
+            return serverSideRedirectTo('/team-profile') //BENNETTTODO
         case undefined:
         case null:
             return serverSideRedirectTo('/new-host')
     }
-    const hostInfo = await getHostInfoById(session.user.id)
+    const sessionId = session.user.id //CH104 TODO
+    if (sessionId !== contextId) {
+        return serverSideRedirectTo(`/hosts/${sessionId}/request`)
+    }
+    const hostInfo = await getHostInfoById(sessionId)
     let status = hostInfo?.status
     // not pending status
     if (status === 'accepted') {
-        return serverSideRedirectTo('/hosts/profile')
+        return serverSideRedirectTo(`/hosts/${sessionId}/profile`)
     } else if (status !== 'rejected' && status !== 'pending') {
         status = 'pending'
     }
