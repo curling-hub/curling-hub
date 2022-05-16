@@ -75,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return serverSideRedirectTo('/new-host')
     }
     const userId = session.user.id
-    const [hostEmail = undefined, tempHost, hasPermission] = await Promise.all([
+    const [hostEmail = null, tempHost, hasPermission] = await Promise.all([
         getHostEmailById(hostId),
         getHostInfoById(hostId),
         isHostAdmin(userId, hostId),
