@@ -26,20 +26,21 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
     return (
         <>
             <Box h="75%">
+                <Text
+                    fontSize="2.5em"
+                    fontWeight="bold"
+                    marginTop="31px"
+                    h="120px"
+                >
+                    Recently Added Matches
+                </Text>
                 <Flex
                     align="center"
                     minW="110px"
                     direction="column"
-                    h="100%"
-                    marginTop="31px"
+                    h="85%"
+
                 >
-                    <Text
-                        fontSize="2.5em"
-                        fontWeight="bold"
-                        h="120px"
-                    >
-                        Recently Added Matches
-                    </Text>
                     <TableContainer w="90%" /* maxW="388px" */ minW="302px" overflowY="auto">
                         <Table variant='simple' size="sm" whiteSpace="normal">
                             <Thead>
