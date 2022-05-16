@@ -1,9 +1,16 @@
-import { Box, Flex, Text, TableContainer, Table, Thead, Tr, Td, Tbody, FormLabel } from "@chakra-ui/react"
+import { Box, Flex, Text, TableContainer, Table, Thead, Tr, Td, Tbody, FormLabel, HStack } from "@chakra-ui/react"
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
 import type { HostMatchResult } from '../../../lib/models/match'
 import { GrFormEdit } from 'react-icons/gr'
-
+import { m } from "framer-motion";
+import {
+    AiOutlineCheck,
+    AiOutlineClose
+} from 'react-icons/ai'
+import {
+    MdHorizontalRule
+} from 'react-icons/md'
 
 
 interface HostInfoBoxProps {
@@ -47,8 +54,69 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                 {hostMatches.map((match) => (
                                     <Tr key={`${match.matchId}`}>
                                         <Td>{match.date}</Td>
-                                        <Td>{match.team1}</Td>
-                                        <Td>{match.team2}</Td>
+                                        {
+                                            match.winner === 'team_id_1' &&
+                                            <>
+                                                <Td>
+                                                    <HStack>
+                                                        <AiOutlineCheck
+                                                            style={{ color: 'green' }}
+                                                        />
+                                                        <Text>{match.team1}</Text>
+                                                    </HStack>
+                                                </Td>
+                                                <Td>
+                                                    <HStack>
+                                                        <AiOutlineClose
+                                                            style={{ color: 'red' }}
+                                                        />
+                                                        <Text>{match.team2}</Text>
+                                                    </HStack>
+                                                </Td>
+                                            </>
+                                        }
+                                        {
+                                            match.winner === 'team_id_2' &&
+                                            <>
+                                                <Td>
+                                                    <HStack>
+                                                        <AiOutlineClose
+                                                            style={{ color: 'red' }}
+                                                        />
+                                                        <Text>{match.team1}</Text>
+                                                    </HStack>
+                                                </Td>
+                                                <Td>
+                                                    <HStack>
+                                                        <AiOutlineCheck
+                                                            style={{ color: 'green' }}
+                                                        />
+                                                        <Text>{match.team2}</Text>
+                                                    </HStack>
+                                                </Td>
+                                            </>
+                                        }
+                                        {
+                                            match.winner === 'tie' &&
+                                            <>
+                                                <Td>
+                                                    <HStack>
+                                                        <MdHorizontalRule
+                                                            style={{ color: 'blue' }}
+                                                        />
+                                                        <Text>{match.team1}</Text>
+                                                    </HStack>
+                                                </Td>
+                                                <Td>
+                                                    <HStack>
+                                                        <MdHorizontalRule
+                                                            style={{ color: 'blue' }}
+                                                        />
+                                                        <Text>{match.team2}</Text>
+                                                    </HStack>
+                                                </Td>
+                                            </>
+                                        }
                                         <Td>
                                             <FormLabel id={`edit-${match.matchId}`} srOnly>Edit</FormLabel>
                                             <GrFormEdit aria-labelledby={`edit-${match.matchId}`} />

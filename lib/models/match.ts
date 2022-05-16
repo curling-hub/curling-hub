@@ -34,5 +34,6 @@ export interface HostMatchResult {
     matchId: number
     team1: string
     team2: string
+    winner: string
     date: string
 }
