@@ -67,23 +67,24 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
         onIsAgreedPPChange,
         onOpenPrivacyPolicy,
         onOpenTermsOfService,
-        onSubmit = async () => {},
+        onSubmit = async () => { },
     } = props
     const router = useRouter()
 
     const helperTextFontSize = "12";
+
     return (
         <Formik
             initialValues={getFormInitialValues()}
             validationSchema={hostSignupSchema}
             onSubmit={onSubmit} // Eventually do auth stuff here
         >
-            {( props ) => (
+            {(props) => (
                 <Form>
                     <VStack alignItems="start" spacing="4">
                         <Stack>
                             <Field name="organization">
-                                {({field, form}: FieldProps<string>) => (
+                                {({ field, form }: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.organization != undefined && form.touched.organization != undefined}>
                                         <FormLabel htmlFor="organization" srOnly>Organization</FormLabel>
                                         <Input
@@ -95,12 +96,12 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             onChange={props.handleChange('organization')}
                                             id="organization"
                                         />
-                                        <FormErrorMessage>{form.errors.organization}</FormErrorMessage>
+                                        <FormErrorMessage>Organization is a required field</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
                             <Field name="website">
-                                {({field, form}: FieldProps<string>) => (
+                                {({ field, form }: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.website != undefined && form.touched.website != undefined}>
                                         <FormLabel htmlFor="website" srOnly>Website</FormLabel>
                                         <Input
@@ -112,13 +113,13 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             onChange={props.handleChange('website')}
                                             id="website"
                                         />
-                                    <FormErrorMessage>{form.errors.website}</FormErrorMessage>
+                                        <FormErrorMessage>Website is required and must start with https://</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
                             <HStack>
                                 <Field name="countryCode">
-                                    {({field, form}: FieldProps<string>) => (
+                                    {({ field, form }: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.countryCode != undefined && form.touched.countryCode != undefined}>
                                             <FormLabel htmlFor="countryCode" srOnly>Country Code</FormLabel>
                                             <Select
@@ -130,12 +131,12 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             >
                                                 <option>+1</option>
                                             </Select>
-                                            <FormErrorMessage>{form.errors.countryCode}</FormErrorMessage>
+                                            <FormErrorMessage>Country code is required</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
                                 <Field name="phone">
-                                    {({field, form}: FieldProps<string>) => (
+                                    {({ field, form }: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.phone != undefined && form.touched.phone != undefined}>
                                             <FormLabel htmlFor="phone" srOnly>Phone</FormLabel>
                                             <Input
@@ -149,13 +150,13 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 onChange={props.handleChange('phone')}
                                                 id="phone"
                                             />
-                                        <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
+                                            <FormErrorMessage>Phone number is required</FormErrorMessage>
                                         </FormControl>
                                     )}
-                                </Field>    
+                                </Field>
                             </HStack>
                             <Field name="address">
-                                {({field, form}: FieldProps<string>) => (
+                                {({ field, form }: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.address != undefined && form.touched.address != undefined}>
                                         <FormLabel htmlFor="address" srOnly>Street Address</FormLabel>
                                         <Input
@@ -167,12 +168,12 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             onChange={props.handleChange('address')}
                                             id="address"
                                         />
-                                    <FormErrorMessage>{form.errors.address}</FormErrorMessage>
+                                        <FormErrorMessage>Address is required</FormErrorMessage>
                                     </FormControl>
                                 )}
-                            </Field>        
+                            </Field>
                             <Field name="address2">
-                                {({field, form}: FieldProps<string>) => (
+                                {({ field, form }: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.address2 != undefined && form.touched.address2 != undefined}>
                                         <FormLabel htmlFor="address2" srOnly>Apt., Suite, Unit, etc.</FormLabel>
                                         <Input
@@ -184,13 +185,13 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             onChange={props.handleChange('address2')}
                                             id="address2"
                                         />
-                                    <FormErrorMessage>{form.errors.address2}</FormErrorMessage>
+                                        <FormErrorMessage>{form.errors.address2}</FormErrorMessage>
                                     </FormControl>
                                 )}
-                            </Field>   
+                            </Field>
                             <HStack>
                                 <Field name="city">
-                                    {({field, form}: FieldProps<string>) => (
+                                    {({ field, form }: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.city != undefined && form.touched.city != undefined}>
                                             <FormLabel htmlFor="city" srOnly>City</FormLabel>
                                             <Input
@@ -202,12 +203,12 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 onChange={props.handleChange('city')}
                                                 id="city"
                                             />
-                                        <FormErrorMessage>{form.errors.city}</FormErrorMessage>
+                                            <FormErrorMessage>City is Required</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
                                 <Field name="state">
-                                    {({field, form}: FieldProps<string>) => (
+                                    {({ field, form }: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.state != undefined && form.touched.state != undefined}>
                                             <FormLabel htmlFor="state" srOnly>State</FormLabel>
                                             <Select
@@ -276,14 +277,14 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 <option value='WI'>Wisconsin</option>
                                                 <option value='WY'>Wyoming</option>
                                             </Select>
-                                            <FormErrorMessage>{form.errors.state}</FormErrorMessage>
+                                            <FormErrorMessage>State is required</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
                             </HStack>
                             <HStack>
                                 <Field name="zip">
-                                    {({field, form}: FieldProps<string>) => (
+                                    {({ field, form }: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.zip != undefined && form.touched.zip != undefined}>
                                             <FormLabel htmlFor="zip" srOnly>Zipcode</FormLabel>
                                             <Input
@@ -295,12 +296,12 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 onChange={props.handleChange('zip')}
                                                 id="zip"
                                             />
-                                        <FormErrorMessage>{form.errors.zip}</FormErrorMessage>
+                                            <FormErrorMessage>Zipcode is required</FormErrorMessage>
                                         </FormControl>
                                     )}
-                                </Field>        
+                                </Field>
                                 <Field name="country">
-                                    {({field, form}: FieldProps<string>) => (
+                                    {({ field, form }: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.country != undefined && form.touched.country != undefined}>
                                             <FormLabel htmlFor="country" srOnly>Country</FormLabel>
                                             <Select
@@ -311,14 +312,14 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             >
                                                 <option value='USA'>USA</option>
                                             </Select>
-                                            <FormErrorMessage>{form.errors.country}</FormErrorMessage>
+                                            <FormErrorMessage>Country is required</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
                             </HStack>
                         </Stack>
                         <Field name="iceSheetCount">
-                            {({field, form}: FieldProps<string[]>) => (
+                            {({ field, form }: FieldProps<string[]>) => (
                                 <FormControl>
                                     <ChakraReactSelect<IceSheetSelectOptions, false, GroupBase<IceSheetSelectOptions>>
                                         options={getIceSheetsSelectionOptions()}
@@ -326,7 +327,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                         focusBorderColor="green.400"
                                         instanceId="iceSheetCount"
                                         id="iceSheetCount"
-                                        onFocus={() => {form.setFieldTouched("iceSheetCount", true, true)}}
+                                        onFocus={() => { form.setFieldTouched("iceSheetCount", true, true) }}
                                         onChange={
                                             (newValue: SingleValue<IceSheetSelectOptions>, actionMeta: ActionMeta<IceSheetSelectOptions>) => {
                                                 const startingChar = form.values.namingScheme === 'ABC' ? 'A' : '1'
@@ -342,7 +343,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                             )}
                         </Field>
                         <Field name="namingScheme">
-                            {({field, form}: FieldProps<string>) => (
+                            {({ field, form }: FieldProps<string>) => (
                                 <FormControl>
                                     <RadioGroup
                                         {...field}
@@ -361,7 +362,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                         </Field>
                         <VStack w="100%" spacing={1}>
                             <Field name="agreed">
-                                {({field, form}: FieldProps<string>) => (
+                                {({ field, form }: FieldProps<string>) => (
                                     <FormControl isInvalid={form.errors.agreed != undefined && form.touched.agreed != undefined}>
                                         <HStack>
                                             <Checkbox
@@ -389,7 +390,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 </Text>
                                             </FormLabel>
                                         </HStack>
-                                        <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
+                                        <FormErrorMessage>Agreeing to terms of service and privacy policy is required to make an account</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>

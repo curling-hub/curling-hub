@@ -17,6 +17,7 @@ import {
     Select as ChakraSelect,
     Textarea,
     VStack,
+    FormErrorMessage,
     useRadioGroup,
 } from '@chakra-ui/react'
 import {
@@ -29,7 +30,7 @@ import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
 
 
-const getInitialValues = (otherFields: {[key: string]: any} = {}) => ({
+const getInitialValues = (otherFields: { [key: string]: any } = {}) => ({
     matchResult: 'Win',
     date: '',
     team1: '',
@@ -63,12 +64,12 @@ const Fields = (props: FieldsProps): JSX.Element => {
     const {
         host = null,
         teams = [],
-        onSubmit = async () => {},
+        onSubmit = async () => { },
     } = props
 
     const iceSheets = host?.iceSheets || []
 
-    const resultOptions = [ 'Win', 'Loss', 'Tie' ]
+    const resultOptions = ['Win', 'Loss', 'Tie']
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'matchResult',
         defaultValue: 'Win',
@@ -106,7 +107,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                         >
                             <Box w="100%">
                                 <Field name="matchResult">
-                                    {({field, form}: FieldProps<string>) => {
+                                    {({ field, form }: FieldProps<string>) => {
                                         return (
                                             <FormControl>
                                                 <Flex justifyContent="space-between" {...group}>
@@ -120,7 +121,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                         </FormLabel>
                                                     ))}
                                                     {resultOptions.map((value) => {
-                                                        const radioProps = getRadioProps({value});
+                                                        const radioProps = getRadioProps({ value });
                                                         return (<ResultRadio
                                                             key={value}
                                                             {...radioProps}
@@ -142,8 +143,8 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             </Box>
                             <Box w="100%">
                                 <Field name="date">
-                                    {({field, form}: FieldProps) => (
-                                        <FormControl>
+                                    {({ field, form }: FieldProps) => (
+                                        <FormControl isInvalid={form.errors.date != undefined && form.touched.date != undefined}>
                                             <FormLabel htmlFor="date" srOnly>Date</FormLabel>
                                             <Input
                                                 type="date"
@@ -151,13 +152,12 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 borderRadius="full"
                                                 {...field}
                                                 id="date"
+
                                             />
+                                            <FormErrorMessage>Date of match is required</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
-                                <Box textColor="red.500" px={2}>
-                                    <ErrorMessage name="date" />
-                                </Box>
                             </Box>
                         </Grid>
                         <Flex
@@ -168,8 +168,8 @@ const Fields = (props: FieldsProps): JSX.Element => {
                         >
                             <Box w={{ base: "100%", md: "35%" }}>
                                 <Field name="team1">
-                                    {({field, form}: FieldProps) => (
-                                        <FormControl>
+                                    {({ field, form }: FieldProps) => (
+                                        <FormControl isInvalid={form.errors.team1 != undefined && form.touched.team1 != undefined}>
                                             <FormLabel htmlFor="team1" srOnly>Team 1</FormLabel>
                                             <Select<TeamSelectOptions>
                                                 options={teamOptions}
@@ -188,17 +188,15 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                     }
                                                 }
                                             />
+                                            <FormErrorMessage>First team is required</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
-                                <Box textColor="red.500" px={2}>
-                                    <ErrorMessage name="team1" />
-                                </Box>
                             </Box>
                             <Box w={{ base: "100%", md: "35%" }}>
                                 <Field name="team2">
-                                    {({field, form}: FieldProps) => (
-                                        <FormControl>
+                                    {({ field, form }: FieldProps) => (
+                                        <FormControl isInvalid={form.errors.team2 != undefined && form.touched.team2 != undefined}>
                                             <FormLabel htmlFor="team2" srOnly>Team 2</FormLabel>
                                             <Select<TeamSelectOptions>
                                                 options={teamOptions}
@@ -216,17 +214,16 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                     }
                                                 }
                                             />
+                                            <FormErrorMessage>Second team is required</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
-                                <Box textColor="red.500" px={2}>
-                                    <ErrorMessage name="team2" />
-                                </Box>
+
                             </Box>
                             <Box w={{ base: "100%", md: "30%" }}>
                                 <Field name="sheetOfIce">
-                                    {({field, form}: FieldProps) => (
-                                        <FormControl>
+                                    {({ field, form }: FieldProps) => (
+                                        <FormControl isInvalid={form.errors.sheetOfIce != undefined && form.touched.sheetOfIce != undefined}>
                                             <FormLabel htmlFor="sheet-of-ice" srOnly>Ice sheet</FormLabel>
                                             <Select<IceSheetSelectOptions>
                                                 options={iceSheetsOptions}
@@ -243,12 +240,10 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                     }
                                                 }
                                             />
+                                            <FormErrorMessage>Ice sheet is required</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
-                                <Box textColor="red.500" px={2}>
-                                    <ErrorMessage name="sheetOfIce" />
-                                </Box>
                             </Box>
                         </Flex>
                         <Field name="location">
@@ -270,7 +265,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             )}
                         </Field>
                         <Field name="comments">
-                            {({field, form}: FieldProps) => (
+                            {({ field, form }: FieldProps) => (
                                 <FormControl>
                                     <FormLabel htmlFor="comment" srOnly>Comment</FormLabel>
                                     <Textarea

@@ -51,7 +51,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     }
     const pageCount = pages.length
 
-    async function updateHostStatus(id: string, newStatus: string) {
+    async function updateHostStatus(id: number, newStatus: string) {
         const req = {
             hostId: id,
             newStatus: newStatus
@@ -69,21 +69,21 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     }
 
     useEffect(() => {
-       const req = {
-           id: tabIndex
-       }
-       
-       fetch('/api/host/info', {
-           body: JSON.stringify(req),
-           headers: {
-               'Content-Type': 'application/json'
-           },
-           method: 'POST'
-       }).then((res) => {
+        const req = {
+            id: tabIndex
+        }
+
+        fetch('/api/host/info', {
+            body: JSON.stringify(req),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        }).then((res) => {
             if (res.status == 200) {
                 res.json().then((result) => setHosts(result.data))
             }
-       }).catch((e: any) => console.log(e))
+        }).catch((e: any) => console.log(e))
     }, [tabIndex, refreshKey])
     
     return (

@@ -17,7 +17,7 @@ describe("Yup required schema", () => {
             matchResult: 'Win',
             date: '2022-04-03',
             category: 2,
-            location: 'Host 1',
+            location: 1,
             sheetOfIce: 'Left',
         }
         const expected = Object.assign({}, input, {

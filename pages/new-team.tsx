@@ -15,7 +15,7 @@ import {
 import NewTeamFields from '../components/newTeam/newTeamFields'
 import type { Category } from '../lib/models'
 import { getAllCategories } from '../lib/handlers/categories'
-import { getHostInfoById } from '../lib/handlers/hosts'
+import { getHostInfoByUserId } from '../lib/handlers/hosts'
 import { getSession } from '../lib/auth/session'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import { AccountType } from '../lib/models/accountType'
@@ -160,12 +160,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             case AccountType.TEAM:
                 return serverSideRedirectTo('/team-profile')
             case AccountType.HOST:
-                const hostInfo = await getHostInfoById(session.user.id)
-                const status = hostInfo?.status
-                if (status === 'accepted') {
-                    return serverSideRedirectTo('/hosts/profile')
-                } else {
-                    return serverSideRedirectTo('/hosts/request')
+                const hostInfoList = await getHostInfoByUserId(session.user.id)
+                if (hostInfoList.length !== 0) {
+                    const hostInfo = hostInfoList[0]
+                    const status = hostInfo.status
+                    if (status === 'accepted') {
+                        return serverSideRedirectTo(`/hosts/${hostInfo.hostId}/profile`)
+                    } else {
+                        return serverSideRedirectTo(`/hosts/${hostInfo.hostId}/request`)
+                    }
                 }
         }
     }
