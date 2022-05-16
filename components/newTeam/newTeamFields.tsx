@@ -73,17 +73,17 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
     ])
 
     let newTeamSchema = object({
-        team: string().required("Team Name is required").max(255),
-        curler1: string().required("Curler One is required").max(255),
-        curler2: string().required("Curler Two is required").max(255),
+        team: string().required("Enter the team name").max(255),
+        curler1: string().required("Curler one is required").max(255),
+        curler2: string().required("Curler two is required").max(255),
         gameMode: string().required(),
         curler3: string().when("gameMode", {
             is: 'open',
-            then: string().required("Curler Three is required").max(255)
+            then: string().required("Curler three is required").max(255)
         }),
         curler4: string().when("gameMode", {
             is: 'open',
-            then: string().required("Curler Four is required").max(255)
+            then: string().required("Curler four is required").max(255)
         }),
         showAlternate: boolean().required(),
         alternate: string().when("showAlternate", {
