@@ -59,17 +59,22 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                             <>
                                                 <Td>
                                                     <HStack>
-                                                        <AiOutlineCheck
-                                                            style={{ color: 'green' }}
-                                                        />
+                                                        <Box>
+                                                            <AiOutlineCheck
+                                                                style={{ color: 'green' }}
+                                                            />
+                                                        </Box>
                                                         <Text>{match.team1}</Text>
                                                     </HStack>
                                                 </Td>
                                                 <Td>
                                                     <HStack>
-                                                        <AiOutlineClose
-                                                            style={{ color: 'red' }}
-                                                        />
+                                                        <Box>
+                                                            <AiOutlineClose
+                                                                style={{ color: 'red' }}
+
+                                                            />
+                                                        </Box>
                                                         <Text>{match.team2}</Text>
                                                     </HStack>
                                                 </Td>
@@ -80,17 +85,21 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                             <>
                                                 <Td>
                                                     <HStack>
-                                                        <AiOutlineClose
-                                                            style={{ color: 'red' }}
-                                                        />
+                                                        <Box>
+                                                            <AiOutlineClose
+                                                                style={{ color: 'red' }}
+                                                            />
+                                                        </Box>
                                                         <Text>{match.team1}</Text>
                                                     </HStack>
                                                 </Td>
                                                 <Td>
                                                     <HStack>
-                                                        <AiOutlineCheck
-                                                            style={{ color: 'green' }}
-                                                        />
+                                                        <Box>
+                                                            <AiOutlineCheck
+                                                                style={{ color: 'green' }}
+                                                            />
+                                                        </Box>
                                                         <Text>{match.team2}</Text>
                                                     </HStack>
                                                 </Td>
@@ -101,17 +110,21 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                             <>
                                                 <Td>
                                                     <HStack>
-                                                        <MdHorizontalRule
-                                                            style={{ color: 'blue' }}
-                                                        />
+                                                        <Box>
+                                                            <MdHorizontalRule
+                                                                style={{ color: 'blue' }}
+                                                            />
+                                                        </Box>
                                                         <Text>{match.team1}</Text>
                                                     </HStack>
                                                 </Td>
                                                 <Td>
                                                     <HStack>
-                                                        <MdHorizontalRule
-                                                            style={{ color: 'blue' }}
-                                                        />
+                                                        <Box>
+                                                            <MdHorizontalRule
+                                                                style={{ color: 'blue' }}
+                                                            />
+                                                        </Box>
                                                         <Text>{match.team2}</Text>
                                                     </HStack>
                                                 </Td>

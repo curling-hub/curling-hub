@@ -1,4 +1,4 @@
-import { Box, Flex, Spacer, VStack, Text } from "@chakra-ui/react"
+import { Box, Flex, Spacer, VStack, Text, HStack } from "@chakra-ui/react"
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
 import type { CurrentHostInfo } from '../../../lib/models/host'
@@ -58,9 +58,14 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                             >
                                 Sheets of Ice
                             </Text>
-                            <Text>
-                                {currentHost.iceSheets?.length}
-                            </Text>
+                            <HStack>
+                                <Text>
+                                    {currentHost.iceSheets?.length}
+                                </Text>
+                                <Text>
+                                    {"(" + currentHost?.iceSheets?.toString() + ")"}
+                                </Text>
+                            </HStack>
                         </VStack>
 
                     </Flex>
