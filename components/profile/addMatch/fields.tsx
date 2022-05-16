@@ -99,10 +99,11 @@ const Fields = (props: FieldsProps): JSX.Element => {
     })
     const group = getRootProps()
 
-    const teamOptions = teams.map((t) => ({
-        value: t.teamId,
-        label: t.name,
-    }))
+    const teamOptions = teams
+        .filter((team:TeamInfo) => team.teamId !== currentTeam.teamId)
+        .map((team:TeamInfo) => ({ value: team.teamId, label: team.name}))
+
+
     const hostOptions = hosts.map((h) => ({
         value: h.hostId,
         label: h.organization,
