@@ -375,10 +375,10 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 borderRadius="50%"
                                                 colorScheme="teal"
                                                 css={`
-                                                    > span:first-of-type {
-                                                        box-shadow: unset;
-                                                    }
-                                                `}
+                                                   > span:first-of-type {
+                                                       box-shadow: unset;
+                                                   }
+                                               `}
                                             />
                                             <FormLabel htmlFor="agreed">
                                                 <Text fontSize={helperTextFontSize}>
@@ -444,3 +444,5 @@ const getIceSheetsSelectionOptions = (): IceSheetSelectOptions[] => {
     const iceSheetOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     return iceSheetOptions.map((option) => ({ label: `${option}`, value: option }))
 }
+
+

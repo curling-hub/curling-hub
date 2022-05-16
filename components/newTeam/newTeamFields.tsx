@@ -324,10 +324,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                                 colorScheme="teal"
                                                 onChange={props.handleChange('agreed')}
                                                 css={`
-                                                > span:first-of-type {
-                                                    box-shadow: unset;
-                                                }
-                                            `}
+                                               > span:first-of-type {
+                                                   box-shadow: unset;
+                                               }
+                                           `}
                                             />
                                             <Text fontSize="12">
                                                 {" "}I agree to the {" "}
@@ -374,3 +374,6 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         </Formik>
     )
 }
+
+
+
