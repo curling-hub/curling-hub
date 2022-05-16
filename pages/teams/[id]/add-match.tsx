@@ -42,7 +42,7 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
         }
         router.push('/team-profile')
     }
-    const fetchIceSheetsByHostId = async (hostId: string): Promise<any[]> => {
+    const fetchIceSheetsByHostId = async (hostId: number): Promise<any[]> => {
         const res = await fetch(`/api/location/${hostId}/info`)
         if (res.status === 200) {
             const hostInfo = await res.json()

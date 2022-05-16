@@ -19,10 +19,14 @@ import {
     useMediaQuery,
 } from '@chakra-ui/react'
 import { getPendingHosts } from '../lib/handlers/hosts'
-import { useState, Children, useEffect } from 'react';
-import { HostInfo } from '../lib/models';
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
-import AdminLayout from '../components/layouts/AdminLayout';
+import { useState, Children, useEffect } from 'react'
+import { HostInfo } from '../lib/models'
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
+import AdminLayout from '../components/layouts/AdminLayout'
+import { getSession } from '../lib/auth/session'
+import { serverSideRedirectTo } from '../lib/auth/redirect'
+import { AccountType } from '../lib/models/accountType'
+import HostInfoModal from '../components/modals/HostInfoModal'
 
 interface ReqProps {
     hosts: HostInfo[]
@@ -30,10 +34,14 @@ interface ReqProps {
 
 const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     const [hosts, setHosts] = useState(props.hosts)
+    const [modalHost, setModalHost] = useState(props.hosts[0])
     const [pageIndex, setPageIndex] = useState(0)
     const [tabIndex, setTabIndex] = useState(0)
     const [refreshKey, setRefreshKey] = useState(0)
-    const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
+    const [isMedScreen] = useMediaQuery("(max-width: 1213px)")
+    const [isSmallScreen] = useMediaQuery("(max-width: 880px)")
+    const [isTinyScreen] = useMediaQuery("(max-width: 700px)")
+    const [modalState, setModalState] = useState(false)
     
     const tableSize = isSmallScreen ? 4 : 13
 
@@ -43,7 +51,7 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     }
     const pageCount = pages.length
 
-    async function updateHostStatus(id: string, newStatus: string) {
+    async function updateHostStatus(id: number, newStatus: string) {
         const req = {
             hostId: id,
             newStatus: newStatus
@@ -61,21 +69,21 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
     }
 
     useEffect(() => {
-       const req = {
-           id: tabIndex
-       }
-       
-       fetch('/api/host/info', {
-           body: JSON.stringify(req),
-           headers: {
-               'Content-Type': 'application/json'
-           },
-           method: 'POST'
-       }).then((res) => {
+        const req = {
+            id: tabIndex
+        }
+
+        fetch('/api/host/info', {
+            body: JSON.stringify(req),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        }).then((res) => {
             if (res.status == 200) {
                 res.json().then((result) => setHosts(result.data))
             }
-       }).catch((e: any) => console.log(e))
+        }).catch((e: any) => console.log(e))
     }, [tabIndex, refreshKey])
     
     return (
@@ -90,7 +98,9 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
             <AdminLayout/>
-                <Box paddingBottom={"4rem"}>
+                <Box 
+                    paddingBottom="4rem"
+                >
                     <Box
                         backgroundColor="primary.white"
                         display='flex'
@@ -103,20 +113,21 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                         maxW="100%"
                         textAlign="center"
                         top="0"
-                        marginLeft='4rem'
-                        marginRight='4rem'
+                        marginLeft={isMedScreen ? '1rem' : '4rem'}
+                        marginRight={isMedScreen ? '1rem' : '4rem'}
+                        overflow='auto'
                     >
-                        <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+                        <Text fontSize={isMedScreen ? '1.5rem' : '2.5rem'} marginTop="5px" fontWeight="bold">
                             Host Account Requests
                         </Text>
                         <Box
                             display='flex'
                             flexDir='row'
-                            alignItems='start'
-                            w='100%'
+                            alignItems={'start'}
+                            w={isMedScreen ? '100%' : '90%'}
                         >
                             <Tabs 
-                                
+                                size={isMedScreen ? 'sm' : 'md'}
                                 marginTop="5px" 
                                 variant='soft-rounded' 
                                 onChange={(index) => {
@@ -157,65 +168,160 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                         </Box>
                         <Box
                             display='flex'
-                            flexDir='row'
-                            alignItems='start'
-                            w='100%'
+                            flexDir='column'
+                            w={isMedScreen ? '100%' : '90%'}
+                            h='80%'
                             marginTop='1%'
                         >
                             <TableContainer 
                                 marginTop="5px"
                                 width='100%'
-                                height='80%'
+                                height='100%'
                             >
-                                <Table variant='simple' size="sm">
-                                    <Thead textAlign="center">
-                                        <Tr>
-                                            <Td fontWeight="bold">Name</Td>
-                                            {!isSmallScreen && <Td fontWeight="bold">Phone Number</Td>}
-                                            {!isSmallScreen && <Td fontWeight="bold">Email</Td>}
-                                            {!isSmallScreen && <Td fontWeight="bold">Website</Td>}
-                                            <Td></Td>
-                                        </Tr>
-                                        {Children.toArray(pages[pageIndex]?.map((host: HostInfo, index) => 
-                                            <Tr
-                                                key={index}
-                                            >
-                                                <Td>{host.organization}</Td>
-                                                {!isSmallScreen && <Td>{host.phoneNumber}</Td>}
-                                                {!isSmallScreen && <Td>{host.email}</Td>}
-                                                {!isSmallScreen && <Td>{host.website}</Td>}
-                                                { tabIndex == 0 &&
-                                                    <Td>
-                                                        <HStack
-                                                            spacing={4}
-                                                        >
-                                                            <Button
-                                                                colorScheme='green'
-                                                                borderRadius='30px'
-                                                                size='sm'
-                                                                color='black'
-                                                                onClick={async () => {await updateHostStatus(host.hostId, 'accepted')}}
-                                                            >
-                                                                Accept
-                                                            </Button>
-                                                            <Button
-                                                                colorScheme='red'
-                                                                borderRadius='30px'
-                                                                size='sm'
-                                                                color='black'
-                                                                onClick={async () => {await updateHostStatus(host.hostId, 'rejected')}}
-                                                            >
-                                                                Reject
-                                                            </Button>
-                                                        </HStack>
-                                                    </Td>
-                                                }
+                                <Table 
+                                    variant='simple' 
+                                    size="sm"
+                                >
+                                    {
+                                        tabIndex != 0 && 
+                                        <Thead textAlign="center">
+                                            <Tr>
+                                                {isTinyScreen && <Td fontWeight="bold">Host Info</Td>}
+                                                {!isTinyScreen && <Td fontWeight="bold">Name</Td>}
+                                                {<Td fontWeight="bold">Phone Number</Td>}
+                                                {!isTinyScreen && <Td fontWeight="bold">Email</Td>}
+                                                {!isTinyScreen && !isSmallScreen && <Td fontWeight="bold">Website</Td>}
+                                                { tabIndex == 0 && <Td></Td>}
                                             </Tr>
-                                        ))}
-                                    </Thead>
-                                    <Tbody>
-
-                                    </Tbody>
+                                            {Children.toArray(pages[pageIndex]?.map((host: HostInfo, index) => 
+                                            <>
+                                                <Tr
+                                                    key={index}
+                                                >
+                                                    {isTinyScreen && 
+                                                        <Td>
+                                                            <Button
+                                                                onClick={() => {
+                                                                    setModalHost(host)
+                                                                    setModalState(!modalState)
+                                                                }
+                                                                }
+                                                            >
+                                                                Details
+                                                            </Button>
+                                                        </Td>
+                                                    }
+                                                    {!isTinyScreen && <Td>{host.organization}</Td>}
+                                                    {<Td>{host.phoneNumber}</Td>}
+                                                    {!isTinyScreen && <Td>{host.email}</Td>}
+                                                    {!isTinyScreen && !isSmallScreen && <Td>{host.website}</Td>}
+                                                    { tabIndex == 0 &&
+                                                        <Td>
+                                                            <Box
+                                                                display='flex'
+                                                                flexDir='row'
+                                                                justifyContent='end'
+                                                            >
+                                                                <HStack
+                                                                    spacing={4}
+                                                                >
+                                                                    <Button
+                                                                        colorScheme='green'
+                                                                        borderRadius='30px'
+                                                                        size='sm'
+                                                                        color='black'
+                                                                        onClick={async () => {await updateHostStatus(host.hostId, 'accepted')}}
+                                                                    >
+                                                                        Accept
+                                                                    </Button>
+                                                                    <Button
+                                                                        colorScheme='red'
+                                                                        borderRadius='30px'
+                                                                        size='sm'
+                                                                        color='black'
+                                                                        onClick={async () => {await updateHostStatus(host.hostId, 'rejected')}}
+                                                                    >
+                                                                        Reject
+                                                                    </Button>
+                                                                </HStack>
+                                                            </Box>
+                                                        </Td>
+                                                    }
+                                                </Tr>
+                                                </>
+                                            ))}
+                                        </Thead>
+                                    }
+                                    {
+                                        tabIndex == 0 && 
+                                        <Thead textAlign="center">
+                                            <Tr>
+                                                {isTinyScreen && <Td fontWeight="bold">Host Info</Td>}
+                                                {!isTinyScreen && <Td fontWeight="bold">Name</Td>}
+                                                {!isTinyScreen && !isSmallScreen && !isMedScreen && <Td fontWeight="bold">Phone Number</Td>}
+                                                {!isTinyScreen && !isSmallScreen && <Td fontWeight="bold">Email</Td>}
+                                                {!isTinyScreen &&  <Td fontWeight="bold">Website</Td>}
+                                                { tabIndex == 0 && <Td></Td>}
+                                            </Tr>
+                                            {Children.toArray(pages[pageIndex]?.map((host: HostInfo, index) => 
+                                            <>
+                                                <Tr
+                                                    key={index}
+                                                >
+                                                    {isTinyScreen && 
+                                                        <Td>
+                                                            <Button
+                                                                onClick={() => {
+                                                                    setModalHost(host)
+                                                                    setModalState(!modalState)
+                                                                }
+                                                                }
+                                                            >
+                                                                Details
+                                                            </Button>
+                                                        </Td>
+                                                    }
+                                                    {!isTinyScreen && <Td>{host.organization}</Td>}
+                                                    {!isTinyScreen && !isSmallScreen && !isMedScreen && <Td>{host.phoneNumber}</Td>}
+                                                    {!isTinyScreen && !isSmallScreen && <Td>{host.email}</Td>}
+                                                    {!isTinyScreen && <Td>{host.website}</Td>}
+                                                    { tabIndex == 0 &&
+                                                        <Td>
+                                                            <Box
+                                                                display='flex'
+                                                                flexDir='row'
+                                                                justifyContent='end'
+                                                            >
+                                                                <HStack
+                                                                    spacing={isTinyScreen ? 1 : 4}
+                                                                >
+                                                                    <Button
+                                                                        colorScheme='green'
+                                                                        borderRadius='30px'
+                                                                        size='sm'
+                                                                        color='black'
+                                                                        onClick={async () => {await updateHostStatus(host.hostId, 'accepted')}}
+                                                                    >
+                                                                        Accept
+                                                                    </Button>
+                                                                    <Button
+                                                                        colorScheme='red'
+                                                                        borderRadius='30px'
+                                                                        size='sm'
+                                                                        color='black'
+                                                                        onClick={async () => {await updateHostStatus(host.hostId, 'rejected')}}
+                                                                    >
+                                                                        Reject
+                                                                    </Button>
+                                                                </HStack>
+                                                            </Box>
+                                                        </Td>
+                                                    }
+                                                </Tr>
+                                                </>
+                                            ))}
+                                        </Thead>
+                                    }
                                 </Table>    
                             </TableContainer>
                             {pages.length > 1 && 
@@ -223,11 +329,11 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                                     aria-label="Page navigation " 
                                     display='flex'
                                     flexDirection='row'
-                                    justifyContent='center'
-                                    w='100%'
+                                    justifyContent='space-between'
+                                    marginTop='5px'
                                 >
                                         <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
-                                        <Box w='80%'/>
+                                        
                                         <HStack
                                             spacing={2}
                                         >   
@@ -254,6 +360,14 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
                             }
                         </Box>
                     </Box>
+                    <HostInfoModal
+                        isOpen={modalState}
+                        onClose={() => setModalState(!modalState)}
+                        name={modalHost?.organization}
+                        email={modalHost?.email}
+                        phoneNumber={modalHost?.phoneNumber}
+                        website={modalHost?.website}
+                    />
                 </Box>
                 <Footer />
             </Box >
@@ -262,12 +376,14 @@ const AdminRequests: NextPage<ReqProps> = (props: ReqProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    var hosts: HostInfo[] | null = []
-    try {
-    hosts = await getPendingHosts()
-    } catch (e: any) {
-        console.log(e)
+    const hosts = await getPendingHosts()
+    const sessionWrapper = await getSession(context)
+    const session = sessionWrapper.session
+
+    if (!session || session.user.account_type != AccountType.ADMIN) {
+        return serverSideRedirectTo('/')
     }
+
     return {
         props: {
             hosts: hosts

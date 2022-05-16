@@ -48,7 +48,7 @@ interface TeamInfoInstance extends Model<TeamInfo, Partial<TeamInfo>>, TeamInfo 
     // Allows `addMatch` on a team instance
     addMatch: BelongsToManyAddAssociationMixin<MatchResult, number>
 
-    admins: NonAttribute<UserInstance[]>
+    admins: NonAttribute<Array<UserInstance>>
 }
 
 interface CategoryInstance extends Model<Category, Partial<Category>>, Category { }
@@ -64,7 +64,8 @@ interface MatchResultInstance extends Model<MatchResult, Partial<MatchResult>>, 
 interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, HostInfoBase {
     iceSheets: NonAttribute<Array<{ hostId: string, name: string }>>
     matches: NonAttribute<MatchResultInstance>
-    user: NonAttribute<{email: string}>
+    //user: NonAttribute<{email: string}>
+    admins?: NonAttribute<UserInstance[]>
 }
 
 interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod { }
@@ -281,13 +282,10 @@ TeamInfoModel.belongsToMany(CategoryModel, {
 
 export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
     hostId: {
-        type: DataTypes.UUID,
+        type: DataTypes.BIGINT,
         field: 'host_id',
         primaryKey: true,
-        references: {
-            model: UserModel,
-            key: 'id',
-        },
+        autoIncrement: true,
     },
     organization: {
         type: DataTypes.STRING(255),
@@ -341,7 +339,7 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
 
 export const IceSheetModel = sequelize.define('Ice Sheet', {
     hostId: {
-        type: DataTypes.UUID,
+        type: DataTypes.BIGINT,
         field: 'host_id',
         primaryKey: true,
         references: {
@@ -360,19 +358,48 @@ export const IceSheetModel = sequelize.define('Ice Sheet', {
 })
 
 
-UserModel.hasOne(HostInfoModel, {
+export const HostAdminModel = sequelize.define('HostAdmin', {
+    hostId: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        references: {
+            model: HostInfoModel,
+            key: 'host_id',
+        },
+    },
+    userId: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        references: {
+            model: UserModel,
+            key: 'id',
+        },
+    },
+}, {
+    tableName: 'host_admin',
+    underscored: true,
+    timestamps: false,
+})
+
+
+UserModel.belongsToMany(HostInfoModel, {
+    through: HostAdminModel,
+    foreignKey: {
+        name: 'userId',
+        field: 'user_id',
+    },
+    as: 'hosts',
+})
+HostInfoModel.belongsToMany(UserModel, {
+    through: HostAdminModel,
     foreignKey: {
         name: 'hostId',
-        field: 'id',
+        field: 'host_id',
     },
+    as: 'admins',
 })
-HostInfoModel.belongsTo(UserModel, {
-    foreignKey: {
-        name: 'hostId',
-        field: 'id',
-    },
-    as: 'user'
-})
+
+
 HostInfoModel.hasMany(IceSheetModel, {
     foreignKey: {
         name: 'hostId',
@@ -396,7 +423,7 @@ export const MatchModel = sequelize.define<MatchResultInstance>('Match Info', {
         autoIncrement: true,
     },
     hostId: {
-        type: DataTypes.UUID,
+        type: DataTypes.BIGINT,
         field: 'host_id',
         references: {
             model: HostInfoModel,

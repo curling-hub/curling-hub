@@ -7,18 +7,21 @@ import {
     useMediaQuery
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { getSession } from '../../../lib/auth/session'
 import ProfileBox from '../../../components/host/profile/ProfileBox'
 import type { CurrentHostInfo } from '../../../lib/models/host'
 import type { HostMatchResult } from '../../../lib/models/match'
-import { getHostEmailById, getHostInfoById } from '../../../lib/handlers/hosts';
+import { getHostEmailById, getHostInfoById, isHostAdmin } from '../../../lib/handlers/hosts';
 import { getHostMatchesById } from '../../../lib/handlers/matches'
 import { getTeamById } from '../../../lib/handlers/teams';
+import { HostInfoModel } from '../../../lib/db_model';
+import { serverSideRedirectTo } from '../../../lib/auth/redirect';
 
 interface HostProfileProps {
     currentHost: CurrentHostInfo
     hostMatches: HostMatchResult[]
     hostEmail: string
+    hostId: number
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -30,6 +33,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
         currentHost,
         hostMatches = [],
         hostEmail,
+        hostId,
     } = props
 
     return (
@@ -43,7 +47,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
                 minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <HostLayout>
+                <HostLayout hostId={hostId}>
                     <ProfileBox currentHost={currentHost} hostMatches={hostMatches} hostEmail={hostEmail} />
                 </HostLayout>
                 <Footer />
@@ -59,15 +63,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             props: {}
         }
     }
-    const id = context.params?.id ? context.params.id : 1
+    const { params } = context
+    const id = (Array.isArray(params.id) ? params.id[0] : params.id) || ''
+    const hostId = Number.parseInt(id)
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    const hostEmail = await getHostEmailById(id.toString()) || null
-    const tempHost = await getHostInfoById(id.toString())
-    if (!tempHost) {
-        return {
-            props: {}
-        }
+    if (!signedIn || !session) {
+        return serverSideRedirectTo('/login')
+    }
+    if (!signedUp) {
+        return serverSideRedirectTo('/new-host')
+    }
+    const userId = session.user.id
+    const [hostEmail = undefined, tempHost, hasPermission] = await Promise.all([
+        getHostEmailById(hostId),
+        getHostInfoById(hostId),
+        isHostAdmin(userId, hostId),
+    ])
+    if (!tempHost || !hasPermission) {
+        return { notFound: true }
     }
     const currentHost: CurrentHostInfo = {
         organization: tempHost.organization,
@@ -81,7 +95,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         country: tempHost.country,
         iceSheets: tempHost.iceSheets,
     }
-    const tempMatches = await getHostMatchesById(id.toString())
+    const tempMatches = await getHostMatchesById(id)
     // Format hosts for page and serialization
     const hostMatches = await Promise.all(tempMatches.map(async (match) => {
         const convert: HostMatchResult = {
@@ -95,43 +109,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
         return convert
     }))
-    if (!session || !session["user"]) {
-        // not signed in / signed up
-        return {
-            props: {
-                user: null,
-                // TODO: Remove props when not signed in
-                currentHost: currentHost,
-                hostMatches: hostMatches,
-                hostEmail: hostEmail,
-            }
-        }
-    }
-
-    const user = session["user"]
-    if (!user["account_type"]) {
-        // has not completed sign up up
-        return {
-            props: {
-                user: null,
-                // TODO: Remove props when not signed in
-                currentHost: currentHost,
-                hostMatches: hostMatches,
-                hostEmail: hostEmail,
-            },
-        }
-    }
-
     // signed in, share session with component
     return {
         props: {
-            user: session,
+            session: session,
             currentHost: currentHost,
             hostMatches: hostMatches,
             hostEmail: hostEmail,
+            hostId: hostId,
         },
     }
 }
 
 export default HostProfile
-
