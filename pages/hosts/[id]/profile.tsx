@@ -62,7 +62,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const id = context.params?.id ? context.params.id : 1
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    const hostEmail = await getHostEmailById(id.toString()) || undefined
+    const hostEmail = await getHostEmailById(id.toString()) || null
     const tempHost = await getHostInfoById(id.toString())
     if (!tempHost) {
         return {
