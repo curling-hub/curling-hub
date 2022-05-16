@@ -12,7 +12,7 @@ export interface MatchCreationForm {
 
 export interface MatchResult {
     matchId: number
-    hostId: string
+    hostId: number
     teamId1: number
     teamId2: number
     winner: string

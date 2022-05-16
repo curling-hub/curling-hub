@@ -1,4 +1,4 @@
-describe('Admin Requests Page Tests', () => {
+/*describe('Admin Requests Page Tests', () => {
     const port = Cypress.env("PORT") || '3000'
     const baseUrl = `http://localhost:${port}`
     it('Should contain a Pending tab', () => {
@@ -13,4 +13,4 @@ describe('Admin Requests Page Tests', () => {
         cy.visit(`${baseUrl}/admin-requests`)
         cy.get('[name="rejected-tab"]').click({force: true})
     })
-})
+})*/

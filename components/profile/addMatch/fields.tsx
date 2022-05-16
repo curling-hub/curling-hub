@@ -51,7 +51,7 @@ interface TeamSelectOptions extends OptionBase {
 
 interface HostSelectOptions extends OptionBase {
     label: string
-    value: string
+    value: number
 }
 
 interface IceSheetSelectOptions extends OptionBase {
@@ -65,7 +65,7 @@ interface FieldsProps {
     hosts?: HostInfo[]
     teams?: TeamInfo[]
     onSubmit?: (values: ReturnType<typeof getInitialValues>) => Promise<void>
-    fetchIceSheetsByHostId?: (hostId: string) => Promise<any[]>
+    fetchIceSheetsByHostId?: (hostId: number) => Promise<any[]>
 }
 
 
@@ -78,9 +78,9 @@ const Fields = (props: FieldsProps): JSX.Element => {
         onSubmit = async () => { },
     } = props
 
-    const [fetchingIceSheets, setFetchingIceSheets] = useState(false)
-    const [iceSheets, setIceSheets] = useState<any[]>([])
-    const onLocationChange = async (hostId: string) => {
+    const [ fetchingIceSheets, setFetchingIceSheets ] = useState(false)
+    const [ iceSheets, setIceSheets ] = useState<any[]>([])
+    const onLocationChange = async (hostId: number) => {
         setFetchingIceSheets(true)
         try {
             const iceSheets = await fetchIceSheetsByHostId(hostId)
@@ -100,15 +100,16 @@ const Fields = (props: FieldsProps): JSX.Element => {
     })
     const group = getRootProps()
 
-    const teamOptions = teams.map((t) => ({
-        value: t.teamId,
-        label: t.name,
-    }))
+    const teamOptions = teams
+        .filter((team:TeamInfo) => team.teamId !== currentTeam.teamId)
+        .map((team:TeamInfo) => ({ value: team.teamId, label: team.name}))
+
+
     const hostOptions = hosts.map((h) => ({
         value: h.hostId,
         label: h.organization,
     }))
-    hostOptions.push({ value: 'other', label: 'other' })
+    hostOptions.push({ value: 0, label: 'other' })
     const getIceSheetsOptions = (iceSheets: any[]) => (
         [...iceSheets, 'other'].map((iceSheet: string) => ({
             value: iceSheet,
