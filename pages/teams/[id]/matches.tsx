@@ -31,31 +31,65 @@ interface TeamRatingsProps {
     teamId: number,
 }
 
+function useWindowDimensions() {
+
+    const hasWindow = typeof window !== 'undefined';
+
+    function getWindowDimensions() {
+        const width = hasWindow ? window.innerWidth : null;
+        const height = hasWindow ? window.innerHeight : null;
+        return {
+            width,
+            height,
+        };
+    }
+
+    function handleResize() {
+        setWindowDimensions(getWindowDimensions());
+    }
+
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+    useEffect(() => {
+        if (hasWindow) {
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }
+    }, [hasWindow, handleResize]);
+
+    return windowDimensions;
+}
+
 const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
     const { teamId } = props
+    const {height, width} = useWindowDimensions()
     const [ isSmallScreen ] = useMediaQuery("(max-width: 880px)")
     const [ isMobileScreen ] = useMediaQuery("(max-width: 510px)")
     const [ mounted, setMounted ] = useState(false)
     useEffect(() => { setMounted(true) }, [])
-    
+    const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 2) : 10
+
     return (
         <>
             <Head>
                 <title>Matches | curlo</title>
             </Head>
             <Box
-                position="absolute"
-                w="100%"
-                h="100vh"
-                bgGradient="linear-gradient(primary.purple, primary.white)"
+               position="absolute"
+               w="100%"
+               minH="100%"
+               bgGradient="linear-gradient(primary.purple, primary.white)"
             >
+                <Box 
+                    paddingBottom="4rem"
+                >
                 {
                     mounted && isMobileScreen && isSmallScreen &&
                         <TeamLayout>
                             <TeamRatingsBoxMobile
                                 teamMatches={props.matches}
                                 filters={filters}
-                                tableSize={8}
+                                tableSize={pageNum}
                                 teamId={teamId}
                             />
                         </TeamLayout>
@@ -66,7 +100,7 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                             <TeamRatingsBoxSmall
                                 teamMatches={props.matches}
                                 filters={filters}
-                                tableSize={8}
+                                tableSize={pageNum}
                                 teamId={teamId}
                             />
                         </TeamLayout>
@@ -77,11 +111,12 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                             <TeamRatingsBox
                                 teamMatches={props.matches}
                                 filters={filters}
-                                tableSize={10}
+                                tableSize={pageNum}
                                 teamId={teamId}
                             />
                         </TeamLayout>
                 }
+                </Box>
             <Footer/>
             </Box>
         </>
@@ -119,7 +154,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             },
         }
     }
-    
+
     else {
         return serverSideRedirectTo('/')
     }
