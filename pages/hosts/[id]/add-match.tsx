@@ -97,6 +97,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
     const hostId = Number.parseInt(idStr)
     const userId = session.user.id
+
     // TODO: redirect on error?
     try {
         const [ teams, hostInfo, hasPermission ] = await Promise.all([

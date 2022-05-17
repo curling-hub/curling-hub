@@ -1,6 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { getSession } from 'next-auth/react'
 import { Session } from 'next-auth'
 import TeamLayout from '../../../components/layouts/TeamLayout'
 import {
@@ -8,10 +7,14 @@ import {
 } from '@chakra-ui/react'
 import TeamRatingsBox from '../../../components/teamRatings/teamRatingsBox'
 import TeamRatingsBoxSmall from '../../../components/teamRatings/teamRatingsBoxSmall'
-import { getTeamMatches } from '../../../lib/handlers/teams'
+import TeamRatingsBoxMobile from '../../../components/teamRatings/teamRatingsBoxMobile'
+import { getTeamInfoByUserId, getTeamMatches } from '../../../lib/handlers/teams'
 import type { TeamMatch } from '../../../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { Filter } from '../../../lib/models/match'
+import Footer from '../../../components/footer/footer'
+import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { serverSideRedirectTo } from '../../../lib/auth/redirect'
 
 const filters = [
     {filter_id: 1, value: "Most Recent"},
@@ -30,7 +33,8 @@ interface TeamRatingsProps {
 
 const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
     const { teamId } = props
-    const [ isSmallScreen ] = useMediaQuery("(max-width: 768px)")
+    const [ isSmallScreen ] = useMediaQuery("(max-width: 880px)")
+    const [ isMobileScreen ] = useMediaQuery("(max-width: 510px)")
     const [ mounted, setMounted ] = useState(false)
     useEffect(() => { setMounted(true) }, [])
     
@@ -46,18 +50,18 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 {
-                    mounted && !isSmallScreen &&
+                    mounted && isMobileScreen && isSmallScreen &&
                         <TeamLayout>
-                            <TeamRatingsBox
+                            <TeamRatingsBoxMobile
                                 teamMatches={props.matches}
                                 filters={filters}
-                                tableSize={10}
+                                tableSize={8}
                                 teamId={teamId}
                             />
                         </TeamLayout>
                 }
                 {
-                    mounted && isSmallScreen &&
+                    mounted && !isMobileScreen && isSmallScreen &&
                         <TeamLayout>
                             <TeamRatingsBoxSmall
                                 teamMatches={props.matches}
@@ -67,48 +71,53 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                             />
                         </TeamLayout>
                 }
+                {
+                    mounted && !isMobileScreen && !isSmallScreen &&
+                        <TeamLayout>
+                            <TeamRatingsBox
+                                teamMatches={props.matches}
+                                filters={filters}
+                                tableSize={10}
+                                teamId={teamId}
+                            />
+                        </TeamLayout>
+                }
+            <Footer/>
             </Box>
         </>
     )
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const idString = context.params?.id || ''
-    const teamId = Array.isArray(idString) ? NaN : Number.parseInt(idString)
-    const session = await getSession(context)
-    const matches = await getTeamMatches(teamId)
+    const sessionWrapper = await getSession(context)
+    const { signedIn, signedUp, session } = sessionWrapper
+
+    if (!signedIn || !signedUp || !session) {
+        return serverSideRedirectTo('/')
+    }
     
-    if (!session || !session["user"]) {
-        // not signed in / signed up
-        return {
-            props: {
-                user: null,
-                matches: matches,
-                teamId,
-            }
-        }
+    const { params } = context
+    if (!params) {
+        return { notFound: true }
     }
-
-    const user = session["user"]
-    if (!user["account_type"]) {
-        // has not completed sign up up
-        return {
-            props: {
-                user: null,
-                matches: matches,
-                teamId,
-            },
-        }
+    const idStr = Array.isArray(params.id) ? params.id[0] : params.id
+    if (!idStr) {
+        return { notFound: true }
     }
+    const teamId = Number.parseInt(idStr)
+    const userId = session.user.id
+   
+    
 
-    // signed in, share session with component
-    return {
+    const matches = await getTeamInfoByUserId(userId)
+    console.log(matches)
+    /*return {
         props: {
             user: session,
             rankings: null,
-            teamId,
+            userId,
         },
-    }
+    }*/
 }
 
 export default TeamRatings

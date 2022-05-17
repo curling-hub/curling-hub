@@ -1,20 +1,16 @@
 import {
     Box,
-    Container,
     Flex,
     Select,
     Text,
-    Grid,
-    GridItem,
-    Divider,
-    IconButton,
     Input,
     HStack,
     TableContainer,
     Table,
     Thead,
     Td,
-    Tr
+    Tr,
+    IconButton
 } from '@chakra-ui/react'
 import {
     AiOutlineLeft,
@@ -30,6 +26,7 @@ import { Filter } from '../../lib/models/match'
 import { useState, Children } from 'react'
 import { matchResultToString, matchResultOpponentTeamName } from '../../lib/utils/match'
 
+
 interface teamRatingsBoxProps {
     teamMatches: TeamMatch[]
     filters: Filter[]
@@ -43,20 +40,21 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
         teamId,
         teamMatches = [],
         filters,
-        tableSize
+        tableSize,
     } = props
     
     const [pageIndex, setPageIndex] = useState(0)
     const [displayedRankings, setDisplayedRankings] = useState(teamMatches)
     const [fixedRankings, setFixedRankings] = useState(teamMatches)
-    let i = 0
-    const pages: Array<TeamMatch[]> = []
+
+    var i = 0
+    var pages: Array<TeamMatch[]> = []
     for (i; i < Math.ceil(displayedRankings.length / tableSize); ++i) {
         pages[i] = displayedRankings.slice(i*tableSize, i*tableSize + tableSize)
     }
-
+    
     const pageCount = pages.length
-
+    
     // Search function
     function search(query: string) {
         const tables = fixedRankings.filter((match) => {
@@ -72,14 +70,14 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     // use this to filter
     function filterMatches(selected: number) {  
         if (selected == 1) {
-            const dates = [...fixedRankings].sort((m1, m2) => {
-                return (new Date(m1.date).getTime() + new Date(m2.date).getTime())
+            const dates = fixedRankings.sort((m1, m2) => {
+                return new Date(m1.date).getTime() - new Date(m2.date).getTime()
             })
             setDisplayedRankings(dates)
-        } 
+        }
         else if (selected == 2) {
-            const dates = [...fixedRankings].sort((m1, m2) => {
-                return (new Date(m1.date).getTime() - new Date(m2.date).getTime())
+            const dates = fixedRankings.sort((m1, m2) => {
+                return new Date(m1.date).getTime() + new Date(m2.date).getTime()
             })
             setDisplayedRankings(dates)
         }
@@ -119,11 +117,11 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                 maxW="100%"
                 minH='70vh'
                 textAlign="center"
-                marginLeft='4rem'
-                marginRight='4rem'
-                marginTop='2rem'
+                marginLeft='1rem'
+                marginRight='1rem'
+                marginTop='1rem'
             >
-                <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+                <Text fontSize="1.5rem" marginTop="5px" fontWeight="bold">
                     Matches
                 </Text>
                 <Box
@@ -134,6 +132,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                         spacing='2rem'
                     >
                         <Select
+                            size='sm'
                             name='category-dropdown'
                             borderRadius='20px'
                             variant='filled'
@@ -153,6 +152,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                             }
                         </Select>
                         <Input
+                            size='sm'
                             name='search-bar'
                             borderRadius='20px'
                             w='200%'
@@ -174,18 +174,13 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                             >
                                 <Thead textAlign='center'>
                                     <Tr>
-                                        <Td fontWeight="bold">Date</Td>
                                         <Td fontWeight="bold">Outcome</Td>
                                         <Td fontWeight="bold">Opponent</Td>
-                                        <Td fontWeight="bold">Location</Td>
-                                        <Td fontWeight="bold">Sheet of ice</Td>
-                                        <Td fontWeight="bold">Comment</Td>
                                     </Tr>
                                     { Children.toArray(pages[pageIndex]?.map((match, index) => 
                                         <Tr
                                             key={index}
                                         >
-                                            <Td>{match.date}</Td>
                                             <Td>
                                             {
                                                 matchResultToString(teamId, match) == 'Win' &&
@@ -237,9 +232,6 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                             }
                                             </Td>
                                             <Td>{matchResultOpponentTeamName(teamId, match)}</Td>
-                                            <Td>{match.host.organization}</Td>
-                                            <Td>{match.sheetOfIce}</Td>
-                                            <Td>{match.comments}</Td>
                                         </Tr>
                                     ))
                                     }
