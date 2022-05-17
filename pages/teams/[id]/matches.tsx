@@ -63,8 +63,8 @@ function useWindowDimensions() {
 const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
     const {user, filters, matches, teamId} = props
     const {height, width} = useWindowDimensions()
-    const [ isSmallScreen ] = useMediaQuery("(max-width: 880px)")
-    const [ isMobileScreen ] = useMediaQuery("(max-width: 510px)")
+    const isSmallScreen = width && width < 880 ? true : false
+    const isMobileScreen = width && width < 680 ? true : false
     const [ mounted, setMounted ] = useState(false)
     useEffect(() => { setMounted(true) }, [])
     const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 2) : 10
