@@ -72,10 +72,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     // use this to filter
     function filterMatches(selected: number) {  
         if (selected == 1) {
-            const dates = [...fixedRankings].sort((m1, m2) => {
-                return (new Date(m1.date).getTime() + new Date(m2.date).getTime())
-            })
-            setDisplayedRankings(dates)
+            setDisplayedRankings(fixedRankings)
         } 
         else if (selected == 2) {
             const dates = [...fixedRankings].sort((m1, m2) => {

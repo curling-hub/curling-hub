@@ -61,7 +61,7 @@ function useWindowDimensions() {
 }
 
 const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
-    const { teamId } = props
+    const {user, filters, matches, teamId} = props
     const {height, width} = useWindowDimensions()
     const [ isSmallScreen ] = useMediaQuery("(max-width: 880px)")
     const [ isMobileScreen ] = useMediaQuery("(max-width: 510px)")
@@ -87,7 +87,7 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
                     mounted && isMobileScreen && isSmallScreen &&
                         <TeamLayout>
                             <TeamRatingsBoxMobile
-                                teamMatches={props.matches}
+                                teamMatches={matches}
                                 filters={filters}
                                 tableSize={pageNum}
                                 teamId={teamId}
@@ -149,14 +149,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 user: session,
+                filters: filters,
                 matches: matches,
-                userId,
+                teamId: teamId,
             },
         }
     }
 
     else {
-        return serverSideRedirectTo('/')
+       return serverSideRedirectTo('/')
     }
 }
 
