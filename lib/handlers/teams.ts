@@ -23,7 +23,7 @@ export async function isUserOnTeam(teamId: number, userId: string): Promise<bool
         }
     })
 
-    return !result
+    return result.length > 0
 }
 
 export async function getTeamInfo(teamId: number): Promise<TeamInfo & TeamWithMembersAndRatings | null> {

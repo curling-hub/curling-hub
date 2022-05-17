@@ -108,7 +108,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const userId = session.user.id
 
     const allowed = await isUserOnTeam(teamId, userId)
-    console.log(userId == 'aab84300-1f6b-49d3-a84a-7d7616425690')
+    
     if (allowed) {
         const matches = await getTeamMatches(teamId)
         return {
