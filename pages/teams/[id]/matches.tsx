@@ -8,12 +8,12 @@ import {
 import TeamRatingsBox from '../../../components/teamRatings/teamRatingsBox'
 import TeamRatingsBoxSmall from '../../../components/teamRatings/teamRatingsBoxSmall'
 import TeamRatingsBoxMobile from '../../../components/teamRatings/teamRatingsBoxMobile'
-import { getTeamInfoByUserId, getTeamMatches } from '../../../lib/handlers/teams'
+import { getTeamMatches, isUserOnTeam } from '../../../lib/handlers/teams'
 import type { TeamMatch } from '../../../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { Filter } from '../../../lib/models/match'
 import Footer from '../../../components/footer/footer'
-import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { getSession } from '../../../lib/auth/session'
 import { serverSideRedirectTo } from '../../../lib/auth/redirect'
 
 const filters = [
@@ -106,18 +106,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
     const teamId = Number.parseInt(idStr)
     const userId = session.user.id
-   
-    
 
-    const matches = await getTeamInfoByUserId(userId)
-    console.log(matches)
-    /*return {
-        props: {
-            user: session,
-            rankings: null,
-            userId,
-        },
-    }*/
+    const allowed = await isUserOnTeam(teamId, userId)
+    console.log(userId == 'aab84300-1f6b-49d3-a84a-7d7616425690')
+    if (allowed) {
+        const matches = await getTeamMatches(teamId)
+        return {
+            props: {
+                user: session,
+                matches: matches,
+                userId,
+            },
+        }
+    }
+    
+    else {
+        return serverSideRedirectTo('/')
+    }
 }
 
 export default TeamRatings

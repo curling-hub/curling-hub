@@ -15,19 +15,14 @@ export async function teams() {
     return 0
 }
 
-export async function getTeamInfoByUserId(userId: string): Promise<boolean> {
-    const result = await DbModels.TeamInfoModel.findAll({
-        include: [{
-            model: DbModels.UserModel,
-            required: true,
-            as: 'admins',
-            where: { id: userId },
-            attributes: [],
-        }],
-        attributes: {
-            exclude: ['admins']
-        },
+export async function isUserOnTeam(teamId: number, userId: string): Promise<boolean> {
+    const result = await DbModels.TeamAdminModel.findAll({
+        where: { 
+            teamId: teamId,
+            userId: userId
+        }
     })
+
     return !result
 }
 
