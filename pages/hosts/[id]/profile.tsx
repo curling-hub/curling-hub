@@ -75,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return serverSideRedirectTo('/new-host')
     }
     const userId = session.user.id
-    const [ hostEmail = undefined, tempHost, hasPermission ] = await Promise.all([
+    const [hostEmail = null, tempHost, hasPermission] = await Promise.all([
         getHostEmailById(hostId),
         getHostInfoById(hostId),
         isHostAdmin(userId, hostId),
@@ -102,6 +102,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             matchId: match.matchId,
             team1: (await getTeamById(match.teamId1))?.name || match.teamId1.toString(),
             team2: (await getTeamById(match.teamId2))?.name || match.teamId2.toString(),
+            winner: match.winner,
             date: match.date.getMonth().toString() + "/" +
                 match.date.getDate().toString() + "/" +
                 match.date.getFullYear().toString(),
