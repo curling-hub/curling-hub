@@ -131,9 +131,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const id = context.params?.id ? Number(context.params.id) : 1
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    if (!signedIn || !signedUp) {
+    /* if (!signedIn || !signedUp) {
         return getSessionServerSideResult(sessionWrapper)
-    }
+    } */
     try {
         const [teamInfo, teamMatches, teamContactInfo, teamCategories/* , teamEmail */] = await Promise.all([
             getTeamInfo(id),

@@ -16,6 +16,8 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
         hostEmail,
     } = props
 
+    const iceSheetString = currentHost?.iceSheets?.toString().replaceAll(',', '').slice(0, 3) || null
+
     return (
         <>
             <Box h="75%">
@@ -63,7 +65,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                     {currentHost.iceSheets?.length}
                                 </Text>
                                 <Text>
-                                    {"(" + currentHost?.iceSheets?.toString() + ")"}
+                                    {"(" + iceSheetString + '...' + ")"}
                                 </Text>
                             </HStack>
                         </VStack>
