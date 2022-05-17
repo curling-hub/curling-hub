@@ -13,15 +13,11 @@ import {
     FormControl,
     FormLabel,
     Grid,
-    HStack,
     Input,
     Select as ChakraSelect,
-    Stack,
-    Spacer,
     Textarea,
     VStack,
     useRadioGroup,
-    FormErrorMessage
 } from '@chakra-ui/react'
 import {
     Select,
@@ -33,9 +29,10 @@ import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
 
 
-const getInitialValues = (otherFields: any = {}) => ({
+const getInitialValues = (otherFields: {[key: string]: any} = {}) => ({
     matchResult: 'Win',
     date: '',
+    team1: '',
     team2: '',
     location: '',
     sheetOfIce: '',
@@ -49,11 +46,6 @@ interface TeamSelectOptions extends OptionBase {
     value: number
 }
 
-interface HostSelectOptions extends OptionBase {
-    label: string
-    value: number
-}
-
 interface IceSheetSelectOptions extends OptionBase {
     label: string
     value: string
@@ -61,65 +53,45 @@ interface IceSheetSelectOptions extends OptionBase {
 
 
 interface FieldsProps {
-    currentTeam?: TeamInfo
-    hosts?: HostInfo[]
+    host?: HostInfo
     teams?: TeamInfo[]
     onSubmit?: (values: ReturnType<typeof getInitialValues>) => Promise<void>
-    fetchIceSheetsByHostId?: (hostId: number) => Promise<any[]>
 }
 
 
 const Fields = (props: FieldsProps): JSX.Element => {
     const {
-        currentTeam = {} as TeamInfo,
-        fetchIceSheetsByHostId = async (_) => [],
-        hosts = [],
+        host = null,
         teams = [],
-        onSubmit = async () => { },
+        onSubmit = async () => {},
     } = props
 
-    const [ fetchingIceSheets, setFetchingIceSheets ] = useState(false)
-    const [ iceSheets, setIceSheets ] = useState<any[]>([])
-    const onLocationChange = async (hostId: number) => {
-        setFetchingIceSheets(true)
-        try {
-            const iceSheets = await fetchIceSheetsByHostId(hostId)
-            setIceSheets(iceSheets)
-        } catch (error: any) {
-            console.log(error)
-        } finally {
-            setFetchingIceSheets(false)
-        }
-    }
+    const iceSheets = host?.iceSheets || []
 
-    const resultOptions = ['Win', 'Loss', 'Tie']
+    const resultOptions = [ 'Win', 'Loss', 'Tie' ]
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'matchResult',
         defaultValue: 'Win',
         onChange: (val) => console.log(val)
     })
     const group = getRootProps()
-
-    const teamOptions = teams
-        .filter((team:TeamInfo) => team.teamId !== currentTeam.teamId)
-        .map((team:TeamInfo) => ({ value: team.teamId, label: team.name}))
-
-
-    const hostOptions = hosts.map((h) => ({
-        value: h.hostId,
-        label: h.organization,
+    const teamOptions = teams.map((t) => ({
+        value: t.teamId,
+        label: t.name,
     }))
-    hostOptions.push({ value: 0, label: 'other' })
-    const getIceSheetsOptions = (iceSheets: any[]) => (
-        [...iceSheets, 'other'].map((iceSheet: string) => ({
-            value: iceSheet,
-            label: iceSheet,
-        }))
-    )
+ {/*}   const team2Options = teams
+        .filter((teams:TeamSelectOptions) => teams.value !== team1.teamId)
+        .map((teams:TeamSelectOptions) => ({value: teams.teamId, label: teams.name})) */}
+    
+
+    const iceSheetsOptions = [...iceSheets, 'N/A'].map((iceSheet) => ({
+        value: iceSheet,
+        label: iceSheet,
+    }))
 
     return (
         <Formik
-            initialValues={getInitialValues({ team1: currentTeam.teamId })}
+            initialValues={getInitialValues({ location: host?.hostId })}
             validationSchema={schema}
             onSubmit={onSubmit}
         >
@@ -134,7 +106,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                         >
                             <Box w="100%">
                                 <Field name="matchResult">
-                                    {({ field, form }: FieldProps<string>) => {
+                                    {({field, form}: FieldProps<string>) => {
                                         return (
                                             <FormControl>
                                                 <Flex justifyContent="space-between" {...group}>
@@ -148,7 +120,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                         </FormLabel>
                                                     ))}
                                                     {resultOptions.map((value) => {
-                                                        const radioProps = getRadioProps({ value });
+                                                        const radioProps = getRadioProps({value});
                                                         return (<ResultRadio
                                                             key={value}
                                                             {...radioProps}
@@ -170,8 +142,8 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             </Box>
                             <Box w="100%">
                                 <Field name="date">
-                                    {({ field, form }: FieldProps) => (
-                                        <FormControl isInvalid={form.errors.date != undefined && form.touched.date != undefined}>
+                                    {({field, form}: FieldProps) => (
+                                        <FormControl>
                                             <FormLabel htmlFor="date" srOnly>Date</FormLabel>
                                             <Input
                                                 type="date"
@@ -180,42 +152,12 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 {...field}
                                                 id="date"
                                             />
-                                            <FormErrorMessage>Date of match is required</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
-                            </Box>
-                        </Grid>
-                        <Grid
-                            templateColumns="repeat(1, 1fr)"
-                            rowGap={4}
-                            columnGap={12}
-                            w="100%"
-                        >
-                            <Box w="100%">
-                                <Field name="team2">
-                                    {({ field, form }: FieldProps) => (
-                                        <FormControl isInvalid={form.errors.team2 != undefined && form.touched.team2 != undefined}>
-                                            <FormLabel htmlFor="team2" srOnly>Opponent</FormLabel>
-                                            <Select<TeamSelectOptions>
-                                                options={teamOptions}
-                                                placeholder="Select opponent team"
-                                                closeMenuOnSelect
-                                                focusBorderColor="blue.500"
-                                                id="team2"
-                                                instanceId="team2"
-                                                onFocus={() => form.setFieldTouched("team2", true, true)}
-                                                onChange={
-                                                    (newValue, actionMeta) => {
-                                                        form.values.team2 = newValue?.value
-                                                        form.validateField("team2")
-                                                    }
-                                                }
-                                            />
-                                            <FormErrorMessage>Opponent team is required</FormErrorMessage>
-                                        </FormControl>
-                                    )}
-                                </Field>
+                                <Box textColor="red.500" px={2}>
+                                    <ErrorMessage name="date" />
+                                </Box>
                             </Box>
                         </Grid>
                         <Flex
@@ -224,61 +166,111 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             columnGap={4}
                             w="100%"
                         >
-                            <Box w={{ base: "100%", md: "70%" }}>
-                                <Field name="location">
-                                    {({ field, form }: FieldProps) => (
-                                        <FormControl isInvalid={form.errors.location != undefined && form.touched.location != undefined}>
-                                            <FormLabel htmlFor="location" srOnly>Location</FormLabel>
-                                            <Select<HostSelectOptions>
-                                                options={hostOptions}
-                                                placeholder="Select host location"
+                            <Box w={{ base: "100%", md: "35%" }}>
+                                <Field name="team1">
+                                    {({field, form}: FieldProps) => (
+                                        <FormControl>
+                                            <FormLabel htmlFor="team1" srOnly>Team 1</FormLabel>
+                                            <Select<TeamSelectOptions>
+                                                options={teamOptions}
+                                                placeholder="Select team 1"
                                                 closeMenuOnSelect
                                                 focusBorderColor="blue.500"
-                                                id="location"
-                                                instanceId="location"
-                                                onFocus={() => form.setFieldTouched("location", true, true)}
+                                                id="team1"
+                                                instanceId="team1"
+                                                onFocus={() => form.setFieldTouched("team1", true, true)}
+                                                isOptionDisabled={(teams) => teams.value === form.values.team2}
                                                 onChange={
                                                     (newValue, actionMeta) => {
-                                                        form.values.location = newValue?.value
-                                                        newValue && onLocationChange(newValue.value)
-                                                        form.validateField("location")
+                                                        form.values.team1 = newValue?.value
+                                                        form.validateField("team1")
+                                                        
                                                     }
                                                 }
                                             />
-                                            <FormErrorMessage>Location is required</FormErrorMessage>
-
                                         </FormControl>
                                     )}
                                 </Field>
+                                <Box textColor="red.500" px={2}>
+                                    <ErrorMessage name="team1" />
+                                </Box>
+                            </Box>
+                            <Box w={{ base: "100%", md: "35%" }}>
+                                <Field name="team2">
+                                    {({field, form}: FieldProps) => (
+                                        <FormControl>
+                                            <FormLabel htmlFor="team2" srOnly>Team 2</FormLabel>
+                                            <Select<TeamSelectOptions>
+                                                options={teamOptions}
+                                                placeholder="Select team 2"
+                                                closeMenuOnSelect
+                                                focusBorderColor="blue.500"
+                                                id="team2"
+                                                instanceId="team2"
+                                                isOptionDisabled={(teams) => teams.value === form.values.team1}
+                                                onFocus={() => form.setFieldTouched("team2", true, true)}
+                                                onChange={
+                                                    (newValue, actionMeta) => {
+                                                        form.values.team2 = newValue?.value
+                                                        form.validateField("team2")
+                                                    }
+                                                }
+                                            />
+                                        </FormControl>
+                                    )}
+                                </Field>
+                                <Box textColor="red.500" px={2}>
+                                    <ErrorMessage name="team2" />
+                                </Box>
                             </Box>
                             <Box w={{ base: "100%", md: "30%" }}>
                                 <Field name="sheetOfIce">
-                                    {({ field, form }: FieldProps) => (
-                                        <FormControl isInvalid={(values.location && values.location != 'other') && form.errors.sheetOfIce != undefined && form.touched.sheetOfIce != undefined}>
-                                            <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
+                                    {({field, form}: FieldProps) => (
+                                        <FormControl>
+                                            <FormLabel htmlFor="sheet-of-ice" srOnly>Ice sheet</FormLabel>
                                             <Select<IceSheetSelectOptions>
-                                                isDisabled={!values.location || values.location === 'other' || fetchingIceSheets}
-                                                options={getIceSheetsOptions(iceSheets)}
+                                                options={iceSheetsOptions}
                                                 placeholder="Ice sheet"
                                                 closeMenuOnSelect
                                                 focusBorderColor="blue.500"
                                                 id="sheet-of-ice"
                                                 instanceId="sheet-of-ice"
-                                                onFocus={() => form.setFieldTouched("sheet-of-ice", true, true)}
+                                                onFocus={() => form.setFieldTouched("sheetOfIce", true, true)}
                                                 onChange={
                                                     (newValue, actionMeta) => {
                                                         form.values.sheetOfIce = newValue?.value
+                                                        form.validateField("sheetOfIce")
                                                     }
                                                 }
                                             />
-                                            {values.location ? <FormErrorMessage>Ice sheet is required</FormErrorMessage> : <></>}
                                         </FormControl>
                                     )}
                                 </Field>
+                                <Box textColor="red.500" px={2}>
+                                    <ErrorMessage name="sheetOfIce" />
+                                </Box>
                             </Box>
                         </Flex>
-                        <Field name="comments">
+                        <Field name="location">
                             {({ field, form }: FieldProps) => (
+                                <FormControl hidden={true}>
+                                    <ChakraSelect
+                                        disabled
+                                        borderRadius="full"
+                                        placeholder="Location"
+                                        {...field}
+                                        value={host?.hostId}
+                                        id="location"
+                                    >
+                                        <option key={`${host?.hostId}`} value={host?.hostId}>
+                                            {host?.organization}
+                                        </option>
+                                    </ChakraSelect>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <Field name="comments">
+                            {({field, form}: FieldProps) => (
                                 <FormControl>
                                     <FormLabel htmlFor="comment" srOnly>Comment</FormLabel>
                                     <Textarea
