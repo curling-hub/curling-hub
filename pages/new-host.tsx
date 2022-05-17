@@ -9,7 +9,7 @@ import AuthLayout from '../components/layouts/AuthLayout'
 import NewHostFields from '../components/newHost/newHostFields'
 import Footer from "../components/footer/footer";
 import { serverSideRedirectTo } from '../lib/auth/redirect'
-import { getHostInfoById } from '../lib/handlers/hosts'
+import { getHostInfoById, getHostInfoByUserId } from '../lib/handlers/hosts'
 import { AccountType } from '../lib/models/accountType'
 import {
     Box,
@@ -66,7 +66,9 @@ const NewHost: NextPage = () => {
             alert(error.message)
             return
         }
-        router.push('/hosts/request')
+        const data = await res.json()
+        const hostId = data['data']['hostId']
+        router.push(`/hosts/${hostId}/request`)
     }
 
     useEffect(() => { setMounted(true) }, [])
@@ -146,12 +148,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             case AccountType.TEAM:
                 return serverSideRedirectTo('/team-profile')
             case AccountType.HOST:
-                const hostInfo = await getHostInfoById(session.user.id)
-                const status = hostInfo?.status
-                if (status === 'accepted') {
-                    return serverSideRedirectTo('/hosts/profile')
-                } else {
-                    return serverSideRedirectTo('/hosts/request')
+                const hostInfoList = await getHostInfoByUserId(session.user.id)
+                if (hostInfoList.length !== 0) {
+                    const hostInfo = hostInfoList[0]
+                    const status = hostInfo.status
+                    if (status === 'accepted') {
+                        return serverSideRedirectTo(`/hosts/${hostInfo.hostId}/profile`)
+                    } else {
+                        return serverSideRedirectTo(`/hosts/${hostInfo.hostId}/request`)
+                    }
                 }
         }
     }

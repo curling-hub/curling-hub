@@ -7,20 +7,22 @@ import {
     useMediaQuery
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { getSession } from '../../../lib/auth/session'
 import ProfileBox from '../../../components/host/profile/ProfileBox'
 import type { CurrentHostInfo } from '../../../lib/models/host'
 import type { HostMatchResult } from '../../../lib/models/match'
-import { getHostEmailById, getHostInfoById } from '../../../lib/handlers/hosts';
+import { getHostEmailById, getHostInfoById, isHostAdmin } from '../../../lib/handlers/hosts';
 import { getHostMatchesById } from '../../../lib/handlers/matches'
 import { getTeamById } from '../../../lib/handlers/teams';
 import { AccountType } from '../../../lib/models/accountType';
+import { HostInfoModel } from '../../../lib/db_model';
 import { serverSideRedirectTo } from '../../../lib/auth/redirect';
 
 interface HostProfileProps {
     currentHost: CurrentHostInfo
     hostMatches: HostMatchResult[]
     hostEmail: string
+    hostId: number
 }
 
 const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
@@ -32,6 +34,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
         currentHost,
         hostMatches = [],
         hostEmail,
+        hostId,
     } = props
 
     return (
@@ -45,7 +48,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
                 minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <HostLayout>
+                <HostLayout hostId={hostId}>
                     <ProfileBox currentHost={currentHost} hostMatches={hostMatches} hostEmail={hostEmail} />
                 </HostLayout>
                 <Footer />
@@ -55,28 +58,31 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const contextId = context.params?.id ? context.params.id.toString() : "1"
-    const sessionWrapper = await getSession(context)
-    const { signedIn, signedUp, session } = sessionWrapper
-    if (!signedIn || !signedUp || !session) {
-        return getSessionServerSideResult(sessionWrapper)
-    }
-    switch (session.user.account_type) {
-        case AccountType.TEAM:
-            return serverSideRedirectTo(`/team-profile`) //BENNETTTODO
-        case AccountType.ADMIN:
-            return serverSideRedirectTo(`/admin-requests`)
-    }
-    const sessionId = session.user.id //CH104 TODO
-    if (sessionId !== contextId) {
-        return serverSideRedirectTo(`/hosts/${sessionId}/profile`)
-    }
-    const hostEmail = await getHostEmailById(contextId) || undefined
-    const tempHost = await getHostInfoById(contextId)
-    if (!tempHost) {
+    // Redirect if not authentiated
+    if (!context.params) {
         return {
             props: {}
         }
+    }
+    const { params } = context
+    const id = (Array.isArray(params.id) ? params.id[0] : params.id) || ''
+    const hostId = Number.parseInt(id)
+    const sessionWrapper = await getSession(context)
+    const { signedIn, signedUp, session } = sessionWrapper
+    if (!signedIn || !session) {
+        return serverSideRedirectTo('/login')
+    }
+    if (!signedUp) {
+        return serverSideRedirectTo('/new-host')
+    }
+    const userId = session.user.id
+    const [hostEmail = undefined, tempHost, hasPermission] = await Promise.all([
+        getHostEmailById(hostId),
+        getHostInfoById(hostId),
+        isHostAdmin(userId, hostId),
+    ])
+    if (!tempHost || !hasPermission) {
+        return { notFound: true }
     }
     const currentHost: CurrentHostInfo = {
         organization: tempHost.organization,
@@ -90,7 +96,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         country: tempHost.country,
         iceSheets: tempHost.iceSheets,
     }
-    const tempMatches = await getHostMatchesById(contextId)
+    const tempMatches = await getHostMatchesById(id)
     // Format hosts for page and serialization
     const hostMatches = await Promise.all(tempMatches.map(async (match) => {
         const convert: HostMatchResult = {
@@ -106,13 +112,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // signed in, share session with component
     return {
         props: {
-            user: session,
+            session: session,
             currentHost: currentHost,
             hostMatches: hostMatches,
             hostEmail: hostEmail,
+            hostId: hostId,
         },
     }
 }
 
 export default HostProfile
-

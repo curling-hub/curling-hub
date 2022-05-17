@@ -12,17 +12,17 @@ import HostLayout from '../../../components/layouts/HostLayout'
 import { HostPending, HostRejected } from '../../../components/host/status'
 import { getSession } from '../../../lib/auth/session'
 import { serverSideRedirectTo } from '../../../lib/auth/redirect'
-import { getHostInfoById } from '../../../lib/handlers/hosts'
+import { getHostInfoById, isHostAdmin } from '../../../lib/handlers/hosts'
 import { AccountType } from '../../../lib/models/accountType'
-import { GetSessionParams } from 'next-auth/react'
 
 
 interface HostRequestStatusProps {
     status: string
+    hostId: number
 }
 
 const HostRequestStatusPage: NextPage<HostRequestStatusProps> = (props): JSX.Element => {
-    const { status } = props
+    const { hostId, status } = props
     return (
         <>
             <Head>
@@ -34,7 +34,7 @@ const HostRequestStatusPage: NextPage<HostRequestStatusProps> = (props): JSX.Ele
                 h="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <HostLayout>
+                <HostLayout hostId={hostId}>
                     {getBoxByStatus(status)}
                 </HostLayout>
             </Box>
@@ -52,8 +52,8 @@ function getBoxByStatus(status: string): JSX.Element {
     // shouldn't happen
     return (<></>)
 }
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const contextId = context.params?.id ? context.params.id.toString() : "1"
     const { signedIn, signedUp, session } = await getSession(context)
     if (!signedIn || !session) {
         // not signed in
@@ -73,11 +73,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         case null:
             return serverSideRedirectTo('/new-host')
     }
-    const sessionId = session.user.id //CH104 TODO
-    if (sessionId !== contextId) {
-        return serverSideRedirectTo(`/hosts/${sessionId}/request`)
+    const { params } = context
+    if (!params?.id) {
+        return { notFound: true }
     }
-    const hostInfo = await getHostInfoById(sessionId)
+    const userId = session.user.id
+    const hostIdStr = Array.isArray(params.id) ? params.id[0] : params.id
+    const hostId = Number.parseInt(hostIdStr)
+    const [hostInfo, hasPermission] = await Promise.all([
+        getHostInfoById(hostId),
+        isHostAdmin(userId, hostId)
+    ])
+    if (!hasPermission) {
+        return { notFound: true }
+    }
     let status = hostInfo?.status
     // not pending status
     if (status === 'accepted') {
@@ -85,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } else if (status !== 'rejected' && status !== 'pending') {
         status = 'pending'
     }
-    return { props: { status } }
+    return { props: { status, hostId } }
 }
 
 export default HostRequestStatusPage

@@ -9,10 +9,32 @@ import { getSession } from '../lib/auth/session'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import type { GetServerSideProps } from 'next'
 import TeamLayout from '../components/layouts/TeamLayout'
+import { AccountType } from "../lib/models/accountType";
+import { getTeamIdByUserId } from "../lib/handlers/teams";
+import { getHostIdByUserId } from "../lib/handlers/hosts";
+import AdminLayout from "../components/layouts/AdminLayout";
+import HostLayout from "../components/layouts/HostLayout";
 
+function landingPageLayout(accountType?: AccountType, id?: number | null) {
+  switch (accountType) {
+    case AccountType.ADMIN:
+      return <AdminLayout />
+    case AccountType.HOST:
+      return <HostLayout hostId={id} />
+    case AccountType.TEAM:
+      return <TeamLayout teamId={id} />
+    default:
+      return <StandardLayout />
+  }
+}
 
-const Home: NextPage<loggedInProps> = (isLoggedIn: loggedInProps) => {
+const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
   const { data: session } = useSession()
+  const {
+    isLoggedIn,
+    accountType,
+    id,
+  } = props
   return (
     <>
       <Head>
@@ -25,7 +47,7 @@ const Home: NextPage<loggedInProps> = (isLoggedIn: loggedInProps) => {
         bgGradient="linear-gradient(primary.purple, primary.white)"
       >
 
-        {session ? <TeamLayout /> : <StandardLayout />}
+        {landingPageLayout(accountType, id)}
         <Box paddingBottom="4rem">
 
           {/*Card Container Box*/}
@@ -128,19 +150,41 @@ const Home: NextPage<loggedInProps> = (isLoggedIn: loggedInProps) => {
     </>
   );
 };
-export interface loggedInProps {
+export interface LandingPageProps {
   isLoggedIn: boolean
+  accountType?: AccountType
+  id?: number | null
 }
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context)
-  const { signedIn } = session
-  if (!signedIn) {// not signed in 
+  const sessionWrapper = await getSession(context)
+  const { signedIn, signedUp, session } = sessionWrapper
+  !signedIn || !signedUp || !session
+  if (!signedUp && session && signedIn) {// not signed in 
+    return serverSideRedirectTo('/new-team')
+  } else if (!signedIn || !session || !signedUp) { //
     return {
       props: { isLoggedIn: false, session: null }
     }
+  }
+  const userId = session.user.id
+  switch (session.user.account_type) {
+    case AccountType.ADMIN:
+      return {
+        props: { isLoggedIn: false, session: null, accountType: AccountType.ADMIN }
+      }
+    case AccountType.HOST:
+      const hostId = await Promise.all([getHostIdByUserId(userId)])
+      return {
+        props: { isLoggedIn: false, session: null, accountType: AccountType.HOST, id: hostId }
+      }
+    case AccountType.TEAM:
+      const teamId = await Promise.all([getTeamIdByUserId(userId)])
+      return {
+        props: { isLoggedIn: false, session: null, accountType: AccountType.TEAM, id: teamId }
+      }
   }
   return {
     props: { isLoggedIn: true, session: session }
   }
 }
-export default Home;
+export default LandingPage;

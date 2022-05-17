@@ -17,6 +17,8 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { AccountType } from '../lib/models/accountType'
+import { getHostIdByUserId } from '../lib/handlers/hosts'
+import { getTeamIdByUserId } from '../lib/handlers/teams'
 
 
 const NewHost: NextPage = () => {
@@ -100,22 +102,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!session) {
         return getSessionServerSideResult(sessionWrapper)
     }
-    const id = session.user.id
+    const userId = session.user.id
     switch (session.user.account_type) {
-        // incorrect account type
         case AccountType.ADMIN:
             return serverSideRedirectTo('/admin-requests')
         case AccountType.TEAM:
-            return serverSideRedirectTo(`/teams/98/profile`)
+            const teamId = await Promise.all([getTeamIdByUserId(userId)])
+            return serverSideRedirectTo(teamId ? `/teams/${teamId}/profile` : `/`)
         case AccountType.HOST:
-            return serverSideRedirectTo(`/hosts/${session.user.id}/profile`)
-        case undefined:
-            return serverSideRedirectTo('/')
+            const hostId = await Promise.all([getHostIdByUserId(userId)])
+            return serverSideRedirectTo(hostId ? `/teams/${hostId}/profile` : `/`)
         case null:
             return serverSideRedirectTo('/new-team')
     }
     // already signed in, redirect
-    return serverSideRedirectTo('/team-profile') //BENNETTTODO
+    return serverSideRedirectTo('/')
 }
 
 export default NewHost

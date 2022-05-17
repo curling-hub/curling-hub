@@ -6,7 +6,7 @@ import moment from 'moment'
 import * as DbModels from '../db_model'
 
 import type { Category, TeamInfo } from '../models'
-import type { TeamCreationForm, TeamMember } from '../models/team'
+import type { TeamAdmin, TeamCreationForm, TeamMember } from '../models/team'
 import type { TeamMatch, TeamRanking, TeamWithMembersAndRatings } from '../models/teams'
 import { AccountType } from '../models/accountType'
 import { getCurrentSettings } from './rating'
@@ -238,4 +238,15 @@ export async function createTeam(form: TeamCreationForm): Promise<any> {
         return team.toJSON()
     })
     return result
+}
+
+export async function getTeamIdByUserId(userId: string): Promise<number | null> {
+    const result = await DbModels.TeamAdminModel.findOne({
+        attributes: ['teamId'],
+        where: {
+            userId: userId
+        },
+        raw: true,
+    })
+    return result ? result.teamId : result
 }

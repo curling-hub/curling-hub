@@ -13,7 +13,7 @@ const fetchIceSheets = (_hostId) => {
     return [ 'Left', 'Right', 'Middle' ]
 }
 
-const host = { hostId: 'host 1', organization: 'Curly Inc', website: null, iceSheets: fetchIceSheets() }
+const host = { hostId: 1, organization: 'Curly Inc', website: null, iceSheets: fetchIceSheets() }
 
 
 it('Renders add match fields that are selectable', () => {
@@ -30,7 +30,7 @@ it('Renders add match fields that are selectable', () => {
                         team2: '1',
                         matchResult: 'Win',
                         date: '2022-04-07',
-                        location: 'host 1',
+                        location: '1',
                         sheetOfIce: 'Right',
                         comments: 'Coming from cypress test',
                     })

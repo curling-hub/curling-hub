@@ -16,23 +16,28 @@ import { TeamRanking } from '../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { sequelize } from '../lib/db'
 import Footer from "../components/footer/footer";
+import { AccountType } from '../lib/models/accountType'
+import AdminLayout from '../components/layouts/AdminLayout'
+import HostLayout from '../components/layouts/HostLayout'
 
 interface RatingsProps {
     user?: Session,
     categories: Category[],
     rankings: TeamRanking[]
+    accountType?: AccountType,
+    id?: number | null
 }
 
 function useWindowDimensions() {
 
     const hasWindow = typeof window !== 'undefined';
-    
+
     function getWindowDimensions() {
         const width = hasWindow ? window.innerWidth : null;
         const height = hasWindow ? window.innerHeight : null;
         return {
-        width,
-        height,
+            width,
+            height,
         };
     }
 
@@ -41,25 +46,45 @@ function useWindowDimensions() {
     }
 
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-    
+
     useEffect(() => {
         if (hasWindow) {
             window.addEventListener('resize', handleResize);
             return () => window.removeEventListener('resize', handleResize);
         }
-    }, [hasWindow]);
-    
+    }, [hasWindow, handleResize]);
+
     return windowDimensions;
 }
-  
+
+function ratingsPageLayout(accountType?: AccountType, id?: number | null) {
+    switch (accountType) {
+        case AccountType.ADMIN:
+            return <AdminLayout />
+        case AccountType.HOST:
+            return <HostLayout hostId={id} />
+        case AccountType.TEAM:
+            return <TeamLayout teamId={id} />
+        default:
+            return <StandardLayout />
+    }
+}
+
 
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
-    const {height, width} = useWindowDimensions()
+    const {
+        user,
+        categories,
+        rankings,
+        accountType,
+        id,
+    } = props
+    const { height, width } = useWindowDimensions()
     const isSmallScreen = width && width < 750 ? true : false
     const [mounted, setMounted] = useState(false)
     useEffect(() => { setMounted(true) }, [])
     const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 3) : 10
-    
+
     return (
         <>
             <Head>
@@ -71,49 +96,27 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                 minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                {
-                    mounted && !isSmallScreen && props.user &&
+                {mounted && !isSmallScreen &&
                     <>
-                        <TeamLayout/>
+                        {ratingsPageLayout(accountType, id)}
                         <RatingsBox
-                            categories={props.categories}
-                            teamRanking={props.rankings}
+                            categories={categories}
+                            teamRanking={rankings}
                             tableSize={pageNum}
                         />
-                    </>     
+                    </>
                 }
-                {mounted && !isSmallScreen && !props.user &&
+                {mounted && isSmallScreen &&
                     <>
-                        <StandardLayout/>
-                        <RatingsBox
-                            categories={props.categories}
-                            teamRanking={props.rankings}
-                            tableSize={pageNum}
-                        />
-                    </>     
-                }
-                {
-                    mounted && isSmallScreen && props.user &&
-                    <>
-                        <TeamLayout/>
+                        {ratingsPageLayout(accountType, id)}
                         <RatingsBoxSmall
-                            categories={props.categories}
-                            teamRanking={props.rankings}
+                            categories={categories}
+                            teamRanking={rankings}
                             tableSize={pageNum}
                         />
-                    </>     
+                    </>
                 }
-                {mounted && isSmallScreen && !props.user &&
-                    <>
-                        <StandardLayout/>
-                        <RatingsBoxSmall
-                            categories={props.categories}
-                            teamRanking={props.rankings}
-                            tableSize={pageNum}
-                        />
-                    </>    
-                }
-            <Footer />
+                <Footer />
             </Box>
         </>
     )
@@ -143,7 +146,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 session,
-                user: null,
                 categories: categories,
                 rankings: rankings
             },
@@ -154,7 +156,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             session,
-            user: session,
             categories: categories,
             rankings: rankings
         },

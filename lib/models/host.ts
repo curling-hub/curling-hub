@@ -4,8 +4,13 @@ interface user {
     email: string
 }
 
+export interface HostAdmin {
+    hostId: number
+    userId: string
+}
+
 export interface HostInfoBase {
-    hostId: string
+    hostId: number
     organization: string
     website?: string
     phoneNumber: string
@@ -20,7 +25,7 @@ export interface HostInfoBase {
 }
 
 export interface HostCreationForm {
-    hostId: string
+    userId: string
     email: string
     organization: string
     website?: string
@@ -49,8 +54,7 @@ export interface CurrentHostInfo {
 
 export interface HostInfo extends HostInfoBase {
     iceSheets?: string[]
-    user?: user
+    admins?: user[]
     email?: string
 }
-
 

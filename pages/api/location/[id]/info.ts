@@ -13,7 +13,7 @@ export default async function handler(
 ) {
     const { id: host_id } = req.query
     const hostId = Array.isArray(host_id) ? host_id[0] : host_id
-    const hostInfo = await getHostInfoById(hostId)
+    const hostInfo = await getHostInfoById(Number.parseInt(hostId))
     //console.log(hostInfo)
     if (hostInfo === null) {
         res.status(404).json({ data: null })
