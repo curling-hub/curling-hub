@@ -35,7 +35,7 @@ export async function getHostInfoById(hostId: number): Promise<HostInfo | null> 
         },
         attributes: {
             // `getServerSideProps` Cannot serialize date
-            exclude: [ 'updatedAt' ],
+            exclude: ['updatedAt'],
         },
         include: [{
             model: DbModels.IceSheetModel,
@@ -146,19 +146,19 @@ export async function getPendingHosts(): Promise<HostInfo[]> {
         }],
         nest: true
     })
-    
+
     const finalHosts: HostInfo[] = hosts.map((host) => ({
-            email: host.admins?.at(0)?.email || '',
-            hostId: host.hostId,
-            organization: host.organization,
-            website: host.website,
-            phoneNumber: host.phoneNumber,
-            streetAddress: host.streetAddress,
-            city: host.city,
-            state: host.state,
-            zip: host.zip,
-            country: host.country,
-            status: host.status,
+        email: host.admins?.at(0)?.email || '',
+        hostId: host.hostId,
+        organization: host.organization,
+        website: host.website,
+        phoneNumber: host.phoneNumber,
+        streetAddress: host.streetAddress,
+        city: host.city,
+        state: host.state,
+        zip: host.zip,
+        country: host.country,
+        status: host.status,
     }))
     return finalHosts
 }
@@ -176,17 +176,17 @@ export async function getAcceptedHosts(): Promise<HostInfo[]> {
         }],
     })
     const finalHosts: HostInfo[] = hosts.map((host) => ({
-            email: host.admins?.at(0)?.email || '',
-            hostId: host.hostId,
-            organization: host.organization,
-            website: host.website,
-            phoneNumber: host.phoneNumber,
-            streetAddress: host.streetAddress,
-            city: host.city,
-            state: host.state,
-            zip: host.zip,
-            country: host.country,
-            status: host.status,
+        email: host.admins?.at(0)?.email || '',
+        hostId: host.hostId,
+        organization: host.organization,
+        website: host.website,
+        phoneNumber: host.phoneNumber,
+        streetAddress: host.streetAddress,
+        city: host.city,
+        state: host.state,
+        zip: host.zip,
+        country: host.country,
+        status: host.status,
     }))
     return finalHosts
 }
@@ -204,26 +204,37 @@ export async function getRejectedHosts(): Promise<HostInfo[]> {
         }],
     })
     const finalHosts: HostInfo[] = hosts.map((host) => ({
-            email: host.admins?.at(0)?.email || '',
-            hostId: host.hostId,
-            organization: host.organization,
-            website: host.website,
-            phoneNumber: host.phoneNumber,
-            streetAddress: host.streetAddress,
-            city: host.city,
-            state: host.state,
-            zip: host.zip,
-            country: host.country,
-            status: host.status,
+        email: host.admins?.at(0)?.email || '',
+        hostId: host.hostId,
+        organization: host.organization,
+        website: host.website,
+        phoneNumber: host.phoneNumber,
+        streetAddress: host.streetAddress,
+        city: host.city,
+        state: host.state,
+        zip: host.zip,
+        country: host.country,
+        status: host.status,
     }))
     return finalHosts
 }
 
 export async function updateHost(hostId: string, newStatus: string): Promise<number[]> {
-    const rows = await DbModels.HostInfoModel.update({status: sequelize.literal(`'${newStatus}'`)}, {
+    const rows = await DbModels.HostInfoModel.update({ status: sequelize.literal(`'${newStatus}'`) }, {
         where: {
             hostId: hostId
-        }    
+        }
     })
     return rows
+}
+
+export async function getHostIdByUserId(userId: string): Promise<number | null> {
+    const result = await DbModels.HostAdminModel.findOne({
+        attributes: ['hostId'],
+        where: {
+            userId: userId
+        },
+        raw: true,
+    })
+    return result ? result.hostId : result
 }

@@ -10,8 +10,8 @@ import {
 
 import HostLayout from '../../../components/layouts/HostLayout'
 import { HostPending, HostRejected } from '../../../components/host/status'
-import { getSession } from '../../../lib/auth/session'
-import { serverSideRedirectTo } from '../../../lib/auth/redirect'
+import { convertAndVerifyContextId, getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { hostPagesLoggedInRedirects, serverSideRedirectTo } from '../../../lib/auth/redirect'
 import { getHostInfoById, isHostAdmin } from '../../../lib/handlers/hosts'
 import { AccountType } from '../../../lib/models/accountType'
 
@@ -26,7 +26,7 @@ const HostRequestStatusPage: NextPage<HostRequestStatusProps> = (props): JSX.Ele
     return (
         <>
             <Head>
-                <title>Request Pending | Curlo</title>
+                <title>Request Status | Curlo</title>
             </Head>
             <Box
                 position="absolute"
@@ -54,32 +54,23 @@ function getBoxByStatus(status: string): JSX.Element {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const { signedIn, signedUp, session } = await getSession(context)
-    if (!signedIn || !session) {
-        // not signed in
-        return serverSideRedirectTo('/login')
+    const sessionWrapper = await getSession(context)
+    const { signedIn, signedUp, session } = sessionWrapper
+    if (!signedIn || !signedUp || !session) {
+        return getSessionServerSideResult(sessionWrapper)
     }
-    if (!signedUp) {
-        // not signed up
-        return serverSideRedirectTo('/new-host')
+
+    const userId = session.user.id
+    if (session.user.account_type !== AccountType.HOST) {
+        return hostPagesLoggedInRedirects(userId, session.user.account_type)
     }
-    switch (session.user.account_type) {
-        // incorrect account type
-        case AccountType.ADMIN:
-            return serverSideRedirectTo('/admin')
-        case AccountType.TEAM:
-            return serverSideRedirectTo('/team-profile')
-        case undefined:
-        case null:
-            return serverSideRedirectTo('/new-host')
-    }
+
     const { params } = context
-    if (!params?.id) {
+    const hostId = convertAndVerifyContextId(params)
+    if (!hostId) {
         return { notFound: true }
     }
-    const userId = session.user.id
-    const hostIdStr = Array.isArray(params.id) ? params.id[0] : params.id
-    const hostId = Number.parseInt(hostIdStr)
+
     const [hostInfo, hasPermission] = await Promise.all([
         getHostInfoById(hostId),
         isHostAdmin(userId, hostId)
@@ -88,9 +79,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return { notFound: true }
     }
     let status = hostInfo?.status
-    // not pending status
     if (status === 'accepted') {
-        return serverSideRedirectTo('/hosts/profile')
+        return serverSideRedirectTo(`/hosts/${hostId}/profile`)
     } else if (status !== 'rejected' && status !== 'pending') {
         status = 'pending'
     }

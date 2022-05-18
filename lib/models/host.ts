@@ -4,6 +4,11 @@ interface user {
     email: string
 }
 
+export interface HostAdmin {
+    hostId: number
+    userId: string
+}
+
 export interface HostInfoBase {
     hostId: number
     organization: string

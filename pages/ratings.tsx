@@ -1,26 +1,31 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { getSession } from '../lib/auth/session'
-import { Session } from 'next-auth'
+import { getSession, getSessionServerSideResult } from '../lib/auth/session'
 import TeamLayout from '../components/layouts/TeamLayout'
 import StandardLayout from '../components/layouts/StandardLayout'
 import {
-    Box, useMediaQuery
+    Box
 } from '@chakra-ui/react'
 import RatingsBox from '../components/ratings/ratingsBox'
 import RatingsBoxSmall from '../components/ratings/ratingsBoxSmall'
 import { getAllCategories } from '../lib/handlers/categories'
 import { Category } from '../lib/models/category'
-import { getAllRankingsSimple, getRankingsByCategorySimple } from '../lib/handlers/teams'
+import { getRankingsByCategorySimple, getTeamIdByUserId } from '../lib/handlers/teams'
 import { TeamRanking } from '../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { sequelize } from '../lib/db'
 import Footer from "../components/footer/footer";
+import { AccountType } from '../lib/models/accountType'
+import AdminLayout from '../components/layouts/AdminLayout'
+import HostLayout from '../components/layouts/HostLayout'
+import { serverSideRedirectTo } from '../lib/auth/redirect'
+import { getHostIdByUserId } from '../lib/handlers/hosts'
 
 interface RatingsProps {
-    user?: Session,
     categories: Category[],
     rankings: TeamRanking[]
+    accountType?: AccountType,
+    id?: number | null
 }
 
 function useWindowDimensions() {
@@ -51,19 +56,38 @@ function useWindowDimensions() {
 
     return windowDimensions;
 }
-  
+
+function ratingsPageLayout(accountType?: AccountType, id?: number | null) {
+    switch (accountType) {
+        case AccountType.ADMIN:
+            return <AdminLayout />
+        case AccountType.HOST:
+            return <HostLayout hostId={id} />
+        case AccountType.TEAM:
+            return <TeamLayout teamId={id} />
+        default:
+            return <StandardLayout />
+    }
+}
+
 
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
-    const {height, width} = useWindowDimensions()
+    const {
+        categories,
+        rankings,
+        accountType,
+        id,
+    } = props
+    const { height, width } = useWindowDimensions()
     const isSmallScreen = width && width < 750 ? true : false
     const [mounted, setMounted] = useState(false)
     useEffect(() => { setMounted(true) }, [])
     const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 3) : 10
-    
+
     return (
         <>
             <Head>
-                <title>Ratings | curlo</title>
+                <title>Ratings | Curlo</title>
             </Head>
             <Box
                 position="relative"
@@ -71,49 +95,27 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                 minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                {
-                    mounted && !isSmallScreen && props.user &&
+                {mounted && !isSmallScreen &&
                     <>
-                        <TeamLayout/>
+                        {ratingsPageLayout(accountType, id)}
                         <RatingsBox
-                            categories={props.categories}
-                            teamRanking={props.rankings}
+                            categories={categories}
+                            teamRanking={rankings}
                             tableSize={pageNum}
                         />
-                    </>     
+                    </>
                 }
-                {mounted && !isSmallScreen && !props.user &&
+                {mounted && isSmallScreen &&
                     <>
-                        <StandardLayout/>
-                        <RatingsBox
-                            categories={props.categories}
-                            teamRanking={props.rankings}
-                            tableSize={pageNum}
-                        />
-                    </>     
-                }
-                {
-                    mounted && isSmallScreen && props.user &&
-                    <>
-                        <TeamLayout/>
+                        {ratingsPageLayout(accountType, id)}
                         <RatingsBoxSmall
-                            categories={props.categories}
-                            teamRanking={props.rankings}
+                            categories={categories}
+                            teamRanking={rankings}
                             tableSize={pageNum}
                         />
-                    </>     
+                    </>
                 }
-                {mounted && isSmallScreen && !props.user &&
-                    <>
-                        <StandardLayout/>
-                        <RatingsBoxSmall
-                            categories={props.categories}
-                            teamRanking={props.rankings}
-                            tableSize={pageNum}
-                        />
-                    </>    
-                }
-            <Footer />
+                <Footer />
             </Box>
         </>
     )
@@ -127,34 +129,36 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const categories = await getAllCategories()
     const rankings = await getRankingsByCategorySimple(1)
 
-    if (!session || !signedIn) {
-        // not signed in / signed up
+    if (!signedIn) {
         return {
             props: {
-                user: null,
                 categories: categories,
                 rankings: rankings
             }
         }
+    } else if (!signedUp || !session) { //Partially setup account
+        return serverSideRedirectTo('/new-team')
     }
 
-    if (!signedUp) {
-        // has not completed sign up up
-        return {
-            props: {
-                session,
-                user: null,
-                categories: categories,
-                rankings: rankings
-            },
-        }
+    const userId = session.user.id
+    switch (session.user.account_type) {
+        case AccountType.ADMIN:
+            return {
+                props: { categories: categories, rankings: rankings, accountType: AccountType.ADMIN }
+            }
+        case AccountType.HOST:
+            const hostId = await Promise.all([getHostIdByUserId(userId)])
+            return {
+                props: { categories: categories, rankings: rankings, accountType: AccountType.HOST, id: hostId }
+            }
+        case AccountType.TEAM:
+            const teamId = await Promise.all([getTeamIdByUserId(userId)])
+            return {
+                props: { categories: categories, rankings: rankings, accountType: AccountType.TEAM, id: teamId }
+            }
     }
-
-    // signed in, share session with component
     return {
         props: {
-            session,
-            user: session,
             categories: categories,
             rankings: rankings
         },

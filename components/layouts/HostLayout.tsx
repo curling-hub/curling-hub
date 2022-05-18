@@ -1,12 +1,12 @@
 import Header, { LogoutButton } from "../navbar/Navbar"
 import { NavItem } from '../navbar/MobileDrawer'
 
-interface LayoutProps {
-    hostId: number;
+interface HostLayoutProps {
+    hostId?: number | null;
     children?: React.ReactNode;
 }
 
-export default function HostLayout(props: LayoutProps) {
+export default function HostLayout(props: HostLayoutProps) {
     const { children, hostId } = props
     const navItems = getNavItems(hostId)
     const navAnchor = getNavAnchor()
@@ -20,15 +20,15 @@ export default function HostLayout(props: LayoutProps) {
 
 const getNavAnchor = () => LogoutButton
 
-function getNavItems(hostId: number): NavItem[] {
+function getNavItems(hostId?: number | null): NavItem[] {
     const data: NavItem[] = [
         {
             label: "Profile",
-            link: `/hosts/${hostId}/profile`,
+            link: hostId ? `/hosts/${hostId}/profile` : '/',
         },
         {
             label: "Add Match",
-            link: `/hosts/${hostId}/add-match`,
+            link: hostId ? `/hosts/${hostId}/add-match` : '/',
         },
         {
             label: "Ratings",

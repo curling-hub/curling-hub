@@ -6,6 +6,11 @@ export interface TeamInfo {
     rating: string
 }
 
+export interface TeamAdmin {
+    teamId: number
+    userId: string
+}
+
 export interface TeamMember {
     memberId: number
     teamId: number

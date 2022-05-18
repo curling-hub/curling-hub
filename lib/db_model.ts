@@ -6,25 +6,32 @@ import type { AdapterUser } from 'next-auth/adapters'
 
 import { Category, HostInfoBase, TeamInfo, TeamMember } from './models'
 import { MatchResult, MatchResultDetails } from './models/match'
-import { TeamInfoRatings } from './models/team'
+import { TeamAdmin, TeamInfoRatings } from './models/team'
 import { GlickoVariable, RatingPeriod, TeamGlickoInfo } from './models/glicko'
 import { RatingPeriodExt } from './models/teams'
 import { AccountType } from './models/accountType'
+import { HostAdmin } from './models/host'
 
 /**
  * Redefine next-auth's User instance
  */
 interface UserInstance extends
-        Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
+    Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
     account_type?: string
 }
 
+interface HostAdminInstance extends
+    Model<HostAdmin, Partial<HostAdmin>>, HostAdmin { }
+
+interface TeamAdminInstance extends
+    Model<TeamAdmin, Partial<TeamAdmin>>, TeamAdmin { }
+
 interface AccountInstance extends
-        Model<AdapterAccount, Partial<AdapterAccount>>, AdapterAccount {}
+    Model<AdapterAccount, Partial<AdapterAccount>>, AdapterAccount { }
 
 declare module 'next-auth' {
     interface UserInstance extends
-            Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
+        Model<AdapterUser, Partial<AdapterUser>>, AdapterUser {
         account_type?: string
     }
 }
@@ -70,7 +77,7 @@ interface HostInfoInstance extends Model<HostInfoBase, Partial<HostInfoBase>>, H
 
 interface RatingPeriodInstance extends Model<RatingPeriod, Partial<RatingPeriod>>, RatingPeriod { }
 
-interface GlickoVariableInstance extends Model<GlickoVariable, Partial<GlickoVariable>>, GlickoVariable {}
+interface GlickoVariableInstance extends Model<GlickoVariable, Partial<GlickoVariable>>, GlickoVariable { }
 
 
 /**
@@ -125,7 +132,7 @@ export const TeamInfoModel = sequelize.define<TeamInfoInstance>('TeamInfo', {
 })
 
 
-export const TeamAdminModel = sequelize.define('TeamAdmin', {
+export const TeamAdminModel = sequelize.define<TeamAdminInstance>('TeamAdmin', {
     teamId: {
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -324,12 +331,12 @@ export const HostInfoModel = sequelize.define<HostInfoInstance>('HostInfo', {
         allowNull: false,
     },
     status: {
-        type: DataTypes.ENUM<string>('pending','accepted','rejected'),
+        type: DataTypes.ENUM<string>('pending', 'accepted', 'rejected'),
         allowNull: false
     },
     updatedAt: {
-	type: DataTypes.DATE(),
-	defaultValue: DataTypes.NOW(),
+        type: DataTypes.DATE(),
+        defaultValue: DataTypes.NOW(),
     },
 }, {
     tableName: 'host_profile',
@@ -358,7 +365,7 @@ export const IceSheetModel = sequelize.define('Ice Sheet', {
 })
 
 
-export const HostAdminModel = sequelize.define('HostAdmin', {
+export const HostAdminModel = sequelize.define<HostAdminInstance>('HostAdmin', {
     hostId: {
         type: DataTypes.BIGINT,
         primaryKey: true,

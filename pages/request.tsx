@@ -4,11 +4,10 @@ import AuthLayout from '../components/layouts/AuthLayout'
 import Footer from "../components/footer/footer";
 import RequestModal from '../components/modals/RequestModal'
 import {
-    Box, Text, Image, Button, Spacer, Center, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, VStack
+    Box, Text, Image, Button, useDisclosure, VStack
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 const linkTextSize = "12"
-import { Flex } from '@chakra-ui/react';
 
 
 

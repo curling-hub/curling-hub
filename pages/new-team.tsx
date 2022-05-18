@@ -15,10 +15,8 @@ import {
 import NewTeamFields from '../components/newTeam/newTeamFields'
 import type { Category } from '../lib/models'
 import { getAllCategories } from '../lib/handlers/categories'
-import { getHostInfoByUserId } from '../lib/handlers/hosts'
 import { getSession } from '../lib/auth/session'
-import { serverSideRedirectTo } from '../lib/auth/redirect'
-import { AccountType } from '../lib/models/accountType'
+import { authPagesLoggedInRedirects, serverSideRedirectTo } from '../lib/auth/redirect'
 
 
 interface NewTeamProps {
@@ -82,7 +80,9 @@ function NewTeam(props: NewTeamProps) {
         })
 
         if (res.status == 200) {
-            router.push('/team-profile')
+            const data = await res.json()
+            const teamId = data['data']['teamId']
+            router.push(`/teams/${teamId}/profile`)
         } else {
             const result = await res.json()
             alert("error: " + result.error)
@@ -150,30 +150,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const categories = await getAllCategories()
     const { signedIn, signedUp, session } = await getSession(context)
     if (!signedIn || !session) {
-        return serverSideRedirectTo('/login')
+        return serverSideRedirectTo('/signup')
     }
     if (signedUp) {
-        // not signed up (no `account_type`)
-        switch (session.user.account_type) {
-            case AccountType.ADMIN:
-                return serverSideRedirectTo('/admin')
-            case AccountType.TEAM:
-                return serverSideRedirectTo('/team-profile')
-            case AccountType.HOST:
-                const hostInfoList = await getHostInfoByUserId(session.user.id)
-                if (hostInfoList.length !== 0) {
-                    const hostInfo = hostInfoList[0]
-                    const status = hostInfo.status
-                    if (status === 'accepted') {
-                        return serverSideRedirectTo(`/hosts/${hostInfo.hostId}/profile`)
-                    } else {
-                        return serverSideRedirectTo(`/hosts/${hostInfo.hostId}/request`)
-                    }
-                }
-        }
+        return authPagesLoggedInRedirects(session.user.id, session.user.account_type)
     }
     return {
-        props: { categories },
+        props: { categories }
     }
 }
 

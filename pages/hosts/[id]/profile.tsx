@@ -7,15 +7,15 @@ import {
     useMediaQuery
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { getSession } from '../../../lib/auth/session'
+import { convertAndVerifyContextId, getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 import ProfileBox from '../../../components/host/profile/ProfileBox'
 import type { CurrentHostInfo } from '../../../lib/models/host'
 import type { HostMatchResult } from '../../../lib/models/match'
 import { getHostEmailById, getHostInfoById, isHostAdmin } from '../../../lib/handlers/hosts';
 import { getHostMatchesById } from '../../../lib/handlers/matches'
 import { getTeamById } from '../../../lib/handlers/teams';
-import { HostInfoModel } from '../../../lib/db_model';
-import { serverSideRedirectTo } from '../../../lib/auth/redirect';
+import { AccountType } from '../../../lib/models/accountType';
+import { hostPagesLoggedInRedirects, serverSideRedirectTo } from '../../../lib/auth/redirect';
 
 interface HostProfileProps {
     currentHost: CurrentHostInfo
@@ -48,7 +48,7 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
                 <HostLayout hostId={hostId}>
-                    <ProfileBox currentHost={currentHost} hostMatches={hostMatches} hostEmail={hostEmail} />
+                    <ProfileBox currentHost={currentHost} hostMatches={hostMatches} hostEmail={hostEmail} hostId={hostId} />
                 </HostLayout>
                 <Footer />
             </Box >
@@ -57,45 +57,47 @@ const HostProfile: NextPage<HostProfileProps> = (props: HostProfileProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    // Redirect if not authentiated
-    if (!context.params) {
-        return {
-            props: {}
-        }
-    }
-    const { params } = context
-    const id = (Array.isArray(params.id) ? params.id[0] : params.id) || ''
-    const hostId = Number.parseInt(id)
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    if (!signedIn || !session) {
-        return serverSideRedirectTo('/login')
+    if (!signedIn || !signedUp || !session) {
+        return getSessionServerSideResult(sessionWrapper)
     }
-    if (!signedUp) {
-        return serverSideRedirectTo('/new-host')
-    }
+
     const userId = session.user.id
-    const [hostEmail = null, tempHost, hasPermission] = await Promise.all([
+    if (session.user.account_type !== AccountType.HOST) {
+        return hostPagesLoggedInRedirects(userId, session.user.account_type)
+    }
+    const { params } = context
+    const hostId = convertAndVerifyContextId(params)
+    if (!hostId) {
+        return { notFound: true }
+    }
+    const [hostEmail = undefined, hostInfo, hasPermission] = await Promise.all([
         getHostEmailById(hostId),
         getHostInfoById(hostId),
         isHostAdmin(userId, hostId),
     ])
-    if (!tempHost || !hasPermission) {
+    if (!hostInfo || !hasPermission) {
         return { notFound: true }
     }
-    const currentHost: CurrentHostInfo = {
-        organization: tempHost.organization,
-        website: tempHost.website,
-        phoneNumber: tempHost.phoneNumber,
-        streetAddress: tempHost.streetAddress,
-        addressExtras: tempHost.addressExtras,
-        city: tempHost.city,
-        state: tempHost.state,
-        zip: tempHost.zip,
-        country: tempHost.country,
-        iceSheets: tempHost.iceSheets,
+
+    if (hostInfo?.status !== 'accepted') {
+        return serverSideRedirectTo(`/hosts/${hostId}/request`)
     }
-    const tempMatches = await getHostMatchesById(id)
+
+    const currentHost: CurrentHostInfo = {
+        organization: hostInfo.organization,
+        website: hostInfo.website,
+        phoneNumber: hostInfo.phoneNumber,
+        streetAddress: hostInfo.streetAddress,
+        addressExtras: hostInfo.addressExtras,
+        city: hostInfo.city,
+        state: hostInfo.state,
+        zip: hostInfo.zip,
+        country: hostInfo.country,
+        iceSheets: hostInfo.iceSheets,
+    }
+    const tempMatches = await getHostMatchesById(hostId)
     // Format hosts for page and serialization
     const hostMatches = await Promise.all(tempMatches.map(async (match) => {
         const convert: HostMatchResult = {

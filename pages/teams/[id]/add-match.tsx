@@ -10,14 +10,17 @@ import AddMatchFields from '../../../components/profile/addMatch/fields'
 import AddMatchTitle from '../../../components/profile/addMatch/title'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
 import { getAllHosts } from '../../../lib/handlers/hosts'
-import { getAllTeams, getTeamById } from '../../../lib/handlers/teams'
-import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { getAllTeams, getTeamById, isTeamAdmin } from '../../../lib/handlers/teams'
+import { convertAndVerifyContextId, getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { teamPagesLoggedInRedirects } from '../../../lib/auth/redirect'
+import { AccountType } from '../../../lib/models/accountType'
 
 
 interface TeamAddMatchProps {
     hosts?: HostInfo[]
     teams?: TeamInfo[]
     currentTeam: TeamInfo
+    teamId?: number
 }
 
 const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => {
@@ -26,8 +29,9 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
         currentTeam,
         hosts = [],
         teams = [],
+        teamId,
     } = props
-    const [ submissionError, setSubmissionError ] = useState('')
+    const [submissionError, setSubmissionError] = useState('')
     const formOnSubmit = async (values: any) => {
         console.log(values)
         const res = await fetch('/api/team/match/add', {
@@ -40,7 +44,7 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
             setSubmissionError(error)
             return
         }
-        router.push('/team-profile')
+        router.push(`/teams/${teamId}/profile`)
     }
     const fetchIceSheetsByHostId = async (hostId: number): Promise<any[]> => {
         const res = await fetch(`/api/location/${hostId}/info`)
@@ -62,7 +66,7 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
                 h="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <TeamLayout>
+                <TeamLayout teamId={teamId}>
                     <AddMatch>
                         <AddMatchTitle />
                         <AddMatchFields
@@ -87,35 +91,42 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    if (!signedIn || !signedUp) {
+    if (!signedIn || !signedUp || !session) {
         return getSessionServerSideResult(sessionWrapper)
     }
-    // Obtain team id 
-    const { query } = context
-    const { id: _tidString } = query
-    const teamId = Number.parseInt(Array.isArray(_tidString) ? '' : (_tidString || ''))
-    // TODO: redirect on error?
+
+    const userId = session.user.id
+    if (session.user.account_type !== AccountType.TEAM) {
+        return teamPagesLoggedInRedirects(userId, session.user.account_type)
+    }
+
+    const { params } = context
+    const teamId = convertAndVerifyContextId(params)
+    if (!teamId) {
+        return { notFound: true }
+    }
     try {
-        const [ hosts, teams, team ] = await Promise.all([
+        const [hosts, teams, teamInfo, hasPermission] = await Promise.all([
             getAllHosts(),
             getAllTeams(),
             getTeamById(teamId),
+            isTeamAdmin(userId, teamId),
         ])
-        if (team === null) {
+        if (!teamInfo || !hasPermission) {
             return { notFound: true }
         }
-        //console.log({ hosts })
         return {
             props: {
                 hosts,
                 teams,
-                currentTeam: team,
+                currentTeam: teamInfo,
+                teamId,
             },
         }
     } catch (error) {
         console.log(error)
+        throw error
     }
-    return { props: {} }
 }
 
 export default TeamAddMatch

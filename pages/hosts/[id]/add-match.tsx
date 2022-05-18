@@ -11,9 +11,9 @@ import AddMatchTitle from '../../../components/host/addMatch/title'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
 import { getHostInfoById, isHostAdmin } from '../../../lib/handlers/hosts'
 import { getAllTeams } from '../../../lib/handlers/teams'
-import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { convertAndVerifyContextId, getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 import { AccountType } from '../../../lib/models/accountType'
-import { serverSideRedirectTo } from '../../../lib/auth/redirect'
+import { hostPagesLoggedInRedirects, serverSideRedirectTo } from '../../../lib/auth/redirect'
 
 
 interface HostAddMatchProps {
@@ -29,7 +29,7 @@ const HostAddMatchPage: NextPage<HostAddMatchProps> = (props): JSX.Element => {
         hostId,
         teams = [],
     } = props
-    const [ submissionError, setSubmissionError ] = useState('')
+    const [submissionError, setSubmissionError] = useState('')
     const formOnSubmit = async (values: any) => {
         console.log(values)
         const res = await fetch('/api/host/match/add', {
@@ -83,32 +83,32 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!signedIn || !signedUp || !session) {
         return getSessionServerSideResult(sessionWrapper)
     }
-    switch (session.user.account_type) {
-        case AccountType.TEAM:
-            return serverSideRedirectTo('/team-profile')
-    }
-    const { params } = context
-    if (!params) {
-        return { notFound: true }
-    }
-    const idStr = Array.isArray(params.id) ? params.id[0] : params.id
-    if (!idStr) {
-        return { notFound: true }
-    }
-    const hostId = Number.parseInt(idStr)
-    const userId = session.user.id
 
+    const userId = session.user.id
+    if (session.user.account_type !== AccountType.HOST) {
+        return hostPagesLoggedInRedirects(userId, session.user.account_type)
+    }
+
+    const { params } = context
+    const hostId = convertAndVerifyContextId(params)
+    if (!hostId) {
+        return { notFound: true }
+    }
     // TODO: redirect on error?
     try {
-        const [ teams, hostInfo, hasPermission ] = await Promise.all([
+        const [teams, hostInfo, hasPermission] = await Promise.all([
             getAllTeams(),
             getHostInfoById(hostId),
             isHostAdmin(userId, hostId),
         ])
-        if (!hasPermission) {
+        if (!hostInfo || !hasPermission) {
             return { notFound: true }
         }
-        //console.log({ teams, hostInfo })
+
+        if (hostInfo?.status !== 'accepted') {
+            return serverSideRedirectTo(`/hosts/${hostId}/request`)
+        }
+
         return {
             props: {
                 teams,
@@ -118,8 +118,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
     } catch (error) {
         console.log(error)
+        throw error
     }
-    return { props: {} }
 }
 
 
