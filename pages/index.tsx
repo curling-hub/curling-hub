@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { REG_BUTTON_FONT_SIZE, CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from "../components/layouts/StandardLayout";
-import { Box, Button, Text, Flex, Spacer, Link } from "@chakra-ui/react";
+import { Box, Button, Text, Flex, Spacer, Link, propNames } from "@chakra-ui/react";
 import Footer from "../components/footer/footer";
 import { getSession } from '../lib/auth/session'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
@@ -46,6 +46,7 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
         minH="100vh"
         bgGradient="linear-gradient(primary.purple, primary.white)"
       >
+
 
         {session ? landingPageLayout(accountType, id) : <StandardLayout />}
         <Box paddingBottom="4rem">

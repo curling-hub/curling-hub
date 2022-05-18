@@ -2,12 +2,12 @@ import { Box, Grid, Image, Heading, Text, Flex, Container } from '@chakra-ui/rea
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { CONST_BORDER_RADIUS } from "../themes/constants";
-import StandardLayout from '../components/layouts/StandardLayout'
+import TeamLayout from '../components/layouts/TeamLayout'
+import StandardLayout from '../components/layouts/StandardLayout';
 import Footer from '../components/footer/footer';
 import { AccountType } from '../lib/models/accountType';
 import AdminLayout from '../components/layouts/AdminLayout';
 import HostLayout from '../components/layouts/HostLayout';
-import TeamLayout from '../components/layouts/TeamLayout';
 import { serverSideRedirectTo } from '../lib/auth/redirect';
 import { getSession } from '../lib/auth/session'
 import { getHostIdByUserId } from '../lib/handlers/hosts';
