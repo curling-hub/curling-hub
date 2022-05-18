@@ -22,7 +22,8 @@ function aboutPageLayout(accountType?: AccountType, id?: number | null) {
             return <HostLayout hostId={id} />
         case AccountType.TEAM:
             return <TeamLayout teamId={id} />
-
+        default:
+            return <StandardLayout />
     }
 }
 
