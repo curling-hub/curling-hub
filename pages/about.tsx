@@ -12,6 +12,7 @@ import { serverSideRedirectTo } from '../lib/auth/redirect';
 import { getSession } from '../lib/auth/session'
 import { getHostIdByUserId } from '../lib/handlers/hosts';
 import { getTeamIdByUserId } from '../lib/handlers/teams';
+import { useSession } from 'next-auth/react';
 
 function aboutPageLayout(accountType?: AccountType, id?: number | null) {
     switch (accountType) {
@@ -21,8 +22,7 @@ function aboutPageLayout(accountType?: AccountType, id?: number | null) {
             return <HostLayout hostId={id} />
         case AccountType.TEAM:
             return <TeamLayout teamId={id} />
-        default:
-            return <StandardLayout />
+
     }
 }
 
@@ -32,6 +32,7 @@ export interface AboutPageProps {
 }
 
 const About: NextPage<AboutPageProps> = (props: AboutPageProps) => {
+    const { data: session } = useSession()
     const {
         accountType,
         id,
@@ -47,7 +48,7 @@ const About: NextPage<AboutPageProps> = (props: AboutPageProps) => {
                 minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                {aboutPageLayout(accountType, id)}
+                {session ? aboutPageLayout(accountType, id) : <StandardLayout />}
                 <Box
                     paddingBottom="4rem"
                 >

@@ -13,6 +13,7 @@ import { getTeamIdByUserId } from "../lib/handlers/teams";
 import { getHostIdByUserId } from "../lib/handlers/hosts";
 import AdminLayout from "../components/layouts/AdminLayout";
 import HostLayout from "../components/layouts/HostLayout";
+import { useSession } from "next-auth/react";
 
 function landingPageLayout(accountType?: AccountType, id?: number | null) {
   switch (accountType) {
@@ -28,6 +29,8 @@ function landingPageLayout(accountType?: AccountType, id?: number | null) {
 }
 
 const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
+  const { data: session } = useSession()
+
   const {
     accountType,
     id,
@@ -44,7 +47,7 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
         bgGradient="linear-gradient(primary.purple, primary.white)"
       >
 
-        {landingPageLayout(accountType, id)}
+        {session ? landingPageLayout(accountType, id) : <StandardLayout />}
         <Box paddingBottom="4rem">
 
           {/*Card Container Box*/}
