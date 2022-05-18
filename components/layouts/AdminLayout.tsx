@@ -5,7 +5,7 @@ interface LayoutProps {
     children?: React.ReactNode;
 }
 
-export default function TeamLayout({ children }: LayoutProps) {
+export default function AdminLayout({ children }: LayoutProps) {
     const navItems = getNavItems()
     const navAnchor = getNavAnchor()
     return (

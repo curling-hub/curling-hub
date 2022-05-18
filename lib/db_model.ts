@@ -6,7 +6,7 @@ import type { AdapterUser } from 'next-auth/adapters'
 
 import { Category, HostInfoBase, TeamInfo, TeamMember } from './models'
 import { MatchResult, MatchResultDetails } from './models/match'
-import { TeamInfoRatings } from './models/team'
+import { TeamAdmin, TeamInfoRatings } from './models/team'
 import { GlickoVariable, RatingPeriod, TeamGlickoInfo } from './models/glicko'
 import { RatingPeriodExt } from './models/teams'
 import { AccountType } from './models/accountType'
@@ -24,9 +24,7 @@ interface HostAdminInstance extends
     Model<HostAdmin, Partial<HostAdmin>>, HostAdmin { }
 
 interface TeamAdminInstance extends
-    Model<TeamAdmin, Partial<TeamAdmin>>, TeamAdmin {
-    teamId: number | PromiseLike<number>
-}
+    Model<TeamAdmin, Partial<TeamAdmin>>, TeamAdmin { }
 
 interface AccountInstance extends
     Model<AdapterAccount, Partial<AdapterAccount>>, AdapterAccount { }

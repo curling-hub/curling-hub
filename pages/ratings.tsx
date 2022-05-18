@@ -1,17 +1,16 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { getSession } from '../lib/auth/session'
-import { Session } from 'next-auth'
+import { getSession, getSessionServerSideResult } from '../lib/auth/session'
 import TeamLayout from '../components/layouts/TeamLayout'
 import StandardLayout from '../components/layouts/StandardLayout'
 import {
-    Box, useMediaQuery
+    Box
 } from '@chakra-ui/react'
 import RatingsBox from '../components/ratings/ratingsBox'
 import RatingsBoxSmall from '../components/ratings/ratingsBoxSmall'
 import { getAllCategories } from '../lib/handlers/categories'
 import { Category } from '../lib/models/category'
-import { getAllRankingsSimple, getRankingsByCategorySimple } from '../lib/handlers/teams'
+import { getRankingsByCategorySimple, getTeamIdByUserId } from '../lib/handlers/teams'
 import { TeamRanking } from '../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { sequelize } from '../lib/db'
@@ -19,9 +18,10 @@ import Footer from "../components/footer/footer";
 import { AccountType } from '../lib/models/accountType'
 import AdminLayout from '../components/layouts/AdminLayout'
 import HostLayout from '../components/layouts/HostLayout'
+import { serverSideRedirectTo } from '../lib/auth/redirect'
+import { getHostIdByUserId } from '../lib/handlers/hosts'
 
 interface RatingsProps {
-    user?: Session,
     categories: Category[],
     rankings: TeamRanking[]
     accountType?: AccountType,
@@ -73,7 +73,6 @@ function ratingsPageLayout(accountType?: AccountType, id?: number | null) {
 
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
     const {
-        user,
         categories,
         rankings,
         accountType,
@@ -88,7 +87,7 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
     return (
         <>
             <Head>
-                <title>Ratings | curlo</title>
+                <title>Ratings | Curlo</title>
             </Head>
             <Box
                 position="relative"
@@ -130,32 +129,36 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const categories = await getAllCategories()
     const rankings = await getRankingsByCategorySimple(1)
 
-    if (!session || !signedIn) {
-        // not signed in / signed up
+    if (!signedIn) {
         return {
             props: {
-                user: null,
                 categories: categories,
                 rankings: rankings
             }
         }
+    } else if (!signedUp || !session) { //Partially setup account
+        return serverSideRedirectTo('/new-team')
     }
 
-    if (!signedUp) {
-        // has not completed sign up up
-        return {
-            props: {
-                session,
-                categories: categories,
-                rankings: rankings
-            },
-        }
+    const userId = session.user.id
+    switch (session.user.account_type) {
+        case AccountType.ADMIN:
+            return {
+                props: { categories: categories, rankings: rankings, accountType: AccountType.ADMIN }
+            }
+        case AccountType.HOST:
+            const hostId = await Promise.all([getHostIdByUserId(userId)])
+            return {
+                props: { categories: categories, rankings: rankings, accountType: AccountType.HOST, id: hostId }
+            }
+        case AccountType.TEAM:
+            const teamId = await Promise.all([getTeamIdByUserId(userId)])
+            return {
+                props: { categories: categories, rankings: rankings, accountType: AccountType.TEAM, id: teamId }
+            }
     }
-
-    // signed in, share session with component
     return {
         props: {
-            session,
             categories: categories,
             rankings: rankings
         },

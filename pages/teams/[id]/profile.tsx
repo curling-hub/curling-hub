@@ -18,8 +18,10 @@ import MatchesTable from '../../../components/profile/MatchesTable'
 import MembersTable from '../../../components/profile/MembersTable'
 import { TeamMatch, TeamWithMembersAndRatings } from '../../../lib/models/teams'
 import { Category, TeamMember } from "../../../lib/models"
-import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamInfo, getTeamEmailById } from '../../../lib/handlers/teams'
-import { getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamInfo, getTeamEmailById, isTeamAdmin } from '../../../lib/handlers/teams'
+import { convertAndVerifyContextId, getSession, getSessionServerSideResult } from '../../../lib/auth/session'
+import { teamPagesLoggedInRedirects } from '../../../lib/auth/redirect';
+import { AccountType } from '../../../lib/models/accountType';
 
 interface TeamProfileProps {
     teamInfo?: TeamWithMembersAndRatings
@@ -27,6 +29,7 @@ interface TeamProfileProps {
     teamEmail: string
     teamCategories?: Category[]
     teamMembers?: TeamMember[]
+    teamId?: number
 }
 
 const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
@@ -36,7 +39,8 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
         teamMatches = [],
         teamCategories = [],
         teamMembers = [],
-        teamEmail
+        teamEmail,
+        teamId
     } = props
 
     return (
@@ -50,7 +54,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                 minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <TeamLayout />
+                <TeamLayout teamId={teamId} />
                 <Box paddingBottom={"4rem"}>
 
                     <Flex alignItems={{ base: "center", md: "start" }} direction={{ base: "column", md: "row" }}>
@@ -111,7 +115,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                 </Text>
                                 <MatchesTable teamMatches={teamMatches} teamId={teamInfo?.teamId} />
                                 <Box marginTop="63px">
-                                    <Link href="/matches">
+                                    <Link href={`/teams/${teamId}/matches`}>
                                         <ProfileButton buttonText='View Matches' color='primary.green' />
                                     </Link>
                                 </Box>
@@ -127,22 +131,35 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    // Redirect if not authentiated
-    const id = context.params?.id ? Number(context.params.id) : 1
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = sessionWrapper
-    if (!signedIn || !signedUp) {
+    if (!signedIn || !signedUp || !session) {
         return getSessionServerSideResult(sessionWrapper)
     }
+
+    const userId = session.user.id
+    if (session.user.account_type !== AccountType.TEAM) {
+        return teamPagesLoggedInRedirects(userId, session.user.account_type)
+    }
+
+    const { params } = context
+    const teamId = convertAndVerifyContextId(params)
+    if (!teamId) {
+        return { notFound: true }
+    }
+
     try {
-        const [teamInfo, teamMatches, teamContactInfo, teamCategories/* , teamEmail */] = await Promise.all([
-            getTeamInfo(id),
-            getTeamMatches(id),
-            getTeamContactInfo(id),
-            getTeamCategories(id),
-            //getTeamEmailById(id),
+        const [teamInfo, teamMatches, teamContactInfo, teamCategories, hasPermission, teamEmail] = await Promise.all([
+            getTeamInfo(teamId),
+            getTeamMatches(teamId),
+            getTeamContactInfo(teamId),
+            getTeamCategories(teamId),
+            isTeamAdmin(userId, teamId),
+            getTeamEmailById(teamId),
         ])
-        const teamEmail = session?.["user"].email || null
+        if (!teamInfo || !hasPermission) {
+            return { notFound: true }
+        }
         return {
             props: {
                 teamInfo,
@@ -151,14 +168,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 teamCategories,
                 teamMembers: teamInfo?.members || [],
                 teamEmail,
+                teamId,
             }
         }
 
     } catch (error) {
         console.log(error)
-    }
-    return {
-        props: {},
+        throw error
     }
 }
 

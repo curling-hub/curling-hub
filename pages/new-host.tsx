@@ -8,9 +8,7 @@ import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import AuthLayout from '../components/layouts/AuthLayout'
 import NewHostFields from '../components/newHost/newHostFields'
 import Footer from "../components/footer/footer";
-import { serverSideRedirectTo } from '../lib/auth/redirect'
-import { getHostInfoById, getHostInfoByUserId } from '../lib/handlers/hosts'
-import { AccountType } from '../lib/models/accountType'
+import { authPagesLoggedInRedirects, serverSideRedirectTo } from '../lib/auth/redirect'
 import {
     Box,
     Container,
@@ -39,19 +37,19 @@ const NewHost: NextPage = () => {
     const router = useRouter()
 
     const onSubmit = async (values: {
-            organization: string;
-            website: string;
-            phone: string;
-            countryCode: string;
-            address: string;
-            address2: string;
-            city: string;
-            state: string;
-            zip: string;
-            country: string;
-            agreed: boolean;
-            iceSheets: string[];
-            namingScheme: string;
+        organization: string;
+        website: string;
+        phone: string;
+        countryCode: string;
+        address: string;
+        address2: string;
+        city: string;
+        state: string;
+        zip: string;
+        country: string;
+        agreed: boolean;
+        iceSheets: string[];
+        namingScheme: string;
     }) => {
         const body = JSON.stringify(values)
         const res = await fetch('/api/host/create', {
@@ -138,27 +136,10 @@ const NewHost: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { signedIn, signedUp, session } = await getSession(context)
     if (!signedIn || !session) {
-        return serverSideRedirectTo('/login')
+        return serverSideRedirectTo('/signup')
     }
     if (signedUp) {
-        // not signed up (no `account_type`)
-        switch (session.user.account_type) {
-            case AccountType.ADMIN:
-                return serverSideRedirectTo('/admin')
-            case AccountType.TEAM:
-                return serverSideRedirectTo('/team-profile')
-            case AccountType.HOST:
-                const hostInfoList = await getHostInfoByUserId(session.user.id)
-                if (hostInfoList.length !== 0) {
-                    const hostInfo = hostInfoList[0]
-                    const status = hostInfo.status
-                    if (status === 'accepted') {
-                        return serverSideRedirectTo(`/hosts/${hostInfo.hostId}/profile`)
-                    } else {
-                        return serverSideRedirectTo(`/hosts/${hostInfo.hostId}/request`)
-                    }
-                }
-        }
+        return authPagesLoggedInRedirects(session.user.id, session.user.account_type)
     }
     return {
         props: {},

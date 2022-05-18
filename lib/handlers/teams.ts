@@ -250,3 +250,13 @@ export async function getTeamIdByUserId(userId: string): Promise<number | null> 
     })
     return result ? result.teamId : result
 }
+
+export async function isTeamAdmin(userId: string, teamId: number): Promise<boolean> {
+    const result = await DbModels.TeamAdminModel.findOne({
+        where: {
+            userId,
+            teamId,
+        },
+    })
+    return !!result
+}

@@ -4,7 +4,6 @@ import { REG_BUTTON_FONT_SIZE, CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from "../components/layouts/StandardLayout";
 import { Box, Button, Text, Flex, Spacer, Link } from "@chakra-ui/react";
 import Footer from "../components/footer/footer";
-import { useSession } from 'next-auth/react'
 import { getSession } from '../lib/auth/session'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import type { GetServerSideProps } from 'next'
@@ -29,9 +28,7 @@ function landingPageLayout(accountType?: AccountType, id?: number | null) {
 }
 
 const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
-  const { data: session } = useSession()
   const {
-    isLoggedIn,
     accountType,
     id,
   } = props
@@ -151,40 +148,37 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
   );
 };
 export interface LandingPageProps {
-  isLoggedIn: boolean
   accountType?: AccountType
   id?: number | null
 }
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const sessionWrapper = await getSession(context)
-  const { signedIn, signedUp, session } = sessionWrapper
-  !signedIn || !signedUp || !session
-  if (!signedUp && session && signedIn) {// not signed in 
+  const { signedIn, signedUp, session } = await getSession(context)
+
+  if (!signedIn) {
+    return { props: {} }
+  } else if (!signedUp || !session) { //Partially setup account
     return serverSideRedirectTo('/new-team')
-  } else if (!signedIn || !session || !signedUp) { //
-    return {
-      props: { isLoggedIn: false, session: null }
-    }
   }
+
   const userId = session.user.id
   switch (session.user.account_type) {
     case AccountType.ADMIN:
       return {
-        props: { isLoggedIn: false, session: null, accountType: AccountType.ADMIN }
+        props: { accountType: AccountType.ADMIN }
       }
     case AccountType.HOST:
       const hostId = await Promise.all([getHostIdByUserId(userId)])
       return {
-        props: { isLoggedIn: false, session: null, accountType: AccountType.HOST, id: hostId }
+        props: { accountType: AccountType.HOST, id: hostId }
       }
     case AccountType.TEAM:
       const teamId = await Promise.all([getTeamIdByUserId(userId)])
       return {
-        props: { isLoggedIn: false, session: null, accountType: AccountType.TEAM, id: teamId }
+        props: { accountType: AccountType.TEAM, id: teamId }
       }
   }
   return {
-    props: { isLoggedIn: true, session: session }
+    props: {}
   }
 }
 export default LandingPage;

@@ -1,11 +1,41 @@
 import { Box, Grid, Image, Heading, Text, Flex, Container } from '@chakra-ui/react'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from '../components/layouts/StandardLayout'
 import Footer from '../components/footer/footer';
+import { AccountType } from '../lib/models/accountType';
+import AdminLayout from '../components/layouts/AdminLayout';
+import HostLayout from '../components/layouts/HostLayout';
+import TeamLayout from '../components/layouts/TeamLayout';
+import { serverSideRedirectTo } from '../lib/auth/redirect';
+import { getSession } from '../lib/auth/session'
+import { getHostIdByUserId } from '../lib/handlers/hosts';
+import { getTeamIdByUserId } from '../lib/handlers/teams';
 
-const About: NextPage = () => {
+function aboutPageLayout(accountType?: AccountType, id?: number | null) {
+    switch (accountType) {
+        case AccountType.ADMIN:
+            return <AdminLayout />
+        case AccountType.HOST:
+            return <HostLayout hostId={id} />
+        case AccountType.TEAM:
+            return <TeamLayout teamId={id} />
+        default:
+            return <StandardLayout />
+    }
+}
+
+export interface AboutPageProps {
+    accountType?: AccountType
+    id?: number | null
+}
+
+const About: NextPage<AboutPageProps> = (props: AboutPageProps) => {
+    const {
+        accountType,
+        id,
+    } = props
     return (
         <>
             <Head>
@@ -17,7 +47,7 @@ const About: NextPage = () => {
                 minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <StandardLayout />
+                {aboutPageLayout(accountType, id)}
                 <Box
                     paddingBottom="4rem"
                 >
@@ -112,6 +142,37 @@ const About: NextPage = () => {
             </Box>
         </>
     )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const { signedIn, signedUp, session } = await getSession(context)
+
+    if (!signedIn) {
+        return { props: {} }
+    } else if (!signedUp || !session) { //Partially setup account
+        return serverSideRedirectTo('/new-team')
+    }
+
+    const userId = session.user.id
+    switch (session.user.account_type) {
+        case AccountType.ADMIN:
+            return {
+                props: { accountType: AccountType.ADMIN }
+            }
+        case AccountType.HOST:
+            const hostId = await Promise.all([getHostIdByUserId(userId)])
+            return {
+                props: { accountType: AccountType.HOST, id: hostId }
+            }
+        case AccountType.TEAM:
+            const teamId = await Promise.all([getTeamIdByUserId(userId)])
+            return {
+                props: { accountType: AccountType.TEAM, id: teamId }
+            }
+    }
+    return {
+        props: {}
+    }
 }
 
 export default About

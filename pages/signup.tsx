@@ -5,11 +5,10 @@ import { useEffect, useState } from 'react'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import AuthLayout from '../components/layouts/AuthLayout'
-import NewHostFields from '../components/newHost/newHostFields'
 import SignupFields from '../components/signup/signupBox'
 import Footer from "../components/footer/footer";
 import { getSession } from '../lib/auth/session'
-import { serverSideRedirectTo } from '../lib/auth/redirect'
+import { authPagesLoggedInRedirects, serverSideRedirectTo } from '../lib/auth/redirect'
 import {
     Box,
     Container,
@@ -101,17 +100,14 @@ const Signup: NextPage = () => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const sessionWrapper = await getSession(context)
-    const { signedIn, signedUp } = sessionWrapper
+    const { signedIn, signedUp, session } = await getSession(context)
     if (!signedIn) {
         return { props: {} }
-    }
-    if (!signedUp) {
-        // has not completed sign up
+    } else if (!signedUp || !session) { //Partially setup account
         return serverSideRedirectTo('/new-team')
     }
-    // already signed in, redirect
-    return serverSideRedirectTo('/team-profile')
+
+    return authPagesLoggedInRedirects(session.user.id, session.user.account_type)
 }
 
 export default Signup

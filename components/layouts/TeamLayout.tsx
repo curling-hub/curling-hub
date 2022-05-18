@@ -24,15 +24,15 @@ function getNavItems(teamId?: number | null): NavItem[] {
     const data: NavItem[] = [
         {
             label: "My Team",
-            link: teamId ? `/hosts/${teamId}/profile` : '/',
+            link: teamId ? `/teams/${teamId}/profile` : '/',
         },
         {
             label: "Add Match",
-            link: teamId ? `/hosts/${teamId}/add-match` : '/',
+            link: teamId ? `/teams/${teamId}/add-match` : '/',
         },
         {
             label: "Matches",
-            link: teamId ? `/hosts/${teamId}/matches` : '/',
+            link: teamId ? `/teams/${teamId}/matches` : '/',
         },
         {
             label: "Ratings",

@@ -5,20 +5,16 @@ import { useEffect, useState } from 'react'
 import TermsOfServiceModal from '../components/modals/TermsOfServiceModal'
 import PrivacyPolicyModal from '../components/modals/PrivacyPolicyModal'
 import AuthLayout from '../components/layouts/AuthLayout'
-import NewHostFields from '../components/newHost/newHostFields'
 import LoginFields from '../components/login/LoginBox'
 import Footer from "../components/footer/footer";
-import { getSession, getSessionServerSideResult } from '../lib/auth/session'
-import { serverSideRedirectTo } from '../lib/auth/redirect'
+import { getSession } from '../lib/auth/session'
+import { authPagesLoggedInRedirects, serverSideRedirectTo } from '../lib/auth/redirect'
 import {
     Box,
     Container,
     Flex,
     useDisclosure,
 } from '@chakra-ui/react'
-import { AccountType } from '../lib/models/accountType'
-import { getHostIdByUserId } from '../lib/handlers/hosts'
-import { getTeamIdByUserId } from '../lib/handlers/teams'
 
 
 const NewHost: NextPage = () => {
@@ -90,33 +86,14 @@ const NewHost: NextPage = () => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const sessionWrapper = await getSession(context)
-    const { signedIn, signedUp, session } = sessionWrapper
+    const { signedIn, signedUp, session } = await getSession(context)
     if (!signedIn) {
         return { props: {} }
-    }
-    if (!signedUp) {
-        // has not completed sign up
+    } else if (!signedUp || !session) { //Partially setup account
         return serverSideRedirectTo('/new-team')
     }
-    if (!session) {
-        return getSessionServerSideResult(sessionWrapper)
-    }
-    const userId = session.user.id
-    switch (session.user.account_type) {
-        case AccountType.ADMIN:
-            return serverSideRedirectTo('/admin-requests')
-        case AccountType.TEAM:
-            const teamId = await Promise.all([getTeamIdByUserId(userId)])
-            return serverSideRedirectTo(teamId ? `/teams/${teamId}/profile` : `/`)
-        case AccountType.HOST:
-            const hostId = await Promise.all([getHostIdByUserId(userId)])
-            return serverSideRedirectTo(hostId ? `/teams/${hostId}/profile` : `/`)
-        case null:
-            return serverSideRedirectTo('/new-team')
-    }
-    // already signed in, redirect
-    return serverSideRedirectTo('/')
+
+    return authPagesLoggedInRedirects(session.user.id, session.user.account_type)
 }
 
 export default NewHost
