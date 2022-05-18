@@ -80,12 +80,8 @@ const Fields = (props: FieldsProps): JSX.Element => {
         value: t.teamId,
         label: t.name,
     }))
-    {/*}   const team2Options = teams
-       .filter((teams:TeamSelectOptions) => teams.value !== team1.teamId)
-       .map((teams:TeamSelectOptions) => ({value: teams.teamId, label: teams.name})) */}
 
-
-    const iceSheetsOptions = [...iceSheets, 'other'].map((iceSheet) => ({
+    const iceSheetsOptions = [...iceSheets, 'N/A'].map((iceSheet) => ({
         value: iceSheet,
         label: iceSheet,
     }))

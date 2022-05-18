@@ -109,9 +109,9 @@ const Fields = (props: FieldsProps): JSX.Element => {
         value: h.hostId,
         label: h.organization,
     }))
-    hostOptions.push({ value: 0, label: 'other' })
+    hostOptions.push({ value: 0, label: 'N/A' })
     const getIceSheetsOptions = (iceSheets: any[]) => (
-        [...iceSheets, 'other'].map((iceSheet: string) => ({
+        [...iceSheets, 'N/A'].map((iceSheet: string) => ({
             value: iceSheet,
             label: iceSheet,
         }))
@@ -254,10 +254,10 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             <Box w={{ base: "100%", md: "30%" }}>
                                 <Field name="sheetOfIce">
                                     {({ field, form }: FieldProps) => (
-                                        <FormControl isInvalid={(values.location && values.location != 'other') && form.errors.sheetOfIce != undefined && form.touched.sheetOfIce != undefined}>
+                                        <FormControl isInvalid={(values.location && values.location != 'N/A') && form.errors.sheetOfIce != undefined && form.touched.sheetOfIce != undefined}>
                                             <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
                                             <Select<IceSheetSelectOptions>
-                                                isDisabled={!values.location || values.location === 'other' || fetchingIceSheets}
+                                                isDisabled={!values.location || values.location === 'N/A' || fetchingIceSheets}
                                                 options={getIceSheetsOptions(iceSheets)}
                                                 placeholder="Ice sheet"
                                                 closeMenuOnSelect
