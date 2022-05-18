@@ -9,12 +9,14 @@ import {
 import TeamRatingsBox from '../../../components/teamRatings/teamRatingsBox'
 import TeamRatingsBoxSmall from '../../../components/teamRatings/teamRatingsBoxSmall'
 import { getTeamMatches, isTeamAdmin } from '../../../lib/handlers/teams'
+import { getSessionServerSideResult } from '../../../lib/auth/session'
+import { AccountType } from '../../../lib/models/accountType'
+import TeamRatingsBoxMobile from '../../../components/teamRatings/teamRatingsBoxMobile'
 import type { TeamMatch } from '../../../lib/models/teams'
 import { useEffect, useState } from 'react'
 import { Filter } from '../../../lib/models/match'
-import { getSessionServerSideResult } from '../../../lib/auth/session'
+import Footer from '../../../components/footer/footer'
 import { serverSideRedirectTo, teamPagesLoggedInRedirects } from '../../../lib/auth/redirect'
-import { AccountType } from '../../../lib/models/accountType'
 
 const filters = [
     { filter_id: 1, value: "Most Recent" },
@@ -31,11 +33,43 @@ interface TeamRatingsProps {
     teamId: number,
 }
 
+function useWindowDimensions() {
+
+    const hasWindow = typeof window !== 'undefined';
+
+    function getWindowDimensions() {
+        const width = hasWindow ? window.innerWidth : null;
+        const height = hasWindow ? window.innerHeight : null;
+        return {
+            width,
+            height,
+        };
+    }
+
+    function handleResize() {
+        setWindowDimensions(getWindowDimensions());
+    }
+
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+    useEffect(() => {
+        if (hasWindow) {
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }
+    }, [hasWindow, handleResize]);
+
+    return windowDimensions;
+}
+
 const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
-    const { teamId } = props
-    const [isSmallScreen] = useMediaQuery("(max-width: 768px)")
+    const { user, filters, matches, teamId } = props
+    const { height, width } = useWindowDimensions()
+    const isSmallScreen = width && width < 880 ? true : false
+    const isMobileScreen = width && width < 680 ? true : false
     const [mounted, setMounted] = useState(false)
     useEffect(() => { setMounted(true) }, [])
+    const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 2) : 10
 
     return (
         <>
@@ -45,31 +79,47 @@ const TeamRatings: NextPage<TeamRatingsProps> = (props: TeamRatingsProps) => {
             <Box
                 position="absolute"
                 w="100%"
-                h="100vh"
+                minH="100%"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                {
-                    mounted && !isSmallScreen &&
-                    <TeamLayout teamId={teamId}>
-                        <TeamRatingsBox
-                            teamMatches={props.matches}
-                            filters={filters}
-                            tableSize={10}
-                            teamId={teamId}
-                        />
-                    </TeamLayout>
-                }
-                {
-                    mounted && isSmallScreen &&
-                    <TeamLayout>
-                        <TeamRatingsBoxSmall
-                            teamMatches={props.matches}
-                            filters={filters}
-                            tableSize={8}
-                            teamId={teamId}
-                        />
-                    </TeamLayout>
-                }
+                <Box
+                    paddingBottom="4rem"
+                >
+                    {
+                        mounted && isMobileScreen && isSmallScreen &&
+                        <TeamLayout teamId={teamId}>
+                            <TeamRatingsBoxMobile
+                                teamMatches={matches}
+                                filters={filters}
+                                tableSize={pageNum}
+                                teamId={teamId}
+                            />
+                        </TeamLayout>
+                    }
+                    {
+                        mounted && !isMobileScreen && isSmallScreen &&
+                        <TeamLayout teamId={teamId}>
+                            <TeamRatingsBoxSmall
+                                teamMatches={props.matches}
+                                filters={filters}
+                                tableSize={pageNum}
+                                teamId={teamId}
+                            />
+                        </TeamLayout>
+                    }
+                    {
+                        mounted && !isMobileScreen && !isSmallScreen &&
+                        <TeamLayout teamId={teamId}>
+                            <TeamRatingsBox
+                                teamMatches={props.matches}
+                                filters={filters}
+                                tableSize={pageNum}
+                                teamId={teamId}
+                            />
+                        </TeamLayout>
+                    }
+                </Box>
+                <Footer />
             </Box>
         </>
     )

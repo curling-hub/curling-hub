@@ -30,13 +30,17 @@ export default function ProfileBox(props: ProfileBoxProps) {
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
                         <HostInfoBox currentHost={currentHost} hostEmail={hostEmail} />
-                        <ProfileButton buttonText='Edit' color='primary.gray' />
+                        <Box marginTop="63px">
+                            <ProfileButton buttonText='Edit' color='primary.gray' />
+                        </Box>
                     </SideBySideContainer>
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
                         <HostMatchesBox hostMatches={hostMatches} />
                         <Link href={`/hosts/${hostId}/matches`}>
-                            <ProfileButton buttonText='Edit Matches' color='primary.green' />
+                            <Box marginTop="63px">
+                                <ProfileButton buttonText='Edit Matches' color='primary.green' />
+                            </Box>
                         </Link>
                     </SideBySideContainer>
                     <Spacer />

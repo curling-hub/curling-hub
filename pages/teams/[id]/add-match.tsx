@@ -105,7 +105,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!teamId) {
         return { notFound: true }
     }
-    // TODO: redirect on error?
     try {
         const [hosts, teams, teamInfo, hasPermission] = await Promise.all([
             getAllHosts(),

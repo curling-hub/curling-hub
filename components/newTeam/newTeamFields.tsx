@@ -73,7 +73,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
     ])
 
     let newTeamSchema = object({
-        team: string().required("Team name is required").max(255),
+        team: string().required("Enter the team name").max(255),
         curler1: string().required("Curler one is required").max(255),
         curler2: string().required("Curler two is required").max(255),
         gameMode: string().required(),
@@ -95,7 +95,7 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                 value: number(),
                 label: string().required()
             })).min(1, "Please select at least one category"),
-        agreed: boolean().required().isTrue("Agreeing to terms of service and privacy policy is required to make an account")
+        agreed: boolean().required().isTrue("Please agree to the terms of service and privacy policy")
     });
 
     const groupedOptions = categories
@@ -324,10 +324,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                                 colorScheme="teal"
                                                 onChange={props.handleChange('agreed')}
                                                 css={`
-                                                > span:first-of-type {
-                                                    box-shadow: unset;
-                                                }
-                                            `}
+                                               > span:first-of-type {
+                                                   box-shadow: unset;
+                                               }
+                                           `}
                                             />
                                             <Text fontSize="12">
                                                 {" "}I agree to the {" "}
@@ -374,3 +374,6 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         </Formik>
     )
 }
+
+
+
