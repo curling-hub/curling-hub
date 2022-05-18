@@ -9,7 +9,12 @@ import {
     Divider,
     IconButton,
     Input,
-    HStack
+    HStack,
+    TableContainer,
+    Table,
+    Thead,
+    Td,
+    Tr
 } from '@chakra-ui/react'
 import {
     AiOutlineLeft,
@@ -67,10 +72,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     // use this to filter
     function filterMatches(selected: number) {  
         if (selected == 1) {
-            const dates = [...fixedRankings].sort((m1, m2) => {
-                return (new Date(m1.date).getTime() + new Date(m2.date).getTime())
-            })
-            setDisplayedRankings(dates)
+            setDisplayedRankings(fixedRankings)
         } 
         else if (selected == 2) {
             const dates = [...fixedRankings].sort((m1, m2) => {
@@ -104,139 +106,86 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
 
     return (
         <>
-            <Container maxW="2xl" centerContent>
+            <Box
+                backgroundColor="primary.white"
+                display='flex'
+                flexDirection='column'
+                boxShadow='lg'
+                alignItems="center"
+                borderRadius="35px"
+                maxW="100%"
+                minH='70vh'
+                textAlign="center"
+                marginLeft='4rem'
+                marginRight='4rem'
+                marginTop='2rem'
+            >
+                <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+                    Matches
+                </Text>
                 <Box
-                    minW="sm"
-                    maxW={{ base: "sm", md: "none" }}
-                    w="100vh"
-                    h="80vh"
-                    my="4"
-                    borderRadius="20"
-                    bg="white"
-                    shadow="md"
+                    w='80%'
+                    justifyContent='start'
                 >
-                    <Grid
-                        templateColumns='repeat(10, 1fr)'
-                        templateRows='repeat(10, 1fr)'
-                        h="100%"
+                    <HStack
+                        spacing='2rem'
                     >
-                        <GridItem
-                            colSpan={10}
+                        <Select
+                            name='category-dropdown'
+                            borderRadius='20px'
+                            variant='filled'
+                            color='black'
+                            bg='gray.300'
+                            w='100%'
+                            onChange={(e) => {
+                                filterMatches(parseInt(e.target.value))
+                            }}
                         >
-                            <Flex
-                                flexDirection="row"
-                                justify='center'
-                            >
-                                <Text
-                                    fontSize="4xl"
-                                    fontWeight='bold'
-                                >
-                                    Matches
-                                </Text>
-                            </Flex>
-                        </GridItem>
-                        <GridItem
-                            colSpan={10}
+                            {
+                                filters.map((filter) => {
+                                    return (
+                                        <option key={filter.filter_id} value={filter.filter_id}>{filter.value}</option>
+                                    )
+                                })
+                            }
+                        </Select>
+                        <Input
+                            name='search-bar'
+                            borderRadius='20px'
+                            w='200%'
+                            placeholder="Search table..."
+                            onChange={(e: any) => search(e.target.value)}
+                        />
+                    </HStack>
+                    <Box 
+                        minH='50vh'
+                    >
+                        <TableContainer
+                            aria-label='table'
+                            marginTop="5px"
+                            width='100%'
                         >
-                            <Grid
-                                templateColumns='repeat(10, 1fr)'
+                            <Table
+                                variant='simple'
+                                size='sm'
                             >
-                                <GridItem
-                                    colSpan={2}
-                                    colStart={2}
-                                >
-                                    <Select
-                                        name='category-dropdown'
-                                        borderRadius='20px'
-                                        variant='filled'
-                                        color='black'
-                                        bg='gray.300'
-                                        onChange={(e) => {
-                                            filterMatches(parseInt(e.target.value))
-                                        }}
-                                    >
-                                        {
-                                            filters.map((filter) => {
-                                                return (
-                                                    <option key={filter.filter_id} value={filter.filter_id}>{filter.value}</option>
-                                                )
-                                            })
-                                        }
-                                    </Select>
-                                </GridItem>
-                                <GridItem
-                                    colSpan={5}
-                                    colStart={5}
-                                >
-                                    <Input
-                                        name='search-bar'
-                                        borderRadius='20px'
-                                        placeholder="Search table..."
-                                        onChange={(e: any) => search(e.target.value)}
-                                    >
-                                    </Input>
-                                </GridItem>
-                            </Grid>
-                        </GridItem>
-                        <GridItem
-                            rowSpan={7}
-                            colSpan={8}
-                            colStart={2}
-                        >
-                            <Grid
-                                templateColumns='repeat(20, 1fr)'
-                            >
-                                <GridItem
-                                    colStart={1}
-                                >
-                                    <Text fontWeight='bold'>Date</Text>
-                                </GridItem>
-                                <GridItem
-                                    colStart={3}
-                                >
-                                    <Text fontWeight='bold'>Outcome</Text>
-                                </GridItem>
-                                <GridItem
-                                    colStart={5}
-                                >
-                                    <Text fontWeight='bold'>Opponent</Text>
-                                </GridItem>
-                                <GridItem
-                                    colStart={7}
-                                    colSpan={3}
-                                >
-                                    <Text fontWeight='bold'>Location</Text>
-                                </GridItem>
-                                <GridItem
-                                    colStart={12}
-                                    colSpan={4}
-                                >
-                                    <Text fontWeight='bold'>Sheet of ice</Text>
-                                </GridItem>
-                                <GridItem
-                                    colStart={16}
-                                    colSpan={4}
-                                >
-                                    <Text fontWeight='bold'>Comment</Text>
-                                </GridItem>
-                                { Children.toArray(pages[pageIndex]?.map((match, index) => (
-                                    <>
-                                        <GridItem
-                                            colStart={1}
-                                            colSpan={20}
+                                <Thead textAlign='center'>
+                                    <Tr>
+                                        <Td fontWeight="bold">Date</Td>
+                                        <Td fontWeight="bold">Outcome</Td>
+                                        <Td fontWeight="bold">Opponent</Td>
+                                        <Td fontWeight="bold">Location</Td>
+                                        <Td fontWeight="bold">Sheet of ice</Td>
+                                        <Td fontWeight="bold">Comment</Td>
+                                    </Tr>
+                                    { Children.toArray(pages[pageIndex]?.map((match, index) => 
+                                        <Tr
+                                            key={index}
                                         >
-                                            <Divider orientation='horizontal' />
-                                        </GridItem>
-                                        <GridItem
-                                            colStart={1}
-                                        >
-                                            <Text>{match.date}</Text>
-                                        </GridItem>
-                                        {
-                                            matchResultToString(teamId, match) === 'Win' && 
-                                            <GridItem
-                                                colStart={3}
-                                            >
+                                            <Td>{match.date}</Td>
+                                            <Td>
+                                            {
+                                                matchResultToString(teamId, match) == 'Win' &&
                                                 <Flex 
                                                     direction='row'
                                                 >
@@ -244,18 +193,15 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                         spacing='5px'
                                                     >
                                                         <AiOutlineCheck
+                                                            key={'arrow'}
                                                             style={{color: 'green'}}
                                                         />
                                                         <Text>{matchResultToString(teamId, match)}</Text>
                                                     </HStack>
                                                 </Flex>
-                                            </GridItem>
-                                        }
-                                        {
-                                            matchResultToString(teamId, match) === 'Loss' && 
-                                            <GridItem
-                                                colStart={3}
-                                            >
+                                            }
+                                            {
+                                                matchResultToString(teamId, match) == 'Loss' &&
                                                 <Flex 
                                                     direction='row'
                                                 >
@@ -263,18 +209,15 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                         spacing='5px'
                                                     >
                                                         <AiOutlineClose
+                                                            key={'arrow'}
                                                             style={{color: 'red'}}
                                                         />
                                                         <Text>{matchResultToString(teamId, match)}</Text>
                                                     </HStack>
                                                 </Flex>
-                                            </GridItem>
-                                        }
-                                        {
-                                            matchResultToString(teamId, match) === 'Tie' && 
-                                            <GridItem
-                                                colStart={3}
-                                            >
+                                            }
+                                            {
+                                                matchResultToString(teamId, match) == 'Tie' &&
                                                 <Flex 
                                                     direction='row'
                                                 >
@@ -282,96 +225,62 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                         spacing='5px'
                                                     >
                                                         <MdHorizontalRule
+                                                            key={'arrow'}
                                                             style={{color: 'blue'}}
                                                         />
                                                         <Text>{matchResultToString(teamId, match)}</Text>
                                                     </HStack>
                                                 </Flex>
-                                            </GridItem>
-                                        }
-                                        <GridItem
-                                            colStart={5}
-                                        >
-                                            <Text>{matchResultOpponentTeamName(teamId, match)}</Text>
-                                        </GridItem>
-                                        <GridItem
-                                            colStart={7}
-                                            colSpan={5}
-                                        >
-                                            <Text>{match.host.organization}</Text>
-                                        </GridItem>
-                                        <GridItem
-                                            colStart={12}
-                                            colSpan={3}
-                                        >
-                                            <Text>{match.sheetOfIce}</Text>
-                                        </GridItem>
-                                        <GridItem
-                                            colStart={16}
-                                            colSpan={4}
-                                        >
-                                            <Text>{match.comments}</Text>
-                                        </GridItem>
-                                    </>
-                            ))) }
-                            </Grid>
-                           
-                        </GridItem>
-                        <GridItem
-                            colSpan={10}
-                        >
-                            <Grid
-                                templateColumns='repeat(20, 1fr)'
+                                            }
+                                            </Td>
+                                            <Td>{matchResultOpponentTeamName(teamId, match)}</Td>
+                                            <Td>{match.host.organization}</Td>
+                                            <Td>{match.sheetOfIce}</Td>
+                                            <Td>{match.comments}</Td>
+                                        </Tr>
+                                    ))
+                                    }
+                                </Thead>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                    { pages.length > 1 &&
+                            <Box
+                                aria-label="Page navigation " 
+                                display='flex'
+                                flexDirection='row'
+                                justifyContent='space-between'
+                                w='100%'
+                                marginBottom='5px'
                             >
-                                <GridItem
-                                    colStart={2}
-                                    colSpan={3}
-                                    justifyContent='center'
-                                >
-                                    <Flex
-                                        flexDirection="column"
-                                        justifyContent="center"
-                                        h='100%'
-                                    >
-                                        <Text
-                                            fontWeight='bold'
-                                            justifyItems='center'
-                                        >
-                                            {pageIndex+1} of {pageCount}
-                                        </Text>
-                                    </Flex>
-                                </GridItem>
-                                <GridItem
-                                    colStart={18}
-                                >
+                                <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
+                                
+                                <HStack
+                                    spacing={2}
+                                >   
                                     <IconButton
-                                        aria-label='page-left'
-                                        icon={<AiOutlineLeft />}
-                                        onClick={() => {
-                                            if (pageIndex + 1 > 1) {
-                                                setPageIndex(pageIndex-1)
-                                            }
-                                        }}
+                                            aria-label='page-left'
+                                            icon={<AiOutlineLeft />}
+                                            onClick={() => {
+                                                if (pageIndex + 1 > 1) {
+                                                    setPageIndex(pageIndex-1)
+                                                }
+                                            }}
                                     />
-                                </GridItem>
-                                <GridItem
-                                    colStart={19}
-                                >
                                     <IconButton
-                                        aria-label='page-right'
-                                        icon={<AiOutlineRight />}
-                                        onClick={() => {
-                                            if (pageIndex + 1 < pageCount) {
-                                                setPageIndex(pageIndex+1)
-                                            }
-                                        }}
+                                            aria-label='page-right'
+                                            icon={<AiOutlineRight />}
+                                            onClick={() => {
+                                                if (pageIndex + 1 < pageCount) {
+                                                    setPageIndex(pageIndex+1)
+                                                }
+                                            }}
                                     />
-                                </GridItem>
-                            </Grid>
-                        </GridItem>
-                    </Grid>
+                                </HStack>
+                            </Box>
+                        }
                 </Box>
-            </Container>
+            </Box>
         </>
     )
 }

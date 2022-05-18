@@ -72,7 +72,6 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
     const router = useRouter()
 
     const helperTextFontSize = "12";
-
     return (
         <Formik
             initialValues={getFormInitialValues()}
@@ -96,7 +95,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             onChange={props.handleChange('organization')}
                                             id="organization"
                                         />
-                                        <FormErrorMessage>Organization is a required field</FormErrorMessage>
+                                        <FormErrorMessage>{form.errors.organization}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
@@ -113,7 +112,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             onChange={props.handleChange('website')}
                                             id="website"
                                         />
-                                        <FormErrorMessage>Website is required and must start with https://</FormErrorMessage>
+                                        <FormErrorMessage>{form.errors.website}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
@@ -131,7 +130,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             >
                                                 <option>+1</option>
                                             </Select>
-                                            <FormErrorMessage>Country code is required</FormErrorMessage>
+                                            <FormErrorMessage>{form.errors.countryCode}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
@@ -150,7 +149,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 onChange={props.handleChange('phone')}
                                                 id="phone"
                                             />
-                                            <FormErrorMessage>Phone number is required</FormErrorMessage>
+                                            <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
@@ -168,7 +167,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             onChange={props.handleChange('address')}
                                             id="address"
                                         />
-                                        <FormErrorMessage>Address is required</FormErrorMessage>
+                                        <FormErrorMessage>{form.errors.address}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
@@ -203,7 +202,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 onChange={props.handleChange('city')}
                                                 id="city"
                                             />
-                                            <FormErrorMessage>City is Required</FormErrorMessage>
+                                            <FormErrorMessage>{form.errors.city}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
@@ -277,7 +276,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 <option value='WI'>Wisconsin</option>
                                                 <option value='WY'>Wyoming</option>
                                             </Select>
-                                            <FormErrorMessage>State is required</FormErrorMessage>
+                                            <FormErrorMessage>{form.errors.state}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
@@ -292,11 +291,13 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 borderRadius="full"
                                                 focusBorderColor="green.400"
                                                 shadow="sm"
+                                                maxLength={5}
+                                                //   minLength={5}
                                                 placeholder="Zipcode"
                                                 onChange={props.handleChange('zip')}
                                                 id="zip"
                                             />
-                                            <FormErrorMessage>Zipcode is required</FormErrorMessage>
+                                            <FormErrorMessage>{form.errors.zip}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
@@ -312,7 +313,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             >
                                                 <option value='USA'>USA</option>
                                             </Select>
-                                            <FormErrorMessage>Country is required</FormErrorMessage>
+                                            <FormErrorMessage>{form.errors.country}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
@@ -339,6 +340,8 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                             }
                                         }
                                     />
+                                    <FormErrorMessage>{form.errors.iceSheetCount}</FormErrorMessage>
+
                                 </FormControl>
                             )}
                         </Field>
@@ -372,10 +375,10 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 borderRadius="50%"
                                                 colorScheme="teal"
                                                 css={`
-                                                    > span:first-of-type {
-                                                        box-shadow: unset;
-                                                    }
-                                                `}
+                                                   > span:first-of-type {
+                                                       box-shadow: unset;
+                                                   }
+                                               `}
                                             />
                                             <FormLabel htmlFor="agreed">
                                                 <Text fontSize={helperTextFontSize}>
@@ -390,7 +393,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 </Text>
                                             </FormLabel>
                                         </HStack>
-                                        <FormErrorMessage>Agreeing to terms of service and privacy policy is required to make an account</FormErrorMessage>
+                                        <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
@@ -408,12 +411,18 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                             Request Account
                         </Button>
                         <VStack w="100%">
-                            <Text fontSize={helperTextFontSize}>
-                                Not a host?{" "}
-                                <NextLink href="/new-host" passHref>
-                                    <ChakraLink><b>Team Sign Up</b></ChakraLink>
-                                </NextLink>
-                            </Text>
+
+                            <Link href="/new-team" passHref>
+                                <a>
+                                    <Button
+                                        type="button"
+                                        variant="link"
+                                        size="xs"
+                                    >
+                                        Not a host? Team sign up
+                                    </Button>
+                                </a>
+                            </Link>
                         </VStack>
                     </VStack>
                 </Form>
@@ -435,3 +444,5 @@ const getIceSheetsSelectionOptions = (): IceSheetSelectOptions[] => {
     const iceSheetOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     return iceSheetOptions.map((option) => ({ label: `${option}`, value: option }))
 }
+
+
