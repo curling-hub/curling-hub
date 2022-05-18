@@ -2,10 +2,14 @@ import { Box, Grid, Image, Heading, Text, Flex, Container } from '@chakra-ui/rea
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { CONST_BORDER_RADIUS } from "../themes/constants";
-import StandardLayout from '../components/layouts/StandardLayout'
+import TeamLayout from '../components/layouts/TeamLayout'
+import StandardLayout from '../components/layouts/StandardLayout';
 import Footer from '../components/footer/footer';
-
-const About: NextPage = () => {
+import { useSession } from 'next-auth/react'
+import { getSession } from '../lib/auth/session'
+import type { GetServerSideProps } from 'next'
+const About: NextPage<loggedInProps> = (isLoggedIn: loggedInProps) => {
+    const { data: session } = useSession()
     return (
         <>
             <Head>
@@ -17,7 +21,7 @@ const About: NextPage = () => {
                 minH="100vh"
                 bgGradient="linear-gradient(primary.purple, primary.white)"
             >
-                <StandardLayout />
+                {session ? <TeamLayout /> : <StandardLayout />}
                 <Box
                     paddingBottom="4rem"
                 >
@@ -114,4 +118,19 @@ const About: NextPage = () => {
     )
 }
 
-export default About
+export interface loggedInProps {
+    isLoggedIn: boolean
+}
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getSession(context)
+    const { signedIn } = session
+    if (!signedIn) {// not signed in 
+        return {
+            props: { isLoggedIn: false, session: null }
+        }
+    }
+    return {
+        props: { isLoggedIn: true, session: session }
+    }
+}
+export default About;
