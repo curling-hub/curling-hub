@@ -2,17 +2,43 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { REG_BUTTON_FONT_SIZE, CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from "../components/layouts/StandardLayout";
-import { Box, Button, Text, Flex, Spacer, Link } from "@chakra-ui/react";
+import { Box, Button, Text, Flex, Spacer, Link, propNames } from "@chakra-ui/react";
 import Footer from "../components/footer/footer";
 import { useSession } from 'next-auth/react'
 import { getSession } from '../lib/auth/session'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import type { GetServerSideProps } from 'next'
 import TeamLayout from '../components/layouts/TeamLayout'
+import HostLayout from "../components/layouts/HostLayout";
+import AdminLayout from "../components/layouts/AdminLayout"
+import { AccountType } from "../lib/models/accountType";
+import { getHostInfoById, isHostAdmin } from "../lib/handlers/hosts";
+import { getAllTeams } from "../lib/handlers/teams";
+
+export interface loggedInProps {
+  isLoggedIn: boolean
+  accountType: string
+  id: number
+}
+
+function getNavType(id: number, accountType: string) {
+  if (accountType == 'host') {
+    return <HostLayout hostId={id} />
+  }
+  else if (accountType == 'admin') {
+    return <AdminLayout />
+  }
+  else if (accountType == 'team') {
+    return <TeamLayout />
+  }
+}
 
 
-const Home: NextPage<loggedInProps> = (isLoggedIn: loggedInProps) => {
+const Home: NextPage<loggedInProps> = (props: loggedInProps) => {
   const { data: session } = useSession()
+
+
+
   return (
     <>
       <Head>
@@ -24,8 +50,9 @@ const Home: NextPage<loggedInProps> = (isLoggedIn: loggedInProps) => {
         minH="100vh"
         bgGradient="linear-gradient(primary.purple, primary.white)"
       >
+        {session ? getNavType(props.id, props.accountType) : <StandardLayout />}
 
-        {session ? <TeamLayout /> : <StandardLayout />}
+
         <Box paddingBottom="4rem">
 
           {/*Card Container Box*/}
@@ -128,19 +155,72 @@ const Home: NextPage<loggedInProps> = (isLoggedIn: loggedInProps) => {
     </>
   );
 };
-export interface loggedInProps {
-  isLoggedIn: boolean
-}
+
+
+
+
+
+
+
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context)
-  const { signedIn } = session
+  const { signedIn, signedUp, session } = await getSession(context)
+  if (!session) {
+    return serverSideRedirectTo('/login')
+  }
+  //const accountType: string = session.user.account_type as string
+
   if (!signedIn) {// not signed in 
     return {
-      props: { isLoggedIn: false, session: null }
+      props: { isLoggedIn: false, session: null, accountType: null }
     }
   }
-  return {
-    props: { isLoggedIn: true, session: session }
+  else {
+    const { params } = context
+    if (!params) {
+      return { notFound: true }
+    }
+    const idStr = Array.isArray(params.id) ? params.id[0] : params.id
+    if (!idStr) {
+      return { notFound: true }
+    }
+    const hostId = Number.parseInt(idStr)
+    const userId = session.user.id
+    // TODO: redirect on error?
+    try {
+      const [teams, hostInfo, hasPermission] = await Promise.all([
+        getAllTeams(),
+        getHostInfoById(hostId),
+        isHostAdmin(userId, hostId),
+      ])
+      if (!hasPermission) {
+        return { notFound: true }
+      }
+      //console.log({ teams, hostInfo })
+
+      if (session.user.account_type == AccountType.ADMIN) {
+        return {
+          props: { isLoggedIn: true, session: session, accountType: 'admin' }
+        }
+      }
+
+      else if (session.user.account_type == AccountType.TEAM) {
+        return {
+          props: { isLoggedIn: true, session: session, accountType: 'team' }
+        }
+      }
+
+      else if (session.user.account_type == AccountType.HOST) {
+        return {
+          props: { isLoggedIn: true, session: session, accountType: 'host', id: hostId }
+        }
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+    return { props: {} }
   }
 }
+
 export default Home;
