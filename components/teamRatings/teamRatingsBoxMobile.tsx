@@ -91,6 +91,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                 const outcome = matchResultToString(teamId, match)
                 return outcome === 'Loss'
             })
+            console.log(losses)
             setDisplayedRankings(losses)
         }
         else {
@@ -114,11 +115,11 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                 maxW="100%"
                 minH='70vh'
                 textAlign="center"
-                marginLeft='4rem'
-                marginRight='4rem'
-                marginTop='2rem'
+                marginLeft='1rem'
+                marginRight='1rem'
+                marginTop='1rem'
             >
-                <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+                <Text fontSize="1.5rem" marginTop="5px" fontWeight="bold">
                     Matches
                 </Text>
                 <Box
@@ -129,6 +130,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                         spacing='2rem'
                     >
                         <Select
+                            size='sm'
                             name='category-dropdown'
                             borderRadius='20px'
                             variant='filled'
@@ -148,6 +150,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                             }
                         </Select>
                         <Input
+                            size='sm'
                             name='search-bar'
                             borderRadius='20px'
                             w='200%'
@@ -169,7 +172,6 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                             >
                                 <Thead textAlign='center'>
                                     <Tr>
-                                        <Td fontWeight="bold">Date</Td>
                                         <Td fontWeight="bold">Outcome</Td>
                                         <Td fontWeight="bold">Opponent</Td>
                                     </Tr>
@@ -177,7 +179,6 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                         <Tr
                                             key={index}
                                         >
-                                            <Td>{match.date}</Td>
                                             <Td>
                                             {
                                                 matchResultToString(teamId, match) == 'Win' &&
