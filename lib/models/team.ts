@@ -3,7 +3,6 @@ import { TeamGlickoInfo } from "./glicko"
 export interface TeamInfo {
     teamId: number
     name: string
-    rating: string
 }
 
 export interface TeamAdmin {

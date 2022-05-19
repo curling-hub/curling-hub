@@ -6,7 +6,6 @@ import type { TeamMember } from './team'
 export interface TeamInfo {
     teamId: number
     name: string
-    rating: string
 }
 
 export interface TeamContactInfo {
