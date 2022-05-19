@@ -222,10 +222,7 @@ export async function createTeam(form: TeamCreationForm): Promise<any> {
         const current_glicko = await getCurrentSettings();
         const team = await DbModels.TeamInfoModel.create({
             name: form.name,
-            rating: current_glicko?.defaultRating.toString(),
-        }, {
-            transaction: t,
-        })
+        }, { transaction: t })
 
         // 3. Add team admin
         await DbModels.TeamAdminModel.create({

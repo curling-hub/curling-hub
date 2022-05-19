@@ -123,9 +123,6 @@ export const TeamInfoModel = sequelize.define<TeamInfoInstance>('TeamInfo', {
         type: DataTypes.STRING(255),
         allowNull: false,
     },
-    rating: {
-        type: DataTypes.STRING(255),
-    },
 }, {
     tableName: 'team_profile',
     timestamps: false,
