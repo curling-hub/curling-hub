@@ -32,7 +32,7 @@ export default function MobileDrawer({ data }: MobileDrawerProps) {
             >
                 <VStack alignItems="left">
                     {data.map((item, i) => (
-                        <Link key={i} href="/" passHref>
+                        <Link key={`${i}`} href={item.link} passHref>
                             <a>
                                 <Button variant='text'> {item.label} </Button>
                             </a>
