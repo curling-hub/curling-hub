@@ -13,14 +13,11 @@ export default function MatchesBox(props: MatchesBoxProps) {
         <>
             <Box
                 background={props.color}
-                alignItems="center"
                 padding="1rem"
                 borderRadius={CONST_BORDER_RADIUS}
                 boxShadow={props.boxShadow}
-                maxH="100%"
-                w="100%"
                 minW={props.minW}
-                height={{ base: "900px", md: "1022px" }}
+                height={{ base: "46%", md: "1022px" }}
                 textAlign="center"
                 top="0"
             >

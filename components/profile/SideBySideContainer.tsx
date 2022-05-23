@@ -21,7 +21,6 @@ export default function SideBySideContainer(props: SideBySideContainerProps) {
                 maxW="605px"
                 minW={props.minW}
                 height={props.height}
-                textAlign="center"
                 top="0"
                 shadow={props.shadow}
             >
