@@ -4,11 +4,11 @@ import {
     Tbody,
     Tr,
     Td,
-    TableCaption,
     TableContainer,
     HStack,
     Text,
-    Flex,
+    Link,
+    Box
 } from "@chakra-ui/react"
 import {
     AiOutlineCheck,
@@ -37,67 +37,80 @@ export default function MatchesTable(props: MatchesTableProps) {
 
     return (
         <>
-            <TableContainer h={{ base: "61.9%", md: "78%" }}>
-                <Table variant='simple' size="sm" whiteSpace="normal">
-                    <Thead>
-                        <Tr>
-                            <Td fontWeight="bold">Date</Td>
-                            <Td fontWeight="bold">Outcome</Td>
-                            <Td fontWeight="bold">Opponent</Td>
-                            {/* <Td fontWeight="bold">Category</Td> */}
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {displayMatches.map((match) => (
-                            <Tr key={`${match.matchId}`}>
-                                <Td>{match.date}</Td>
-                                {/* <Td>{match.date}</Td> */}
-                                {
-                                    matchResultToString(teamId || 0, match) === 'Win' &&
-                                    <>
-                                        <Td>
-                                            <HStack>
-                                                <AiOutlineCheck
-                                                    style={{ color: 'green' }}
-                                                />
-                                                <Text>{matchResultToString(teamId || 0, match)}</Text>
-                                            </HStack>
-                                        </Td>
-                                    </>
-                                }
-                                {
-                                    matchResultToString(teamId || 0, match) === 'Loss' &&
-                                    <>
-                                        <Td>
-                                            <HStack>
-                                                <AiOutlineClose
-                                                    style={{ color: 'red' }}
-                                                />
-                                                <Text>{matchResultToString(teamId || 0, match)}</Text>
-                                            </HStack>
-                                        </Td>
-                                    </>
-                                }
-                                {
-                                    matchResultToString(teamId || 0, match) === 'Tie' &&
-                                    <>
-                                        <Td>
-                                            <HStack>
-                                                <MdHorizontalRule
-                                                    style={{ color: 'blue' }}
-                                                />
-                                                <Text>{matchResultToString(teamId || 0, match)}</Text>
-                                            </HStack>
-                                        </Td>
-                                    </>
-                                }
-                                <Td>{matchResultOpponentTeamName(teamId || 0, match)}</Td>
-                                {/* <Td>{match.category}</Td> */}
+            {!(teamMatches.length === 0) &&
+                (<TableContainer h={{ base: "62%", md: "78%" }}>
+                    <Table variant='simple' size="sm" whiteSpace="normal">
+                        <Thead>
+                            <Tr>
+                                <Td fontWeight="bold">Date</Td>
+                                <Td fontWeight="bold">Outcome</Td>
+                                <Td fontWeight="bold">Opponent</Td>
+                                {/* <Td fontWeight="bold">Category</Td> */}
                             </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
-            </TableContainer>
+                        </Thead>
+                        <Tbody>
+                            {displayMatches.map((match) => (
+                                <Tr key={`${match.matchId}`}>
+                                    <Td>{match.date}</Td>
+                                    {/* <Td>{match.date}</Td> */}
+                                    {
+                                        matchResultToString(teamId || 0, match) === 'Win' &&
+                                        <>
+                                            <Td>
+                                                <HStack>
+                                                    <AiOutlineCheck
+                                                        style={{ color: 'green' }}
+                                                    />
+                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                </HStack>
+                                            </Td>
+                                        </>
+                                    }
+                                    {
+                                        matchResultToString(teamId || 0, match) === 'Loss' &&
+                                        <>
+                                            <Td>
+                                                <HStack>
+                                                    <AiOutlineClose
+                                                        style={{ color: 'red' }}
+                                                    />
+                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                </HStack>
+                                            </Td>
+                                        </>
+                                    }
+                                    {
+                                        matchResultToString(teamId || 0, match) === 'Tie' &&
+                                        <>
+                                            <Td>
+                                                <HStack>
+                                                    <MdHorizontalRule
+                                                        style={{ color: 'blue' }}
+                                                    />
+                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                </HStack>
+                                            </Td>
+                                        </>
+                                    }
+                                    <Td>{matchResultOpponentTeamName(teamId || 0, match)}</Td>
+                                    {/* <Td>{match.category}</Td> */}
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </TableContainer>)
+            }
+            {teamMatches.length === 0 &&
+                (
+                    <Box
+                        h={{ base: "48%", md: "72%" }}
+                    >
+                        <Text marginTop="60px">
+                            No matches Found: <Link href={teamId ? `/teams/${teamId}/add-match` : '/'} fontWeight="bold">Add Match</Link>
+                        </Text>
+                    </Box>
+                )
+            }
         </>
     );
 }

@@ -36,7 +36,7 @@ export default function ProfileBox(props: ProfileBoxProps) {
                     </SideBySideContainer>
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
-                        <HostMatchesBox hostMatches={hostMatches} />
+                        <HostMatchesBox hostMatches={hostMatches} hostId={hostId} />
                         <Link href={`/hosts/${hostId}/matches`}>
                             <Box marginTop="63px">
                                 <ProfileButton buttonText='Edit Matches' color='primary.green' />
