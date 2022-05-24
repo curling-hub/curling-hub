@@ -23,14 +23,14 @@ export default async function handler(
         const { email, id } = session.user
 
         const form = await hostSignupSchema.validate(req.body)
-        const phone = phoneUtil.parse(form.phone, form.countryCode)
+        const phoneRaw = phoneUtil.parse(form.phone, form.countryCode)
 
         // TODO: use yup validation
         const hostCreationForm: HostCreationForm = {
             ...form,
             email: email as string,
             userId: id,
-            phoneNumber: phoneUtil.format(phone, PNF.E164),
+            phoneNumber: phoneUtil.format(phoneRaw, PNF.E164),
             streetAddress: form.address,
             addressExtras: form.address2,
         }
