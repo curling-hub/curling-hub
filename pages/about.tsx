@@ -166,7 +166,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { signedIn, signedUp, session } = await getSession(context)
 
     if (!signedIn) {
-        return { props: {} }
+        return { props: { regStatus: true } }
     } else if ((!signedUp || !session) && !(session && session.user.account_type == AccountType.HOST)) { //Partially setup account
         return serverSideRedirectTo('/new-team')
     }

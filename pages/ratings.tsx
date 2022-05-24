@@ -152,10 +152,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { signedUp, signedIn, session } = await getSession(context)
     const categories = await getAllCategories()
     const rankings = await getRankingsByCategorySimple(1)
-
+    
     if (!signedIn) {
         return {
             props: {
+                regStatus: true,
                 categories: categories,
                 rankings: rankings
             }
@@ -163,7 +164,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } else if ((!signedUp || !session) && !(session && session.user.account_type == AccountType.HOST)) { //Partially setup account
         return serverSideRedirectTo('/new-team')
     }
-
+    
     const userId = session.user.id
     switch (session.user.account_type) {
         case AccountType.ADMIN:
@@ -173,7 +174,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         case AccountType.HOST:
             const hostId = await Promise.all([getHostIdByUserId(userId)])
             const setUpComplete = signedUp && session
-            console.log(setUpComplete)
             return {
                 props: { regStatus: setUpComplete, categories: categories, rankings: rankings, accountType: AccountType.HOST, id: hostId }
             }
