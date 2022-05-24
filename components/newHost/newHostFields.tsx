@@ -350,8 +350,16 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                 <FormControl>
                                     <RadioGroup
                                         {...field}
-                                        onChange={() => {
-                                            form.values.iceSheets = []
+                                        id="namingScheme"
+                                        onChange={(nextValue: string) => {
+                                            form.values.namingScheme = nextValue
+                                            const startingChar = nextValue === 'ABC' ? 'A' : '1'
+                                            const startingCode = startingChar.charCodeAt(0)
+                                            const iceSheets = form.values.iceSheets
+                                            form.values.iceSheets = Array(iceSheets.length)
+                                                .fill(0)
+                                                .map((_, i) => String.fromCharCode(startingCode + i))
+                                            form.validateField("namingScheme")
                                         }}
                                     >
                                         <Stack direction="row">
