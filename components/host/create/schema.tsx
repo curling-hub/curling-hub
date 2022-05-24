@@ -10,6 +10,7 @@ const hostSignupSchema = yup.object({
     countryCode: yup.string().required('Enter a country code'),
     phone: yup
         .string()
+        .required('Enter a phone number')
         .test('is-phone-valid', 'Enter a valid phone number', function (value) {
             let countryCode = this.parent.countryCode
             try {
@@ -21,8 +22,7 @@ const hostSignupSchema = yup.object({
                 console.log(err)
                 return false
             }
-        })
-        .required('Enter a phone number'),
+        }),
     address: yup.string().required('Enter the hosts address'),
     address2: yup.string().optional(),
     city: yup.string().required('Enter the city'),
