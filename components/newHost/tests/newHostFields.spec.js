@@ -17,7 +17,7 @@ it('New Host Page', () => {
     cy.get('#organization').type('Husky')
     cy.get('#website').type('https://example.com')
     cy.get('#countryCode').select('+1')
-    cy.get('#phone').type('(555) 555-5555')
+    cy.get('#phone').type('(503) 555-5555')
     cy.get('#address').type('55th Ave')
     cy.get('#city').type('New York City')
     cy.get('#state').select('New York')
