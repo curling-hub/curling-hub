@@ -32,6 +32,7 @@ export default async function handler(
             userId: id,
             phoneNumber: phoneUtil.format(phone, PNF.E164),
             streetAddress: form.address,
+            addressExtras: form.address2,
         }
         console.log(hostCreationForm)
         const host = await createHost(hostCreationForm)
