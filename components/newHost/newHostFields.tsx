@@ -128,7 +128,7 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                                                 placeholder="Country Code"
                                                 id="countryCode"
                                             >
-                                                <option>+1</option>
+                                                <option value='US'>+1</option>
                                             </Select>
                                             <FormErrorMessage>{form.errors.countryCode}</FormErrorMessage>
                                         </FormControl>
