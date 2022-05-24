@@ -411,18 +411,12 @@ const NewHostFields = (props: NewHostFieldsProps): JSX.Element => {
                             Request Account
                         </Button>
                         <VStack w="100%">
-
-                            <Link href="/new-team" passHref>
-                                <a>
-                                    <Button
-                                        type="button"
-                                        variant="link"
-                                        size="xs"
-                                    >
-                                        Not a host? Team sign up
-                                    </Button>
-                                </a>
-                            </Link>
+                            <Text fontSize={helperTextFontSize}>
+                                Not a host?{" "}
+                                <NextLink href="/new-team" passHref>
+                                    <ChakraLink><b>Team Sign Up</b></ChakraLink>
+                                </NextLink>
+                            </Text>
                         </VStack>
                     </VStack>
                 </Form>
