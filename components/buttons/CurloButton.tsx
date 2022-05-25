@@ -1,24 +1,29 @@
 import { Button } from "@chakra-ui/react";
 import { REG_BUTTON_FONT_SIZE } from "../../themes/constants";
 
-interface ProfileButtonProps {
+interface CurloButtonProps {
     buttonText?: string;
     color?: string;
+    isSubmitting?: boolean;
     top?: string;
+    type?: "submit";
 }
 
-export default function ProfileButton(props: ProfileButtonProps) {
+export default function CurloButton(props: CurloButtonProps) {
     return (
         <>
             <Button
+                padding="25px 30px"
+                type={props.type}
+                isFullWidth
+                disabled={props.isSubmitting}
                 background={props.color}
                 borderRadius="full"
                 boxShadow="md"
-                padding="25px 30px"
                 fontSize={REG_BUTTON_FONT_SIZE}
-                w="64%"
                 top={props.top}
-                _focus={{ shadow: "dark-lg" }}
+                _hover={{ bg: "green.400" }}
+                _active={{ bg: "green.400" }}
             >
                 {props.buttonText}
             </Button>

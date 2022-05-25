@@ -13,11 +13,8 @@ import {
     FormControl,
     FormLabel,
     Grid,
-    HStack,
     Input,
     Select as ChakraSelect,
-    Stack,
-    Spacer,
     Textarea,
     VStack,
     useRadioGroup,
@@ -31,6 +28,7 @@ import {
 import schema from './schema'
 import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
+import { REG_BUTTON_FONT_SIZE } from '../../../themes/constants'
 
 
 const getInitialValues = (otherFields: any = {}) => ({
@@ -290,13 +288,16 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             )}
                         </Field>
                         <Button
+                            padding="25px 30px"
+                            boxShadow="md"
                             type="submit"
                             isFullWidth
+                            fontSize={REG_BUTTON_FONT_SIZE}
                             borderRadius="full"
                             bg="primary.green"
                             disabled={isSubmitting}
                             _hover={{ bg: "green.400" }}
-                            _active={{ bg: "green.600" }}
+                            _active={{ bg: "green.400" }}
                         >
                             Add Match Result
                         </Button>

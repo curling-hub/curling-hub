@@ -37,11 +37,9 @@ export default function ProfileBox(props: ProfileBoxProps) {
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
                         <HostMatchesBox hostMatches={hostMatches} />
-                        <Link href={`/hosts/${hostId}/matches`}>
-                            <Box marginTop="63px">
-                                <ProfileButton buttonText='Edit Matches' color='primary.green' />
-                            </Box>
-                        </Link>
+                        <Box marginTop="63px">
+                            <ProfileButton buttonText='Edit Matches' color='primary.green' />
+                        </Box>
                     </SideBySideContainer>
                     <Spacer />
                 </Flex>
