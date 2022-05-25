@@ -10,7 +10,7 @@ import HostLayout from '../components/layouts/HostLayout';
 import TeamLayout from '../components/layouts/TeamLayout';
 import { serverSideRedirectTo } from '../lib/auth/redirect';
 import { getSession } from '../lib/auth/session'
-import { getHostIdByUserId } from '../lib/handlers/hosts';
+import { getHostIdByUserId, getHostInfoByUserId } from '../lib/handlers/hosts';
 import { getTeamIdByUserId } from '../lib/handlers/teams';
 import StatusBanner from '../components/host/status/statusBanner';
 import RequestModal from '../components/modals/RequestModal';
@@ -43,7 +43,7 @@ const About: NextPage<AboutPageProps> = (props: AboutPageProps) => {
     } = props
 
     const [showStatusModal, setShowStatusModal] = useState(false)
-    const [showBanner, setShowBanner] = useState(!regStatus)
+    const [showBanner, setShowBanner] = useState(regStatus)
     
     return (
         <>
@@ -166,8 +166,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { signedIn, signedUp, session } = await getSession(context)
 
     if (!signedIn) {
-        return { props: { regStatus: true } }
-    } else if ((!signedUp || !session) && !(session && session.user.account_type == AccountType.HOST)) { //Partially setup account
+        return { props: { regStatus: false } }
+    } else if (!signedUp || !session) { //Partially setup account
         return serverSideRedirectTo('/new-team')
     }
 
@@ -175,22 +175,38 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     switch (session.user.account_type) {
         case AccountType.ADMIN:
             return {
-                props: { regStatus: true, accountType: AccountType.ADMIN }
+                props: { regStatus: false, accountType: AccountType.ADMIN }
             }
+            
         case AccountType.HOST:
             const hostId = await Promise.all([getHostIdByUserId(userId)])
-            const setUpComplete = signedUp && session
-            return {
-                props: { regStatus: setUpComplete, accountType: AccountType.HOST, id: hostId }
+            const hostInfoList = await getHostInfoByUserId(userId)
+
+            if (hostInfoList.length !== 0) {
+                const hostInfo = hostInfoList[0]
+                const status = hostInfo.status
+                console.log(status)
+                if (status === 'pending') {
+                    return {
+                        props: { regStatus: true, accountType: AccountType.HOST, id: hostId }
+                    }
+                } else {
+                    return {
+                        props: { regStatus: false, accountType: AccountType.HOST, id: hostId }
+                    }
+                }
+            } else {
+                return serverSideRedirectTo('/')
             }
+
         case AccountType.TEAM:
             const teamId = await Promise.all([getTeamIdByUserId(userId)])
             return {
-                props: { regStatus: true, accountType: AccountType.TEAM, id: teamId }
+                props: { regStatus: false, accountType: AccountType.TEAM, id: teamId }
             }
     }
     return {
-        props: {}
+        props: { regStatus: false }
     }
 }
 
