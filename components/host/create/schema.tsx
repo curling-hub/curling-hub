@@ -1,13 +1,28 @@
 import * as yup from 'yup'
+import libphonenumber from 'google-libphonenumber'
+const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance()
 
-const phoneRE = /^(?:(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/g;
 const zipRE = /^\d{5}(?:[- ]?\d{4})?$/
 
 const hostSignupSchema = yup.object({
     organization: yup.string().required('Enter the organizations name'),
     website: yup.string().required('Enter the hosts website').url('Website must start with https:// ').nullable(),
-    phone: yup.string().matches(phoneRE, 'Enter a valid phone number').required('Enter a phone number'),
     countryCode: yup.string().required('Enter a country code'),
+    phone: yup
+        .string()
+        .required('Enter a phone number')
+        .test('is-phone-valid', 'Enter a valid phone number', function (value) {
+            let countryCode = this.parent.countryCode
+            try {
+                return value
+                    && countryCode
+                    && phoneUtil.isValidNumberForRegion(phoneUtil.parse(value, countryCode), countryCode)
+            }
+            catch(err) {
+                console.log(err)
+                return false
+            }
+        }),
     address: yup.string().required('Enter the hosts address'),
     address2: yup.string().optional(),
     city: yup.string().required('Enter the city'),

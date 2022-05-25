@@ -2,6 +2,9 @@ import { Box, Flex, Spacer, VStack, Text, HStack } from "@chakra-ui/react"
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
 import type { CurrentHostInfo } from '../../../lib/models/host'
+import libphonenumber from 'google-libphonenumber'
+const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance()
+const PNF = libphonenumber.PhoneNumberFormat
 
 
 
@@ -17,6 +20,8 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
     } = props
 
     const iceSheetString = currentHost?.iceSheets?.toString().replaceAll(',', '').slice(0, 3) || null
+    const phoneRaw = phoneUtil.parse(currentHost.phoneNumber)
+    const phone = phoneUtil.format(phoneRaw, PNF.INTERNATIONAL)
 
     return (
         <>
@@ -82,7 +87,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                         {hostEmail}
                     </Text>
                     <Text>
-                        {currentHost.phoneNumber}
+                        {phone}
                     </Text>
                     <Spacer />
                     <Text
