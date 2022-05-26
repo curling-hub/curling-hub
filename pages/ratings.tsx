@@ -19,9 +19,12 @@ import { AccountType } from '../lib/models/accountType'
 import AdminLayout from '../components/layouts/AdminLayout'
 import HostLayout from '../components/layouts/HostLayout'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
-import { getHostIdByUserId } from '../lib/handlers/hosts'
+import { getHostIdByUserId, getHostInfoByUserId } from '../lib/handlers/hosts'
+import StatusBanner from '../components/host/status/statusBanner'
+import RequestModal from '../components/modals/RequestModal'
 
 interface RatingsProps {
+    regStatus: boolean, // true = fully registered, false = incomplete
     categories: Category[],
     rankings: TeamRanking[]
     accountType?: AccountType,
@@ -73,6 +76,7 @@ function ratingsPageLayout(accountType?: AccountType, id?: number | null) {
 
 const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
     const {
+        regStatus,
         categories,
         rankings,
         accountType,
@@ -81,6 +85,8 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
     const { height, width } = useWindowDimensions()
     const isSmallScreen = width && width < 750 ? true : false
     const [mounted, setMounted] = useState(false)
+    const [showStatusModal, setShowStatusModal] = useState(false)
+    const [showBanner, setShowBanner] = useState(regStatus)
     useEffect(() => { setMounted(true) }, [])
     const pageNum = height ? (Math.floor(((height) * 0.7 * 0.8) / 33) - 3) : 10
 
@@ -97,7 +103,16 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
             >
                 {mounted && !isSmallScreen &&
                     <>
+                        <StatusBanner
+                            isOpen={showBanner}
+                            onClose={() => setShowBanner(false)}
+                            openModal={() => setShowStatusModal(true)}
+                        />
                         {ratingsPageLayout(accountType, id)}
+                        <RequestModal
+                            isOpen={showStatusModal}
+                            onClose={() => setShowStatusModal(false)}
+                        />
                         <RatingsBox
                             categories={categories}
                             teamRanking={rankings}
@@ -107,7 +122,16 @@ const Ratings: NextPage<RatingsProps> = (props: RatingsProps) => {
                 }
                 {mounted && isSmallScreen &&
                     <>
+                        <StatusBanner
+                            isOpen={showBanner}
+                            onClose={() => setShowBanner(false)}
+                            openModal={() => setShowStatusModal(true)}
+                        />
                         {ratingsPageLayout(accountType, id)}
+                        <RequestModal
+                            isOpen={showStatusModal}
+                            onClose={() => setShowStatusModal(false)}
+                        />
                         <RatingsBoxSmall
                             categories={categories}
                             teamRanking={rankings}
@@ -128,10 +152,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { signedUp, signedIn, session } = await getSession(context)
     const categories = await getAllCategories()
     const rankings = await getRankingsByCategorySimple(1)
-
+    
     if (!signedIn) {
         return {
             props: {
+                regStatus: false,
                 categories: categories,
                 rankings: rankings
             }
@@ -139,26 +164,43 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } else if (!signedUp || !session) { //Partially setup account
         return serverSideRedirectTo('/new-team')
     }
-
+    
     const userId = session.user.id
     switch (session.user.account_type) {
         case AccountType.ADMIN:
             return {
-                props: { categories: categories, rankings: rankings, accountType: AccountType.ADMIN }
+                props: { regStatus: false, categories: categories, rankings: rankings, accountType: AccountType.ADMIN }
             }
         case AccountType.HOST:
             const hostId = await Promise.all([getHostIdByUserId(userId)])
-            return {
-                props: { categories: categories, rankings: rankings, accountType: AccountType.HOST, id: hostId }
+            const hostInfoList = await getHostInfoByUserId(userId)
+
+            if (hostInfoList.length !== 0) {
+                const hostInfo = hostInfoList[0]
+                const status = hostInfo.status
+                
+                if (status === 'pending') {
+                    return {
+                        props: { regStatus: true, categories: categories, rankings: rankings, accountType: AccountType.HOST, id: hostId }
+                    }
+                } else {
+                    return {
+                        props: { regStatus: false, categories: categories, rankings: rankings, accountType: AccountType.HOST, id: hostId }
+                    }
+                }
+            } else {
+                return serverSideRedirectTo('/')
             }
+            
         case AccountType.TEAM:
             const teamId = await Promise.all([getTeamIdByUserId(userId)])
             return {
-                props: { categories: categories, rankings: rankings, accountType: AccountType.TEAM, id: teamId }
+                props: { regStatus: false, categories: categories, rankings: rankings, accountType: AccountType.TEAM, id: teamId }
             }
     }
     return {
         props: {
+            regStatus: false,
             categories: categories,
             rankings: rankings
         },
