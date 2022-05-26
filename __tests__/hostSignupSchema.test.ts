@@ -5,8 +5,8 @@ describe("Test host creation schema validation", () => {
         const input = {
             organization: 'Husky Version 3',
             website: 'http://example.com',
-            phone: '(555) 555-5555',
-            countryCode: '+1',
+            phone: '5035555555',
+            countryCode: 'US',
             address: '55th Ave',
             address2: '#555',
             city: 'New York City',
@@ -18,7 +18,6 @@ describe("Test host creation schema validation", () => {
             namingScheme: '123',
             email: 'example@example.com',
             userId: 'cc1d5bdd-c18e-4b93-8c4f-98bc8699f079',
-            phoneNumber: '+1(555) 555-5555',
             streetAddress: '55th Ave',
         }
         const output = await hostSignupSchema.validate(input)
