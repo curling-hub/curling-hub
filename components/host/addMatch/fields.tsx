@@ -28,6 +28,7 @@ import {
 import schema from './schema'
 import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
+import moment from 'moment'
 
 
 const getInitialValues = (otherFields: { [key: string]: any } = {}) => ({
@@ -148,7 +149,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 borderRadius="full"
                                                 {...field}
                                                 id="date"
-
+                                                max={moment().format("YYYY-MM-DD")}
                                             />
                                             <FormErrorMessage>Date of match is required</FormErrorMessage>
                                         </FormControl>
