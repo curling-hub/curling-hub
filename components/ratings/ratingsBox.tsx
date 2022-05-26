@@ -167,7 +167,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                             <RatingPaging changes={rank.Changes} />
                                             <Td>
                                                 {rank.Players?.map((player) => {
-                                                    return (<Badge ml='2' borderRadius='full' px='2' colorScheme='green'>{player}</Badge>)
+                                                    return (<Badge key={player} ml='2' borderRadius='full' px='2' colorScheme='green'>{player}</Badge>)
                                                 })
                                                 }
                                             </Td>
