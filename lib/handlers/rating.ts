@@ -81,7 +81,6 @@ export async function getAllTeamRatings(): Promise<TeamInfoRatings[]> {
         defaultRating: 600,
         defaultRatingDeviation: 200,
         defaultVolatility: 0.06,
-        currentRatingPeriodId: 2,
         version: '1.0',
         createdAt: 2022-04-15T19:08:42.000Z
     }
