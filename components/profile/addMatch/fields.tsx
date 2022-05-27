@@ -31,7 +31,7 @@ import {
 import schema from './schema'
 import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
-
+import moment from 'moment'
 
 const getInitialValues = (otherFields: any = {}) => ({
     matchResult: 'Win',
@@ -176,7 +176,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             <Box w="100%">
                                 <Field name="date">
                                     {({ field, form }: FieldProps) => (
-                                        <FormControl isInvalid={form.errors.date != undefined && form.touched.date != undefined}>
+                                        <FormControl isInvalid={form.errors.date != undefined && form.touched.date != undefined  }>
                                             <FormLabel htmlFor="date" srOnly>Date</FormLabel>
                                             <Input
                                                 type="date"
@@ -184,6 +184,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 borderRadius="full"
                                                 {...field}
                                                 id="date"
+                                                max={moment().format("YYYY-MM-DD")}
                                             />
                                             <FormErrorMessage>Date of match is required</FormErrorMessage>
                                         </FormControl>
