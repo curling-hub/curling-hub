@@ -429,6 +429,7 @@ export const MatchModel = sequelize.define<MatchResultInstance>('Match Info', {
     hostId: {
         type: DataTypes.BIGINT,
         field: 'host_id',
+        allowNull: true,
         references: {
             model: HostInfoModel,
             key: 'host_id',
