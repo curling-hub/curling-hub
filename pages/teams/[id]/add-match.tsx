@@ -33,6 +33,11 @@ const TeamAddMatch: NextPage<TeamAddMatchProps> = (props: TeamAddMatchProps) => 
     } = props
     const [submissionError, setSubmissionError] = useState('')
     const formOnSubmit = async (values: any) => {
+        if (values.location < 1) {
+            // Remove N/A location so that the form is accepted
+            values = { ...values }
+            delete values['location']
+        }
         console.log(values)
         const res = await fetch('/api/team/match/add', {
             method: 'POST',
