@@ -124,15 +124,6 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
                     isFullWidth={true}
                     size="md"
                   />
-                  {/* <Button
-                    background="primary.green"
-                    borderRadius="full"
-                    boxShadow="md"
-                    padding="25px 108px"
-                    fontSize={REG_BUTTON_FONT_SIZE}
-                  >
-                    Ratings
-                  </Button> */}
                 </Link>
               </Box>
             </Box>{" "}
