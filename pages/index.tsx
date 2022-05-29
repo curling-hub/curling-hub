@@ -10,10 +10,13 @@ import type { GetServerSideProps } from 'next'
 import TeamLayout from '../components/layouts/TeamLayout'
 import { AccountType } from "../lib/models/accountType";
 import { getTeamIdByUserId } from "../lib/handlers/teams";
-import { getHostIdByUserId } from "../lib/handlers/hosts";
+import { getHostIdByUserId, getHostInfoByUserId } from "../lib/handlers/hosts";
 import AdminLayout from "../components/layouts/AdminLayout";
 import HostLayout from "../components/layouts/HostLayout";
 import CurloButton from "../components/buttons/CurloButton";
+import StatusBanner from "../components/host/status/statusBanner";
+import RequestModal from "../components/modals/RequestModal";
+import { useState } from "react";
 
 function landingPageLayout(accountType?: AccountType, id?: number | null) {
   switch (accountType) {
@@ -30,9 +33,14 @@ function landingPageLayout(accountType?: AccountType, id?: number | null) {
 
 const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
   const {
+    regStatus,
     accountType,
     id,
   } = props
+
+  const [showStatusModal, setShowStatusModal] = useState(false)
+  const [showBanner, setShowBanner] = useState(regStatus)
+
   return (
     <>
       <Head>
@@ -44,8 +52,16 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
         minH="100vh"
         bgGradient="linear-gradient(primary.purple, primary.white)"
       >
-
+        <StatusBanner
+            isOpen={showBanner}
+            onClose={() => setShowBanner(false)}
+            openModal={() => setShowStatusModal(true)}
+        />
         {landingPageLayout(accountType, id)}
+        <RequestModal
+            isOpen={showStatusModal}
+            onClose={() => setShowStatusModal(false)}
+        />
         <Box paddingBottom="4rem">
 
           {/*Card Container Box*/}
@@ -138,6 +154,7 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
   );
 };
 export interface LandingPageProps {
+  regStatus: boolean
   accountType?: AccountType
   id?: number | null
 }
@@ -145,7 +162,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { signedIn, signedUp, session } = await getSession(context)
 
   if (!signedIn) {
-    return { props: {} }
+    return { props: { regStatus: false } }
   } else if (!signedUp || !session) { //Partially setup account
     return serverSideRedirectTo('/new-team')
   }
@@ -154,21 +171,38 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   switch (session.user.account_type) {
     case AccountType.ADMIN:
       return {
-        props: { accountType: AccountType.ADMIN }
+        props: { regStatus: false, accountType: AccountType.ADMIN }
       }
+
     case AccountType.HOST:
       const hostId = await Promise.all([getHostIdByUserId(userId)])
-      return {
-        props: { accountType: AccountType.HOST, id: hostId }
+      const hostInfoList = await getHostInfoByUserId(userId)
+      
+      if (hostInfoList.length !== 0) {
+          const hostInfo = hostInfoList[0]
+          const status = hostInfo.status
+          
+          if (status === 'pending') {
+            return {
+              props: { regStatus: true, accountType: AccountType.HOST, id: hostId }
+            }
+          } else {
+            return {
+              props: { regStatus: false, accountType: AccountType.HOST, id: hostId }
+            }
+          }
+      } else {
+          return serverSideRedirectTo('/')
       }
+
     case AccountType.TEAM:
       const teamId = await Promise.all([getTeamIdByUserId(userId)])
       return {
-        props: { accountType: AccountType.TEAM, id: teamId }
+        props: { regStatus: false, accountType: AccountType.TEAM, id: teamId }
       }
   }
   return {
-    props: {}
+    props: { regStatus: false }
   }
 }
 export default LandingPage;

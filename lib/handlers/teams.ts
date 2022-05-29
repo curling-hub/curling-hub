@@ -219,15 +219,21 @@ export async function createTeam(form: TeamCreationForm): Promise<any> {
         }, { transaction: t })
 
         // 2. Create team
-        const current_glicko = await getCurrentSettings();
+        const current_glicko = await getCurrentSettings()
         const team = await DbModels.TeamInfoModel.create({
             name: form.name,
         }, { transaction: t })
 
-        // 3. Add team admin
+        // 3. Add team admin & initialize glicko
         await DbModels.TeamAdminModel.create({
             teamId: team.teamId,
             userId: user.id,
+        }, { transaction: t })
+        await DbModels.TeamGlickoInfoModel.create({
+            teamId: team.teamId,
+            rating: current_glicko?.defaultRating || 1500,
+            ratingDeviation: current_glicko?.defaultRatingDeviation || 200,
+            volatility: current_glicko?.defaultVolatility || 0.06,
         }, { transaction: t })
 
         // 4. Add categories to team

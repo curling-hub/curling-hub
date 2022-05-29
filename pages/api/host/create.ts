@@ -1,4 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import libphonenumber from 'google-libphonenumber'
+const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance()
+const PNF = libphonenumber.PhoneNumberFormat
 
 import { createHost } from '../../../lib/handlers/hosts'
 import type { HostCreationForm } from '../../../lib/models/host'
@@ -20,14 +23,16 @@ export default async function handler(
         const { email, id } = session.user
 
         const form = await hostSignupSchema.validate(req.body)
+        const phoneRaw = phoneUtil.parse(form.phone, form.countryCode)
 
         // TODO: use yup validation
         const hostCreationForm: HostCreationForm = {
             ...form,
             email: email as string,
             userId: id,
-            phoneNumber: form.countryCode + form.phone,
+            phoneNumber: phoneUtil.format(phoneRaw, PNF.E164),
             streetAddress: form.address,
+            addressExtras: form.address2,
         }
         console.log(hostCreationForm)
         const host = await createHost(hostCreationForm)

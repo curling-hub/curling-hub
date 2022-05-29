@@ -35,7 +35,7 @@ export default function ProfileBox(props: ProfileBoxProps) {
                     </SideBySideContainer>
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
-                        <HostMatchesBox hostMatches={hostMatches} />
+                        <HostMatchesBox hostMatches={hostMatches} hostId={hostId} />
                         <Box marginTop="63px">
                             <CurloButton buttonText="Edit Matches" color="primary.green" width="64%" size="md" />
                         </Box>

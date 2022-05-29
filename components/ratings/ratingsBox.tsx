@@ -9,7 +9,8 @@ import {
     Table,
     Thead,
     Tr,
-    Td
+    Td,
+    Badge
 } from '@chakra-ui/react'
 import {
     AiOutlineLeft,
@@ -36,7 +37,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
         teamRanking = [],
         tableSize
     } = props
-    
+
     const [pageIndex, setPageIndex] = useState(0)
     const [displayedRankings, setDisplayedRankings] = useState(teamRanking)
     const [fixedRankings, setFixedRankings] = useState(teamRanking)
@@ -44,16 +45,16 @@ export default function RatingsBox(props: RatingsBoxProps) {
     var i = 0
     var pages: Array<TeamRanking[]> = []
     for (i; i < Math.ceil(displayedRankings.length / tableSize); ++i) {
-        pages[i] = displayedRankings.slice(i*tableSize, i*tableSize + tableSize)
+        pages[i] = displayedRankings.slice(i * tableSize, i * tableSize + tableSize)
     }
-    
+
     const pageCount = pages.length
-    
+
     function search(query: string) {
         const tables = fixedRankings.filter((team) => {
-            return (team.Team.includes(query) || 
-            team.Rating.toString().includes(query) ||
-            team.Players.includes(query))
+            return (team.Team.includes(query) ||
+                team.Rating.toString().includes(query) ||
+                team.Players.includes(query))
         })
         setDisplayedRankings(tables)
     }
@@ -62,11 +63,11 @@ export default function RatingsBox(props: RatingsBoxProps) {
         if (Number.isNaN(selected)) {
             selected = 0
         }
-        
+
         const req = {
             id: selected
         }
-        
+
         const res = await fetch('/api/team/selected', {
             method: 'POST',
             body: new URLSearchParams(req as any).toString(),
@@ -81,64 +82,64 @@ export default function RatingsBox(props: RatingsBoxProps) {
             setFixedRankings(result.data)
         } else {
             const result = await res.json()
-            alert("error: "+result.error)
-        } 
+            alert("error: " + result.error)
+        }
     }
 
     return (
         <>
+            <Box
+                backgroundColor="primary.white"
+                display='flex'
+                flexDirection='column'
+                boxShadow='lg'
+                alignItems="center"
+                borderRadius="35px"
+                maxW="100%"
+                minH='70vh'
+                textAlign="center"
+                marginLeft='4rem'
+                marginRight='4rem'
+                marginTop='2rem'
+            >
+                <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
+                    Ratings
+                </Text>
                 <Box
-                    backgroundColor="primary.white"
-                    display='flex'
-                    flexDirection='column'
-                    boxShadow='lg'
-                    alignItems="center"
-                    borderRadius="35px"
-                    maxW="100%"
-                    minH='70vh'
-                    textAlign="center"
-                    marginLeft='4rem'
-                    marginRight='4rem'
-                    marginTop='2rem'
+                    w='80%'
+                    justifyContent='start'
                 >
-                    <Text fontSize="2.5rem" marginTop="5px" fontWeight="bold">
-                        Ratings
-                    </Text>
-                    <Box
-                        w='80%'
-                        justifyContent='start'
+                    <HStack
+                        spacing='2rem'
                     >
-                        <HStack
-                            spacing='2rem'
+                        <Select
+                            name='category-dropdown'
+                            borderRadius='20px'
+                            variant='filled'
+                            color='black'
+                            bg='gray.300'
+                            w='100%'
+                            onChange={async (e) => {
+                                await getSelectedMatches(parseInt(e.target.value))
+                            }}
                         >
-                            <Select
-                                name='category-dropdown'
-                                borderRadius='20px'
-                                variant='filled'
-                                color='black'
-                                bg='gray.300'
-                                w='100%'
-                                onChange={async (e) => {
-                                    await getSelectedMatches(parseInt(e.target.value))
-                                }}
-                            >
-                                {
-                                    props.categories.map((category) => {
-                                        return (
-                                            <option key={category.categoryId} value={category.categoryId}>{category.name}</option>
-                                        )
-                                    })
-                                }
-                            </Select>
-                            <Input
-                                name='search-bar'
-                                borderRadius='20px'
-                                w='200%'
-                                placeholder="Search table..."
-                                onChange={(e: any) => search(e.target.value)}
-                            />
-                        </HStack>
-                        <Box minH='50vh'>
+                            {
+                                props.categories.map((category) => {
+                                    return (
+                                        <option key={category.categoryId} value={category.categoryId}>{category.name}</option>
+                                    )
+                                })
+                            }
+                        </Select>
+                        <Input
+                            name='search-bar'
+                            borderRadius='20px'
+                            w='200%'
+                            placeholder="Search table..."
+                            onChange={(e: any) => search(e.target.value)}
+                        />
+                    </HStack>
+                    <Box minH='50vh'>
                         <TableContainer
                             aria-label='table'
                             marginTop="5px"
@@ -156,7 +157,7 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                         <Td fontWeight="bold">Changes</Td>
                                         <Td fontWeight="bold">Players</Td>
                                     </Tr>
-                                    { Children.toArray(pages[pageIndex]?.map((rank, index) => 
+                                    {Children.toArray(pages[pageIndex]?.map((rank, index) =>
                                         <Tr
                                             key={index}
                                         >
@@ -164,51 +165,56 @@ export default function RatingsBox(props: RatingsBoxProps) {
                                             <Td>{rank.Team}</Td>
                                             <Td>{rank.Rating}</Td>
                                             <RatingPaging changes={rank.Changes} />
-                                            <Td>{rank.Players?.map((player) => {return (player + '  ')})}</Td>
+                                            <Td>
+                                                {rank.Players?.map((player) => {
+                                                    return (<Badge key={player} ml='2' borderRadius='full' px='2' colorScheme='green'>{player}</Badge>)
+                                                })
+                                                }
+                                            </Td>
                                         </Tr>
                                     ))
                                     }
                                 </Thead>
                             </Table>
                         </TableContainer>
-                        </Box>
-                        { pages.length > 1 &&
-                            <Box
-                                aria-label="Page navigation " 
-                                display='flex'
-                                flexDirection='row'
-                                justifyContent='space-between'
-                                w='100%'
-                                marginBottom='5px'
-                            >
-                                <Text fontWeight='bold'>{pageIndex+1} of {pages.length}</Text>
-                                
-                                <HStack
-                                    spacing={2}
-                                >   
-                                    <IconButton
-                                            aria-label='page-left'
-                                            icon={<AiOutlineLeft />}
-                                            onClick={() => {
-                                                if (pageIndex + 1 > 1) {
-                                                    setPageIndex(pageIndex-1)
-                                                }
-                                            }}
-                                    />
-                                    <IconButton
-                                            aria-label='page-right'
-                                            icon={<AiOutlineRight />}
-                                            onClick={() => {
-                                                if (pageIndex + 1 < pageCount) {
-                                                    setPageIndex(pageIndex+1)
-                                                }
-                                            }}
-                                    />
-                                </HStack>
-                            </Box>
-                        }
                     </Box>
+                    {pages.length > 1 &&
+                        <Box
+                            aria-label="Page navigation "
+                            display='flex'
+                            flexDirection='row'
+                            justifyContent='space-between'
+                            w='100%'
+                            marginBottom='5px'
+                        >
+                            <Text fontWeight='bold'>{pageIndex + 1} of {pages.length}</Text>
+
+                            <HStack
+                                spacing={2}
+                            >
+                                <IconButton
+                                    aria-label='page-left'
+                                    icon={<AiOutlineLeft />}
+                                    onClick={() => {
+                                        if (pageIndex + 1 > 1) {
+                                            setPageIndex(pageIndex - 1)
+                                        }
+                                    }}
+                                />
+                                <IconButton
+                                    aria-label='page-right'
+                                    icon={<AiOutlineRight />}
+                                    onClick={() => {
+                                        if (pageIndex + 1 < pageCount) {
+                                            setPageIndex(pageIndex + 1)
+                                        }
+                                    }}
+                                />
+                            </HStack>
+                        </Box>
+                    }
                 </Box>
+            </Box>
         </>
     )
 }
@@ -218,7 +224,7 @@ interface ChangesProps {
 }
 
 const RatingPaging = (props: ChangesProps): JSX.Element => {
-    const { changes} = props
+    const { changes } = props
     return (
         <>
             {
@@ -230,7 +236,7 @@ const RatingPaging = (props: ChangesProps): JSX.Element => {
                         />
                         <Text>{changes[0] - changes[1]}</Text>
                     </HStack>
-                </Td> 
+                </Td>
             }
             {
                 changes && changes.length > 1 && changes[0] - changes[1] < 0 &&
@@ -241,7 +247,7 @@ const RatingPaging = (props: ChangesProps): JSX.Element => {
                         />
                         <Text>{changes[0] - changes[1]}</Text>
                     </HStack>
-                </Td> 
+                </Td>
             }
             {
                 changes && changes.length > 1 && changes[0] - changes[1] == 0 &&
@@ -252,7 +258,7 @@ const RatingPaging = (props: ChangesProps): JSX.Element => {
                         />
                         <Text>N/A</Text>
                     </HStack>
-                </Td> 
+                </Td>
             }
             {
                 changes && changes.length < 2 &&
@@ -263,8 +269,8 @@ const RatingPaging = (props: ChangesProps): JSX.Element => {
                         />
                         <Text>N/A</Text>
                     </HStack>
-                </Td> 
-            }    
+                </Td>
+            }
         </>
     )
 }

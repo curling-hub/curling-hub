@@ -4,11 +4,11 @@ import {
     Tbody,
     Tr,
     Td,
-    TableCaption,
     TableContainer,
     HStack,
     Text,
-    Box,
+    Link,
+    Box
 } from "@chakra-ui/react"
 import {
     AiOutlineCheck,
@@ -33,12 +33,14 @@ export default function MatchesTable(props: MatchesTableProps) {
         teamMatches = [],
     } = props
 
+    const displayMatches = teamMatches.slice(0, 20)
+
     return (
         <>
-            <Box h={{ base: "75%", md: "78%" }}>
-                <TableContainer /* padding=" 0 5px" */>
-                    <Table variant='simple' size="sm">
-                        <Thead textAlign="center">
+            {!(teamMatches.length === 0) &&
+                (<TableContainer h={{ base: "62%", md: "78%" }}>
+                    <Table variant='simple' size="sm" whiteSpace="normal">
+                        <Thead>
                             <Tr>
                                 <Td fontWeight="bold">Date</Td>
                                 <Td fontWeight="bold">Outcome</Td>
@@ -47,42 +49,48 @@ export default function MatchesTable(props: MatchesTableProps) {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {teamMatches.map((match) => (
+                            {displayMatches.map((match) => (
                                 <Tr key={`${match.matchId}`}>
                                     <Td>{match.date}</Td>
                                     {/* <Td>{match.date}</Td> */}
                                     {
                                         matchResultToString(teamId || 0, match) === 'Win' &&
-                                        <Td>
-                                            <HStack>
-                                                <AiOutlineCheck
-                                                    style={{ color: 'green' }}
-                                                />
-                                                <Text>{matchResultToString(teamId || 0, match)}</Text>
-                                            </HStack>
-                                        </Td>
+                                        <>
+                                            <Td>
+                                                <HStack>
+                                                    <AiOutlineCheck
+                                                        style={{ color: 'green' }}
+                                                    />
+                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                </HStack>
+                                            </Td>
+                                        </>
                                     }
                                     {
                                         matchResultToString(teamId || 0, match) === 'Loss' &&
-                                        <Td>
-                                            <HStack>
-                                                <AiOutlineClose
-                                                    style={{ color: 'red' }}
-                                                />
-                                                <Text>{matchResultToString(teamId || 0, match)}</Text>
-                                            </HStack>
-                                        </Td>
+                                        <>
+                                            <Td>
+                                                <HStack>
+                                                    <AiOutlineClose
+                                                        style={{ color: 'red' }}
+                                                    />
+                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                </HStack>
+                                            </Td>
+                                        </>
                                     }
                                     {
                                         matchResultToString(teamId || 0, match) === 'Tie' &&
-                                        <Td>
-                                            <HStack>
-                                                <MdHorizontalRule
-                                                    style={{ color: 'blue' }}
-                                                />
-                                                <Text>{matchResultToString(teamId || 0, match)}</Text>
-                                            </HStack>
-                                        </Td>
+                                        <>
+                                            <Td>
+                                                <HStack>
+                                                    <MdHorizontalRule
+                                                        style={{ color: 'blue' }}
+                                                    />
+                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                </HStack>
+                                            </Td>
+                                        </>
                                     }
                                     <Td>{matchResultOpponentTeamName(teamId || 0, match)}</Td>
                                     {/* <Td>{match.category}</Td> */}
@@ -90,8 +98,19 @@ export default function MatchesTable(props: MatchesTableProps) {
                             ))}
                         </Tbody>
                     </Table>
-                </TableContainer>
-            </Box>
+                </TableContainer>)
+            }
+            {teamMatches.length === 0 &&
+                (
+                    <Box
+                        h={{ base: "48%", md: "72%" }}
+                    >
+                        <Text marginTop="60px">
+                            No matches Found: <Link href={teamId ? `/teams/${teamId}/add-match` : '/'} fontWeight="bold">Add Match</Link>
+                        </Text>
+                    </Box>
+                )
+            }
         </>
     );
 }
