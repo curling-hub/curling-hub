@@ -1,11 +1,10 @@
-import { Box, Flex, Link, Spacer, } from "@chakra-ui/react"
-import { CONST_BORDER_RADIUS } from '../../../themes/constants'
+import { Box, Flex, Spacer } from "@chakra-ui/react"
 import SideBySideContainer from '../../profile/SideBySideContainer';
-import ProfileButton from "../../profile/ProfileButton";
 import HostInfoBox from "./HostInfoBox";
 import HostMatchesBox from './HostMatchesBox'
 import type { CurrentHostInfo } from '../../../lib/models/host'
 import type { HostMatchResult } from '../../../lib/models/match'
+import CurloButton from "../../buttons/CurloButton";
 
 interface ProfileBoxProps {
     currentHost: CurrentHostInfo
@@ -31,14 +30,14 @@ export default function ProfileBox(props: ProfileBoxProps) {
                     <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
                         <HostInfoBox currentHost={currentHost} hostEmail={hostEmail} />
                         <Box marginTop="63px">
-                            <ProfileButton buttonText='Edit' color='primary.gray' />
+                            <CurloButton buttonText="Edit" color="primary.gray" width="64%" size="md" />
                         </Box>
                     </SideBySideContainer>
                     <Spacer />
                     <SideBySideContainer height="877px" color="primary.white" minW="374px" shadow="lg">
                         <HostMatchesBox hostMatches={hostMatches} />
                         <Box marginTop="63px">
-                            <ProfileButton buttonText='Edit Matches' color='primary.green' />
+                            <CurloButton buttonText="Edit Matches" color="primary.green" width="64%" size="md" />
                         </Box>
                     </SideBySideContainer>
                     <Spacer />

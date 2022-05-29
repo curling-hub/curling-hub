@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-    ErrorMessage,
     Field,
     FieldProps,
     Form,
@@ -28,7 +27,7 @@ import {
 import schema from './schema'
 import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
-import { REG_BUTTON_FONT_SIZE } from '../../../themes/constants'
+import CurloButton from '../../buttons/CurloButton'
 
 
 const getInitialValues = (otherFields: any = {}) => ({
@@ -287,20 +286,13 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 </FormControl>
                             )}
                         </Field>
-                        <Button
-                            padding="25px 30px"
-                            boxShadow="md"
+                        <CurloButton
+                            buttonText="Add Match Result"
+                            color="primary.green"
+                            isFullWidth={true}
                             type="submit"
-                            isFullWidth
-                            fontSize={REG_BUTTON_FONT_SIZE}
-                            borderRadius="full"
-                            bg="primary.green"
-                            disabled={isSubmitting}
-                            _hover={{ bg: "green.400" }}
-                            _active={{ bg: "green.400" }}
-                        >
-                            Add Match Result
-                        </Button>
+                            isSubmitting={isSubmitting}
+                        />
                     </VStack>
                 </Form>
             )}

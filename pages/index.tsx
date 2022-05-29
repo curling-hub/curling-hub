@@ -13,6 +13,7 @@ import { getTeamIdByUserId } from "../lib/handlers/teams";
 import { getHostIdByUserId } from "../lib/handlers/hosts";
 import AdminLayout from "../components/layouts/AdminLayout";
 import HostLayout from "../components/layouts/HostLayout";
+import CurloButton from "../components/buttons/CurloButton";
 
 function landingPageLayout(accountType?: AccountType, id?: number | null) {
   switch (accountType) {
@@ -75,28 +76,20 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
               </Text>
 
               <Box marginTop="308px">
-                <Link href="/signup">
-                  <Button
-                    background="primary.green"
-                    borderRadius="full"
-                    padding="25px 30px"
-                    fontSize={REG_BUTTON_FONT_SIZE}
-                    boxShadow="md"
+                <Link href="/signup" style={{ textDecoration: 'none' }}>
+                  <CurloButton
+                    buttonText="Sign Up"
+                    color="primary.green"
                     marginRight="10px"
-                  >
-                    Sign Up
-                  </Button>
+                    size="md"
+                  />
                 </Link>
-                <Link href="/about">
-                  <Button
-                    background="primary.green"
-                    borderRadius="full"
-                    padding="25px 30px"
-                    fontSize={REG_BUTTON_FONT_SIZE}
-                    boxShadow="md"
-                  >
-                    More Info
-                  </Button>
+                <Link href="/about" style={{ textDecoration: 'none' }}>
+                  <CurloButton
+                    buttonText="More Info"
+                    color="primary.green"
+                    size="md"
+                  />
                 </Link>
               </Box>
             </Box>{" "}
@@ -124,8 +117,14 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
                 the ratings below.
               </Text>
               <Box marginTop="308px">
-                <Link href="/ratings">
-                  <Button
+                <Link href="/ratings" style={{ textDecoration: 'none' }}>
+                  <CurloButton
+                    buttonText="Ratings"
+                    color="primary.green"
+                    isFullWidth={true}
+                    size="md"
+                  />
+                  {/* <Button
                     background="primary.green"
                     borderRadius="full"
                     boxShadow="md"
@@ -133,7 +132,7 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
                     fontSize={REG_BUTTON_FONT_SIZE}
                   >
                     Ratings
-                  </Button>
+                  </Button> */}
                 </Link>
               </Box>
             </Box>{" "}

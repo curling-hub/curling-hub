@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react'
 import LeftHandBox from "../../../components/profile/LeftHandBox"
 import SideBySideContainer from '../../../components/profile/SideBySideContainer';
-import ProfileButton from '../../../components/profile/ProfileButton';
 import MatchesBox from '../../../components/profile/MatchesBox';
 import MatchesTable from '../../../components/profile/MatchesTable'
 import MembersTable from '../../../components/profile/MembersTable'
@@ -22,6 +21,7 @@ import { getTeamMatches, getTeamContactInfo, getTeamCategories, getTeamInfo, get
 import { convertAndVerifyContextId, getSession, getSessionServerSideResult } from '../../../lib/auth/session'
 import { teamPagesLoggedInRedirects } from '../../../lib/auth/redirect';
 import { AccountType } from '../../../lib/models/accountType';
+import CurloButton from '../../../components/buttons/CurloButton';
 
 interface TeamProfileProps {
     teamInfo?: TeamWithMembersAndRatings
@@ -82,7 +82,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                         </Text>
                                         <MembersTable teamMembers={teamMembers} teamCategories={teamCategories} />
                                     </VStack>
-                                    <ProfileButton buttonText='Edit' color='primary.gray' />
+                                    <CurloButton buttonText="Edit" color="primary.gray" width="64%" size="md" />
                                 </LeftHandBox>
                                 <LeftHandBox color='primary.green'>
                                     <VStack>
@@ -115,8 +115,8 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                 </Text>
                                 <MatchesTable teamMatches={teamMatches} teamId={teamInfo?.teamId} />
                                 <Box marginTop="63px">
-                                    <Link href={`/teams/${teamId}/matches`}>
-                                        <ProfileButton buttonText='View Matches' color='primary.green' />
+                                    <Link href={`/teams/${teamId}/matches`} style={{ textDecoration: 'none' }}>
+                                        <CurloButton buttonText="View Matches" color="primary.green" width="64%" size="md" />
                                     </Link>
                                 </Box>
                             </MatchesBox>
