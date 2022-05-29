@@ -28,7 +28,7 @@ import schema from './schema'
 import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
 import CurloButton from '../../buttons/CurloButton'
-
+import moment from 'moment'
 
 const getInitialValues = (otherFields: any = {}) => ({
     matchResult: 'Win',
@@ -75,9 +75,14 @@ const Fields = (props: FieldsProps): JSX.Element => {
         onSubmit = async () => { },
     } = props
 
+    const NOT_APPLICABLE_HOST_ID = -1
+
     const [fetchingIceSheets, setFetchingIceSheets] = useState(false)
     const [iceSheets, setIceSheets] = useState<any[]>([])
     const onLocationChange = async (hostId: number) => {
+        if (hostId === NOT_APPLICABLE_HOST_ID) {
+            return
+        }
         setFetchingIceSheets(true)
         try {
             const iceSheets = await fetchIceSheetsByHostId(hostId)
@@ -106,7 +111,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
         value: h.hostId,
         label: h.organization,
     }))
-    hostOptions.push({ value: 0, label: 'N/A' })
+    hostOptions.push({ value: NOT_APPLICABLE_HOST_ID, label: 'N/A' })
     const getIceSheetsOptions = (iceSheets: any[]) => (
         [...iceSheets, 'N/A'].map((iceSheet: string) => ({
             value: iceSheet,
@@ -168,7 +173,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             <Box w="100%">
                                 <Field name="date">
                                     {({ field, form }: FieldProps) => (
-                                        <FormControl isInvalid={form.errors.date != undefined && form.touched.date != undefined}>
+                                        <FormControl isInvalid={form.errors.date != undefined && form.touched.date != undefined  }>
                                             <FormLabel htmlFor="date" srOnly>Date</FormLabel>
                                             <Input
                                                 type="date"
@@ -176,6 +181,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                                 borderRadius="full"
                                                 {...field}
                                                 id="date"
+                                                max={moment().format("YYYY-MM-DD")}
                                             />
                                             <FormErrorMessage>Date of match is required</FormErrorMessage>
                                         </FormControl>
@@ -254,7 +260,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                         <FormControl isInvalid={(values.location && values.location != 'N/A') && form.errors.sheetOfIce != undefined && form.touched.sheetOfIce != undefined}>
                                             <FormLabel htmlFor="sheet-of-ice" srOnly>Sheet of Ice</FormLabel>
                                             <Select<IceSheetSelectOptions>
-                                                isDisabled={!values.location || values.location === 'N/A' || fetchingIceSheets}
+                                                isDisabled={values.location === NOT_APPLICABLE_HOST_ID || fetchingIceSheets}
                                                 options={getIceSheetsOptions(iceSheets)}
                                                 placeholder="Ice sheet"
                                                 closeMenuOnSelect

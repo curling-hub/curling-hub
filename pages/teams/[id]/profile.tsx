@@ -105,7 +105,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                             </VStack>
                         </SideBySideContainer>
                         <Spacer />
-                        <SideBySideContainer>
+                        <SideBySideContainer height='1022px' minW='322px'>
                             <MatchesBox
                                 color="primary.white"
                                 boxShadow='lg'
@@ -114,7 +114,7 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                     Matches
                                 </Text>
                                 <MatchesTable teamMatches={teamMatches} teamId={teamInfo?.teamId} />
-                                <Box marginTop="63px">
+                                <Box marginTop={{ base: "19px", md: "65px" }}>
                                     <Link href={`/teams/${teamId}/matches`} style={{ textDecoration: 'none' }}>
                                         <CurloButton buttonText="View Matches" color="primary.green" width="64%" size="md" />
                                     </Link>

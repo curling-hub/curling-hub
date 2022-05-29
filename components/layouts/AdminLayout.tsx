@@ -23,6 +23,10 @@ function getNavItems(): NavItem[] {
         {
             label: "Requests",
             link: '/admin-requests',
+        },
+        {
+            label: "Ratings",
+            link: '/ratings',
         }
     ]
     return data
