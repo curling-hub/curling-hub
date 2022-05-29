@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { REG_BUTTON_FONT_SIZE, CONST_BORDER_RADIUS } from "../themes/constants";
+import { CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from "../components/layouts/StandardLayout";
 import { Box, Button, Text, Flex, Spacer, Link } from "@chakra-ui/react";
 import Footer from "../components/footer/footer";
