@@ -159,7 +159,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                 name='search-bar'
                                 borderRadius='full'
                                 placeholder="Search table..."
-                                onChange={(e: any) => search(e.target.value)}
+                                onChange={(e: any) => search(e.target.value.toLowerCase())}
                             />
                         </FormControl>
                     </HStack>

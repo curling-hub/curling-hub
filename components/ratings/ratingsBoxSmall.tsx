@@ -50,9 +50,9 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
     
     function search(query: string) {
         const tables = fixedRankings.filter((team) => {
-            return (team.Team.includes(query) || 
-            team.Rating.toString().includes(query) ||
-            team.Players.includes(query))
+            return (team.Team.toLowerCase().includes(query) ||
+                team.Rating.toString().toLowerCase().includes(query) ||
+                team.Players.map((player) => player.toLowerCase().includes(query)).includes(true))
         })
         setDisplayedRankings(tables)
     }
@@ -141,7 +141,7 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
                                     name='search-bar'
                                     borderRadius='full'
                                     placeholder="Search table..."
-                                    onChange={(e: any) => search(e.target.value)}
+                                    onChange={(e: any) => search(e.target.value.toLowerCase())}
                                 />
                             </FormControl>
                         </HStack>
