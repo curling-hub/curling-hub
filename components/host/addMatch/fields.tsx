@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import {
-    ErrorMessage,
     Field,
     FieldProps,
     Form,
@@ -24,11 +22,10 @@ import {
     Select,
     OptionBase,
 } from 'chakra-react-select'
-
-import schema from './schema'
-import ResultRadio from './resultRadio'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
 import moment from 'moment'
+import ResultRadio from '../../profile/addMatch/resultRadio'
+import schema from '../../profile/addMatch/schema'
 
 
 const getInitialValues = (otherFields: { [key: string]: any } = {}) => ({

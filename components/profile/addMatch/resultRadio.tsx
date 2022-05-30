@@ -1,6 +1,5 @@
 import {
     Box,
-    Radio,
     useRadio,
     UseRadioProps,
 } from '@chakra-ui/react'
@@ -25,14 +24,12 @@ const ResultRadio = (props: ResultRadioProps & UseRadioProps): JSX.Element => {
                 cursor="pointer"
                 borderWidth="1px"
                 borderRadius="full"
+                boxShadow="base"
                 _checked={{
                     bg: "gray.200",
                     fontWeight: "medium",
                     borderColor: "gray.200",
-                }}
-                _focus={{
-                    fontWeight: "medium",
-                    boxShadow: "outline",
+                    boxShadow: "inner"
                 }}
                 px={5}
                 py={2}

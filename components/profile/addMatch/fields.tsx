@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-    ErrorMessage,
     Field,
     FieldProps,
     Form,
@@ -13,11 +12,8 @@ import {
     FormControl,
     FormLabel,
     Grid,
-    HStack,
     Input,
     Select as ChakraSelect,
-    Stack,
-    Spacer,
     Textarea,
     VStack,
     useRadioGroup,
@@ -176,7 +172,7 @@ const Fields = (props: FieldsProps): JSX.Element => {
                             <Box w="100%">
                                 <Field name="date">
                                     {({ field, form }: FieldProps) => (
-                                        <FormControl isInvalid={form.errors.date != undefined && form.touched.date != undefined  }>
+                                        <FormControl isInvalid={form.errors.date != undefined && form.touched.date != undefined}>
                                             <FormLabel htmlFor="date" srOnly>Date</FormLabel>
                                             <Input
                                                 type="date"
