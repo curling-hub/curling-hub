@@ -201,7 +201,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                             key={'arrow'}
                                                             style={{color: 'green'}}
                                                         />
-                                                        <FormLabel id="win">Win</FormLabel>
+                                                        <Text id="win">Win</Text>
                                                     </HStack>
                                                 </Flex>
                                             }
@@ -218,7 +218,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                             key={'arrow'}
                                                             style={{color: 'red'}}
                                                         />
-                                                        <FormLabel id="loss">Loss</FormLabel>
+                                                        <Text id="loss">Loss</Text>
                                                     </HStack>
                                                 </Flex>
                                             }
@@ -235,7 +235,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                             key={'arrow'}
                                                             style={{color: 'blue'}}
                                                         />
-                                                        <FormLabel id="tie">Tie</FormLabel>
+                                                        <Text id="tie">Tie</Text>
                                                     </HStack>
                                                 </Flex>
                                             }

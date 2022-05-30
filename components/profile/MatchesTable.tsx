@@ -8,8 +8,7 @@ import {
     HStack,
     Text,
     Link,
-    Box,
-    FormLabel
+    Box
 } from "@chakra-ui/react"
 import {
     AiOutlineCheck,
@@ -63,7 +62,7 @@ export default function MatchesTable(props: MatchesTableProps) {
                                                         aria-labelledby='win'
                                                         style={{ color: 'green' }}
                                                     />
-                                                    <FormLabel id="win">Win</FormLabel>
+                                                    <Text id="win">Win</Text>
                                                 </HStack>
                                             </Td>
                                         </>
@@ -77,7 +76,7 @@ export default function MatchesTable(props: MatchesTableProps) {
                                                         aria-labelledby='loss'
                                                         style={{ color: 'red' }}
                                                     />
-                                                    <FormLabel id="loss">Loss</FormLabel>
+                                                    <Text id="loss">Loss</Text>
                                                 </HStack>
                                             </Td>
                                         </>
@@ -91,7 +90,7 @@ export default function MatchesTable(props: MatchesTableProps) {
                                                         aria-labelledby='tie'
                                                         style={{ color: 'blue' }}
                                                     />
-                                                    <FormLabel id="tie">Tie</FormLabel>
+                                                    <Text id="tie">Tie</Text>
                                                 </HStack>
                                             </Td>
                                         </>
