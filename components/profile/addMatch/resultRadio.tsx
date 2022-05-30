@@ -25,7 +25,6 @@ const ResultRadio = (props: ResultRadioProps & UseRadioProps): JSX.Element => {
                 cursor="pointer"
                 borderWidth="1px"
                 borderRadius="full"
-                boxShadow="md"
                 _checked={{
                     bg: "gray.200",
                     fontWeight: "medium",
@@ -36,7 +35,7 @@ const ResultRadio = (props: ResultRadioProps & UseRadioProps): JSX.Element => {
                     boxShadow: "outline",
                 }}
                 px={5}
-                py={1}
+                py={2}
             >
                 {children}
             </Box>
