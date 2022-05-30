@@ -67,6 +67,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <AiOutlineCheck
+                                                                    aria-label="Win"
                                                                     style={{ color: 'green' }}
                                                                 />
                                                             </Box>
@@ -77,6 +78,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <AiOutlineClose
+                                                                    aria-label="Loss"
                                                                     style={{ color: 'red' }}
 
                                                                 />
@@ -93,6 +95,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <AiOutlineClose
+                                                                    aria-label="Loss"
                                                                     style={{ color: 'red' }}
                                                                 />
                                                             </Box>
@@ -103,6 +106,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <AiOutlineCheck
+                                                                    aria-label="Win"
                                                                     style={{ color: 'green' }}
                                                                 />
                                                             </Box>
@@ -118,6 +122,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <MdHorizontalRule
+                                                                    aria-label="Tie"
                                                                     style={{ color: 'blue' }}
                                                                 />
                                                             </Box>
@@ -128,6 +133,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <MdHorizontalRule
+                                                                    aria-label="Tie"
                                                                     style={{ color: 'blue' }}
                                                                 />
                                                             </Box>
