@@ -8,7 +8,8 @@ import {
     HStack,
     Text,
     Link,
-    Box
+    Box,
+    FormLabel
 } from "@chakra-ui/react"
 import {
     AiOutlineCheck,
@@ -58,10 +59,10 @@ export default function MatchesTable(props: MatchesTableProps) {
                                         <>
                                             <Td>
                                                 <HStack>
-                                                    <AiOutlineCheck
+                                                    <AiOutlineCheck aria-labelledby="win"
                                                         style={{ color: 'green' }}
                                                     />
-                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                    <FormLabel id="win">Win</FormLabel>
                                                 </HStack>
                                             </Td>
                                         </>
@@ -71,10 +72,10 @@ export default function MatchesTable(props: MatchesTableProps) {
                                         <>
                                             <Td>
                                                 <HStack>
-                                                    <AiOutlineClose
+                                                    <AiOutlineClose aria-labelledby="loss"
                                                         style={{ color: 'red' }}
                                                     />
-                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                    <FormLabel id="loss">Loss</FormLabel>
                                                 </HStack>
                                             </Td>
                                         </>
@@ -84,10 +85,10 @@ export default function MatchesTable(props: MatchesTableProps) {
                                         <>
                                             <Td>
                                                 <HStack>
-                                                    <MdHorizontalRule
+                                                    <MdHorizontalRule aria-labelledby="tie"
                                                         style={{ color: 'blue' }}
                                                     />
-                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                    <FormLabel id="tie">Tie</FormLabel>
                                                 </HStack>
                                             </Td>
                                         </>
