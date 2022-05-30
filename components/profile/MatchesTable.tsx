@@ -59,7 +59,8 @@ export default function MatchesTable(props: MatchesTableProps) {
                                         <>
                                             <Td>
                                                 <HStack>
-                                                    <AiOutlineCheck aria-labelledby="win"
+                                                    <AiOutlineCheck
+                                                        aria-labelledby='win'
                                                         style={{ color: 'green' }}
                                                     />
                                                     <FormLabel id="win">Win</FormLabel>
@@ -72,7 +73,8 @@ export default function MatchesTable(props: MatchesTableProps) {
                                         <>
                                             <Td>
                                                 <HStack>
-                                                    <AiOutlineClose aria-labelledby="loss"
+                                                    <AiOutlineClose
+                                                        aria-labelledby='loss'
                                                         style={{ color: 'red' }}
                                                     />
                                                     <FormLabel id="loss">Loss</FormLabel>
@@ -85,7 +87,8 @@ export default function MatchesTable(props: MatchesTableProps) {
                                         <>
                                             <Td>
                                                 <HStack>
-                                                    <MdHorizontalRule aria-labelledby="tie"
+                                                    <MdHorizontalRule
+                                                        aria-labelledby='tie'
                                                         style={{ color: 'blue' }}
                                                     />
                                                     <FormLabel id="tie">Tie</FormLabel>
