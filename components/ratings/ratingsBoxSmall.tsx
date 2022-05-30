@@ -50,9 +50,11 @@ export default function RatingsBoxSmall(props: RatingsBoxProps) {
     
     function search(query: string) {
         const tables = fixedRankings.filter((team) => {
-            return (team.Team.toLowerCase().includes(query) ||
+            return (
+                team.Team.toLowerCase().includes(query) ||
                 team.Rating.toString().toLowerCase().includes(query) ||
-                team.Players.map((player) => player.toLowerCase().includes(query)).includes(true))
+                team.Players.map((player) => player.toLowerCase().includes(query)).includes(true)
+            )
         })
         setDisplayedRankings(tables)
     }

@@ -62,11 +62,14 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     // Search function
     function search(query: string) {
         const tables = fixedRankings.filter((match) => {
-            return (matchResultToString(teamId, match).toLowerCase().includes(query) || 
-            match.host?.organization?.toLowerCase().includes(query) ||
-            match.date?.toString().toLowerCase().includes(query) ||
-            match.sheetOfIce?.toLowerCase().includes(query) ||
-            match.comments?.toLowerCase().includes(query))
+            return (
+                match.date?.toString().toLowerCase().includes(query) ||
+                matchResultToString(teamId, match).toLowerCase().includes(query) ||
+                matchResultOpponentTeamName(teamId, match).toLowerCase().includes(query) ||
+                match.host?.organization?.toLowerCase().includes(query) ||
+                match.sheetOfIce?.toLowerCase().includes(query) ||
+                match.comments?.toLowerCase().includes(query)
+            )
         })
         setDisplayedRankings(tables)
     }
