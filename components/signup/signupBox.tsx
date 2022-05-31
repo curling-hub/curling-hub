@@ -7,6 +7,7 @@ import {
     Checkbox,
     Divider,
     FormControl,
+    FormLabel,
     HStack,
     Link as ChakraLink,
     Input,
@@ -56,6 +57,7 @@ export default function SignupFields(props: SignupFieldsProps) {
             </Text>
             <FormControl>
                 <Stack>
+                    <FormLabel htmlFor="email" srOnly>Email Address</FormLabel>
                     <Input
                         borderRadius="full"
                         focusBorderColor="green.400"
@@ -63,6 +65,7 @@ export default function SignupFields(props: SignupFieldsProps) {
                         placeholder="Email Address"
                         value={email}
                         onChange={(e) => onEmailChange(e.target.value)}
+                        id="email"
                     />
                 </Stack>
             </FormControl>
@@ -91,11 +94,11 @@ export default function SignupFields(props: SignupFieldsProps) {
                 </Text>
                 <Text fontSize={helperTextFontSize}>
                     <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
-                        Terms of Service
+                        <b>Terms of Service</b>
                     </Button>
                     {" "}and{" "}
                     <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
-                        Privacy Policy
+                        <b>Privacy Policy</b>
                     </Button>
                 </Text>
             </VStack>

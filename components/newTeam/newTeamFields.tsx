@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Link from 'next/link'
+import NextLink from 'next/link'
 import {
     Link as ChakraLink,
     Input,
@@ -12,7 +12,8 @@ import {
     Text,
     Checkbox,
     FormControl,
-    FormErrorMessage
+    FormErrorMessage,
+    FormLabel
 } from '@chakra-ui/react'
 import {
     Select,
@@ -114,6 +115,8 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
         }
     })()
 
+    const helperTextFontSize = "12";
+
     return (
         <Formik
             initialValues={getInitialValues(openCategory ? { categories: [openCategory] } : {})}
@@ -126,8 +129,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         <Field name="team">
                             {({ field, form }: FieldProps<string>) => (
                                 <FormControl isInvalid={form.errors.team != undefined && form.touched.team != undefined}>
+                                    <FormLabel htmlFor="team" srOnly>Team Name</FormLabel>
                                     <Input
                                         {...field}
+                                        id="team"
                                         borderRadius="full"
                                         focusBorderColor="green.400"
                                         shadow="sm"
@@ -167,8 +172,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         <Field name="curler1">
                             {({ field, form }: FieldProps<string>) => (
                                 <FormControl isInvalid={form.errors.curler1 != undefined && form.touched.curler1 != undefined}>
+                                    <FormLabel htmlFor="curler1" srOnly>Curler One</FormLabel>
                                     <Input
                                         {...field}
+                                        id="curler1"
                                         borderRadius="full"
                                         focusBorderColor="green.400"
                                         shadow="sm"
@@ -182,8 +189,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                         <Field name="curler2">
                             {({ field, form }: FieldProps<string>) => (
                                 <FormControl isInvalid={form.errors.curler2 != undefined && form.touched.curler2 != undefined}>
+                                    <FormLabel htmlFor="curler2" srOnly>Curler Two</FormLabel>
                                     <Input
                                         {...field}
+                                        id="curler2"
                                         borderRadius="full"
                                         focusBorderColor="green.400"
                                         shadow="sm"
@@ -199,8 +208,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                 <Field name="curler3">
                                     {({ field, form }: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.curler3 != undefined && form.touched.curler3 != undefined}>
+                                            <FormLabel htmlFor="curler3" srOnly>Curler Three</FormLabel>
                                             <Input
                                                 {...field}
+                                                id="curler3"
                                                 borderRadius="full"
                                                 focusBorderColor="green.400"
                                                 shadow="sm"
@@ -215,8 +226,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                 <Field name="curler4">
                                     {({ field, form }: FieldProps<string>) => (
                                         <FormControl isInvalid={form.errors.curler4 != undefined && form.touched.curler4 != undefined}>
+                                            <FormLabel htmlFor="curler4" srOnly>Curler Four</FormLabel>
                                             <Input
                                                 {...field}
+                                                id="curler4"
                                                 borderRadius="full"
                                                 focusBorderColor="green.400"
                                                 shadow="sm"
@@ -232,8 +245,10 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                         <Field name="alternate">
                                             {({ field, form }: FieldProps<string>) => (
                                                 <FormControl isInvalid={form.errors.alternate != undefined && form.touched.alternate != undefined}>
+                                                    <FormLabel htmlFor="alternate" srOnly>Alternate</FormLabel>
                                                     <Input
                                                         {...field}
+                                                        id="alternate"
                                                         borderRadius="full"
                                                         focusBorderColor="green.400"
                                                         shadow="sm"
@@ -316,8 +331,8 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                         <HStack>
                                             <Checkbox
                                                 {...field}
+                                                id="agree-box"
                                                 name="agree-box"
-                                                aria-label=""
                                                 checked={form.values.agree}
                                                 size="sm"
                                                 borderRadius="50%"
@@ -329,16 +344,18 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                                                }
                                            `}
                                             />
-                                            <Text fontSize="12">
-                                                {" "}I agree to the {" "}
-                                                <Button variant="link" size="12" onClick={onOpenTermsOfService}>
-                                                    Terms of Service
-                                                </Button>
-                                                {" "}and{" "}
-                                                <Button variant="link" size="12" onClick={onOpenPrivacyPolicy}>
-                                                    Privacy Policy
-                                                </Button>
-                                            </Text>
+                                            <FormLabel htmlFor="agree-box">
+                                                <Text fontSize={helperTextFontSize}>
+                                                    I agree to the{" "}
+                                                    <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenTermsOfService}>
+                                                        <b>Terms of Service</b>
+                                                    </Button>
+                                                    {" "}and{" "}
+                                                    <Button textColor="primary.black" variant="link" size={helperTextFontSize} onClick={onOpenPrivacyPolicy}>
+                                                        <b>Privacy Policy</b>
+                                                    </Button>
+                                                </Text>
+                                            </FormLabel>
                                         </HStack>
                                         <FormErrorMessage>{form.errors.agreed}</FormErrorMessage>
                                     </FormControl>
@@ -353,21 +370,18 @@ export default function NewTeamFields(props: NewTeamFieldsProps) {
                             boxShadow="md"
                             _hover={{ bg: "green.400" }}
                             _active={{ bg: "green.600" }}
-                            _focus={{ boxShadow: "lg" }}
+                            _focus={{ boxShadow: "dark-lg" }}
                         >
                             Create Account
                         </Button>
-                        <Link href="/new-host" passHref>
-                            <a>
-                                <Button
-                                    type="button"
-                                    variant="link"
-                                    size="xs"
-                                >
-                                    Not a team? Host sign up
-                                </Button>
-                            </a>
-                        </Link>
+                        <VStack w="100%">
+                            <Text fontSize={helperTextFontSize}>
+                                Not a team?{" "}
+                                <NextLink href="/new-host" passHref>
+                                    <ChakraLink><b>Host Sign Up</b></ChakraLink>
+                                </NextLink>
+                            </Text>
+                        </VStack>
                     </VStack>
                 </Form>
             )}

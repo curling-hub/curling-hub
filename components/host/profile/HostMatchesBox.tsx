@@ -1,4 +1,4 @@
-import { Box, Flex, Text, TableContainer, Table, Thead, Tr, Td, Tbody, FormLabel, HStack, Link } from "@chakra-ui/react"
+import { Box, Flex, Text, TableContainer, Table, Thead, Tr, Td, Tbody, HStack, Link } from "@chakra-ui/react"
 import { CONST_BORDER_RADIUS } from '../../../themes/constants'
 import SideBySideContainer from '../../profile/SideBySideContainer';
 import type { HostMatchResult } from '../../../lib/models/match'
@@ -67,6 +67,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <AiOutlineCheck
+                                                                    aria-label="Win"
                                                                     style={{ color: 'green' }}
                                                                 />
                                                             </Box>
@@ -77,6 +78,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <AiOutlineClose
+                                                                    aria-label="Loss"
                                                                     style={{ color: 'red' }}
 
                                                                 />
@@ -93,6 +95,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <AiOutlineClose
+                                                                    aria-label="Loss"
                                                                     style={{ color: 'red' }}
                                                                 />
                                                             </Box>
@@ -103,6 +106,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <AiOutlineCheck
+                                                                    aria-label="Win"
                                                                     style={{ color: 'green' }}
                                                                 />
                                                             </Box>
@@ -118,6 +122,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <MdHorizontalRule
+                                                                    aria-label="Tie"
                                                                     style={{ color: 'blue' }}
                                                                 />
                                                             </Box>
@@ -128,6 +133,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                         <HStack>
                                                             <Box>
                                                                 <MdHorizontalRule
+                                                                    aria-label="Tie"
                                                                     style={{ color: 'blue' }}
                                                                 />
                                                             </Box>
@@ -137,8 +143,7 @@ export default function HostInfoBox(props: HostInfoBoxProps) {
                                                 </>
                                             }
                                             <Td display={{ base: "none", md: "table-cell" }}>
-                                                <FormLabel id={`edit-${match.matchId}`} srOnly>Edit</FormLabel>
-                                                <GrFormEdit aria-labelledby={`edit-${match.matchId}`} />
+                                                <GrFormEdit aria-label='Edit' />
                                             </Td>
                                         </Tr>
                                     ))}

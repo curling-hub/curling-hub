@@ -10,7 +10,9 @@ import {
     Thead,
     Tr,
     Td,
-    Badge
+    Badge,
+    FormLabel,
+    FormControl
 } from '@chakra-ui/react'
 import {
     AiOutlineLeft,
@@ -52,9 +54,11 @@ export default function RatingsBox(props: RatingsBoxProps) {
 
     function search(query: string) {
         const tables = fixedRankings.filter((team) => {
-            return (team.Team.includes(query) ||
-                team.Rating.toString().includes(query) ||
-                team.Players.includes(query))
+            return (
+                team.Team.toLowerCase().includes(query) ||
+                team.Rating.toString().toLowerCase().includes(query) ||
+                team.Players.map((player) => player.toLowerCase().includes(query)).includes(true)
+            )
         })
         setDisplayedRankings(tables)
     }
@@ -112,32 +116,38 @@ export default function RatingsBox(props: RatingsBoxProps) {
                     <HStack
                         spacing='2rem'
                     >
-                        <Select
-                            name='category-dropdown'
-                            borderRadius='20px'
-                            variant='filled'
-                            color='black'
-                            bg='gray.300'
-                            w='100%'
-                            onChange={async (e) => {
-                                await getSelectedMatches(parseInt(e.target.value))
-                            }}
-                        >
-                            {
-                                props.categories.map((category) => {
-                                    return (
-                                        <option key={category.categoryId} value={category.categoryId}>{category.name}</option>
-                                    )
-                                })
-                            }
-                        </Select>
-                        <Input
-                            name='search-bar'
-                            borderRadius='20px'
-                            w='200%'
-                            placeholder="Search table..."
-                            onChange={(e: any) => search(e.target.value)}
-                        />
+                        <FormControl w="100%">
+                            <FormLabel htmlFor="category-dropdown" srOnly>Category</FormLabel>
+                            <Select
+                                id='category-dropdown'
+                                name='category-dropdown'
+                                borderRadius='full'
+                                variant='filled'
+                                color='black'
+                                bg='gray.300'
+                                onChange={async (e) => {
+                                    await getSelectedMatches(parseInt(e.target.value))
+                                }}
+                            >
+                                {
+                                    props.categories.map((category) => {
+                                        return (
+                                            <option key={category.categoryId} value={category.categoryId}>{category.name}</option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                        <FormControl w="200%">
+                            <FormLabel htmlFor="search-bar" srOnly>Search table...</FormLabel>
+                            <Input
+                                id='search-bar'
+                                name='search-bar'
+                                borderRadius='full'
+                                placeholder="Search table..."
+                                onChange={(e: any) => search(e.target.value.toLowerCase())}
+                            />
+                        </FormControl>
                     </HStack>
                     <Box minH='50vh'>
                         <TableContainer
@@ -232,6 +242,7 @@ const RatingPaging = (props: ChangesProps): JSX.Element => {
                 <Td>
                     <HStack>
                         <AiOutlineArrowUp
+                            aria-label='Up'
                             style={{ color: 'green' }}
                         />
                         <Text>{changes[0] - changes[1]}</Text>
@@ -243,6 +254,7 @@ const RatingPaging = (props: ChangesProps): JSX.Element => {
                 <Td>
                     <HStack>
                         <AiOutlineArrowDown
+                            aria-label='Down'
                             style={{ color: 'red' }}
                         />
                         <Text>{changes[0] - changes[1]}</Text>
@@ -254,6 +266,7 @@ const RatingPaging = (props: ChangesProps): JSX.Element => {
                 <Td>
                     <HStack>
                         <MdHorizontalRule
+                            aria-label='None'
                             style={{ color: 'blue' }}
                         />
                         <Text>N/A</Text>
@@ -265,6 +278,7 @@ const RatingPaging = (props: ChangesProps): JSX.Element => {
                 <Td>
                     <HStack>
                         <MdHorizontalRule
+                            aria-label='None'
                             style={{ color: 'blue' }}
                         />
                         <Text>N/A</Text>

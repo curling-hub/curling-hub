@@ -59,9 +59,10 @@ export default function MatchesTable(props: MatchesTableProps) {
                                             <Td>
                                                 <HStack>
                                                     <AiOutlineCheck
+                                                        aria-labelledby='win'
                                                         style={{ color: 'green' }}
                                                     />
-                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                    <Text id="win">Win</Text>
                                                 </HStack>
                                             </Td>
                                         </>
@@ -72,9 +73,10 @@ export default function MatchesTable(props: MatchesTableProps) {
                                             <Td>
                                                 <HStack>
                                                     <AiOutlineClose
+                                                        aria-labelledby='loss'
                                                         style={{ color: 'red' }}
                                                     />
-                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                    <Text id="loss">Loss</Text>
                                                 </HStack>
                                             </Td>
                                         </>
@@ -85,9 +87,10 @@ export default function MatchesTable(props: MatchesTableProps) {
                                             <Td>
                                                 <HStack>
                                                     <MdHorizontalRule
+                                                        aria-labelledby='tie'
                                                         style={{ color: 'blue' }}
                                                     />
-                                                    <Text>{matchResultToString(teamId || 0, match)}</Text>
+                                                    <Text id="tie">Tie</Text>
                                                 </HStack>
                                             </Td>
                                         </>

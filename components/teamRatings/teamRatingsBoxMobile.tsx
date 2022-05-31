@@ -10,7 +10,9 @@ import {
     Thead,
     Td,
     Tr,
-    IconButton
+    IconButton,
+    FormLabel,
+    FormControl
 } from '@chakra-ui/react'
 import {
     AiOutlineLeft,
@@ -56,13 +58,13 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     const pageCount = pages.length
     
     // Search function
+    // TODO: Include teamRatingsBox search
     function search(query: string) {
         const tables = fixedRankings.filter((match) => {
-            return (matchResultToString(teamId, match).toLowerCase().includes(query) || 
-            match.host?.organization?.toLowerCase().includes(query) ||
-            match.date?.toString().toLowerCase().includes(query) ||
-            match.sheetOfIce?.toLowerCase().includes(query) ||
-            match.comments?.toLowerCase().includes(query))
+            return (
+                matchResultToString(teamId, match).toLowerCase().includes(query) ||
+                matchResultOpponentTeamName(teamId, match).toLowerCase().includes(query)
+            )
         })
         setDisplayedRankings(tables)
     }
@@ -129,34 +131,40 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                     <HStack
                         spacing='2rem'
                     >
-                        <Select
-                            size='sm'
-                            name='category-dropdown'
-                            borderRadius='20px'
-                            variant='filled'
-                            color='black'
-                            bg='gray.300'
-                            w='100%'
-                            onChange={(e) => {
-                                filterMatches(parseInt(e.target.value))
-                            }}
-                        >
-                            {
-                                filters.map((filter) => {
-                                    return (
-                                        <option key={filter.filter_id} value={filter.filter_id}>{filter.value}</option>
-                                    )
-                                })
-                            }
-                        </Select>
-                        <Input
-                            size='sm'
-                            name='search-bar'
-                            borderRadius='20px'
-                            w='200%'
-                            placeholder="Search table..."
-                            onChange={(e: any) => search(e.target.value)}
-                        />
+                        <FormControl w="100%">
+                            <FormLabel htmlFor="category-dropdown" srOnly>Category</FormLabel>
+                            <Select
+                                size='sm'
+                                id='category-dropdown'
+                                name='category-dropdown'
+                                borderRadius='full'
+                                variant='filled'
+                                color='black'
+                                bg='gray.300'
+                                onChange={(e) => {
+                                    filterMatches(parseInt(e.target.value))
+                                }}
+                            >
+                                {
+                                    filters.map((filter) => {
+                                        return (
+                                            <option key={filter.filter_id} value={filter.filter_id}>{filter.value}</option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                        <FormControl w="200%">
+                            <FormLabel htmlFor="search-bar" srOnly>Search table...</FormLabel>
+                            <Input
+                                size='sm'
+                                id='search-bar'
+                                name='search-bar'
+                                borderRadius='full'
+                                placeholder="Search table..."
+                                onChange={(e: any) => search(e.target.value.toLowerCase())}
+                            />
+                        </FormControl>
                     </HStack>
                     <Box 
                         minH='50vh'
@@ -189,10 +197,11 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                         spacing='5px'
                                                     >
                                                         <AiOutlineCheck
+                                                            aria-labelledby='win'
                                                             key={'arrow'}
                                                             style={{color: 'green'}}
                                                         />
-                                                        <Text>{matchResultToString(teamId, match)}</Text>
+                                                        <Text id="win">Win</Text>
                                                     </HStack>
                                                 </Flex>
                                             }
@@ -205,10 +214,11 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                         spacing='5px'
                                                     >
                                                         <AiOutlineClose
+                                                            aria-labelledby='loss'
                                                             key={'arrow'}
                                                             style={{color: 'red'}}
                                                         />
-                                                        <Text>{matchResultToString(teamId, match)}</Text>
+                                                        <Text id="loss">Loss</Text>
                                                     </HStack>
                                                 </Flex>
                                             }
@@ -221,10 +231,11 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                                         spacing='5px'
                                                     >
                                                         <MdHorizontalRule
+                                                            aria-labelledby='tie'
                                                             key={'arrow'}
                                                             style={{color: 'blue'}}
                                                         />
-                                                        <Text>{matchResultToString(teamId, match)}</Text>
+                                                        <Text id="tie">Tie</Text>
                                                     </HStack>
                                                 </Flex>
                                             }

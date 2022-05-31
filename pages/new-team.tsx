@@ -117,7 +117,7 @@ function NewTeam(props: NewTeamProps) {
                                     h="auto"
                                     w="100%"
                                 >
-                                    <Image src="/curlo_Logo.svg" w="60%" h="30%" marginBottom={10} />
+                                    <Image src="/curlo_Logo.svg" alt="Curlo logo" w="60%" h="30%" mb={10} />
                                 </Box>
                                 {/* Sign up container (should only run on client side, e.g mounted) */}
                                 <Box minW="sm" w="100%" h="100%" m={{ base: 0, md: 2 }} p={10} borderRadius="32">
