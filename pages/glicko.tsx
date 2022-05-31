@@ -206,19 +206,6 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
     );
 };
 
-/*
-interface Periods {
-    Name: string,
-    StartDate: string,
-    EndData: string
-}
-
-interface GlickoInformationProps {
-    glicko: GlickoVars,
-    periods: Periods
-}
-*/
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = await getSession(context)
