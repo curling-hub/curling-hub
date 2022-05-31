@@ -62,12 +62,8 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
     function search(query: string) {
         const tables = fixedRankings.filter((match) => {
             return (
-                match.date?.toString().toLowerCase().includes(query) ||
                 matchResultToString(teamId, match).toLowerCase().includes(query) ||
-                matchResultOpponentTeamName(teamId, match).toLowerCase().includes(query) ||
-                match.host?.organization?.toLowerCase().includes(query) ||
-                match.sheetOfIce?.toLowerCase().includes(query) ||
-                match.comments?.toLowerCase().includes(query)
+                matchResultOpponentTeamName(teamId, match).toLowerCase().includes(query)
             )
         })
         setDisplayedRankings(tables)
@@ -136,7 +132,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                         spacing='2rem'
                     >
                         <FormControl w="100%">
-                            <FormLabel htmlFor="category-dropdown">Category</FormLabel>
+                            <FormLabel htmlFor="category-dropdown" srOnly>Category</FormLabel>
                             <Select
                                 size='sm'
                                 id='category-dropdown'
@@ -159,7 +155,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                             </Select>
                         </FormControl>
                         <FormControl w="200%">
-                            <FormLabel htmlFor="search-bar">Search table...</FormLabel>
+                            <FormLabel htmlFor="search-bar" srOnly>Search table...</FormLabel>
                             <Input
                                 size='sm'
                                 id='search-bar'
