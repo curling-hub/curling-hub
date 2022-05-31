@@ -16,20 +16,41 @@ import {
     SimpleGrid,
 } from '@chakra-ui/react'
 import { getPendingHosts } from '../lib/handlers/hosts'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { HostInfo } from '../lib/models'
 import AdminLayout from '../components/layouts/AdminLayout'
 import { getSession, getSessionServerSideResult } from '../lib/auth/session'
 import { serverSideRedirectTo } from '../lib/auth/redirect'
 import { AccountType } from '../lib/models/accountType'
 import CurloButton from '../components/buttons/CurloButton';
+import { getAllRatingPeriods, getCurrentSettings } from '../lib/handlers/rating';
+import moment from 'moment';
+
+interface GlickoVars {
+    Rating: number,
+    Volatility: number,
+    RatingDeviation: number,
+    SystemConstant: number
+}
+
+interface Period {
+    Name: string,
+    Start: string,
+    End: string
+}
 
 interface GlickoInformationProps {
+    glicko: GlickoVars,
+    periods: Period[]
 }
 
 const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInformationProps) => {
     const [isMedScreen] = useMediaQuery("(max-width: 1213px)")
-
+    const {
+        glicko,
+        periods
+    } = props
+    
     return (
         <>
             <Head>
@@ -107,7 +128,7 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
                                     >
                                         Rating
                                     </Text>
-                                    <Text fontSize="1.3em" > 1500 </Text>
+                                    <Text fontSize="1.3em" > {glicko.Rating} </Text>
                                     <Text
                                         fontSize="1.3em"
                                         fontWeight="bold"
@@ -115,7 +136,7 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
                                     >
                                         Volatility
                                     </Text>
-                                    <Text fontSize="1.3em" > 0.06 </Text>
+                                    <Text fontSize="1.3em" > {glicko.Volatility} </Text>
                                     <Text
                                         fontSize="1.3em"
                                         fontWeight="bold"
@@ -123,7 +144,7 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
                                     >
                                         Rating Deviation
                                     </Text>
-                                    <Text fontSize="1.3em" > 200 </Text>
+                                    <Text fontSize="1.3em" > {glicko.RatingDeviation} </Text>
                                     <Text
                                         fontSize="1.3em"
                                         fontWeight="bold"
@@ -131,7 +152,7 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
                                     >
                                         System Constant
                                     </Text>
-                                    <Text fontSize="1.3em" > 0.5 </Text>
+                                    <Text fontSize="1.3em" > {glicko.SystemConstant} </Text>
                                 </SimpleGrid>
                             </Box>
                             <Spacer />
@@ -162,16 +183,15 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
                                             </Tr>
                                         </Thead>
                                         <Tbody>
-                                            <Tr>
-                                                <Td>2022-Q1</Td>
-                                                <Td>2022-01-01</Td>
-                                                <Td>2022-03-31</Td>
-                                            </Tr>
-                                            <Tr>
-                                                <Td>2021-Q4</Td>
-                                                <Td>2021-10-01</Td>
-                                                <Td>2021-12-31</Td>
-                                            </Tr>
+                                            {React.Children.toArray(
+                                                periods && periods.map((p) =>
+                                                    <Tr>
+                                                        <Td>{p.Name}</Td>
+                                                        <Td>{p.Start}</Td>
+                                                        <Td>{p.End}</Td>
+                                                    </Tr>
+                                                )
+                                            )}
                                         </Tbody>
                                     </Table>
                                 </TableContainer>
@@ -186,6 +206,19 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
     );
 };
 
+/*
+interface Periods {
+    Name: string,
+    StartDate: string,
+    EndData: string
+}
+
+interface GlickoInformationProps {
+    glicko: GlickoVars,
+    periods: Periods
+}
+*/
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const sessionWrapper = await getSession(context)
     const { signedIn, signedUp, session } = await getSession(context)
@@ -197,10 +230,37 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return serverSideRedirectTo('/')
     }
 
-    return {
-        props: {
+    try {
+        const [glickoVars, periodVars] = await Promise.all([
+            getCurrentSettings(),
+            getAllRatingPeriods()
+        ])
+        
+        return {
+            props: {
+                glicko: {
+                    Rating: glickoVars?.defaultRating,
+                    Volatility: glickoVars?.defaultVolatility,
+                    RatingDeviation: glickoVars?.defaultRatingDeviation,
+                    SystemConstant: glickoVars?.systemConstant
+                },
+                periods: periodVars.map((p) => {
+                    return { 
+                         Name: p.ratingPeriod.name,
+                         Start: getDate(p.ratingPeriod.startDate),
+                         End: getDate(p.ratingPeriod.endDate)
+                     }
+                 })
+            }
         }
+    } catch (error) {
+        console.log(error)
+        throw error
     }
+}
+
+function getDate(d: Date): String {
+    return moment(d).format('YYYY-MM-DD') as String
 }
 
 export default GlickoInformation
