@@ -25,6 +25,7 @@ import {
     VStack,
     useDisclosure
 } from '@chakra-ui/react'
+import CurloButton from '../buttons/CurloButton'
 
 interface SignupFieldsProps {
     email: string;
@@ -68,34 +69,21 @@ export default function SignupFields(props: SignupFieldsProps) {
                     />
                 </Stack>
             </FormControl>
-            <Button
+            <CurloButton
+                buttonText="Sign up with Email"
+                color="primary.green"
+                isFullWidth={true}
+                onClick={() => signIn("email", { email })}
                 leftIcon={<HiOutlineMail />}
-                isFullWidth
-                bg="primary.green"
-                borderRadius="full"
-                boxShadow="md"
-                _hover={{ bg: "green.200" }}
-                _active={{ bg: "green.300" }}
-                _focus={{ boxShadow: "dark-lg" }}
-                onClick={() => signIn("email", { email })}//TODO this needs to be changed
-            >
-                Sign up with Email
-            </Button>
+            />
             <Divider orientation="horizontal" mt={2} width="100%" />
-            <Button
+            <CurloButton
+                buttonText="Sign up with Google"
+                color="primary.green"
+                isFullWidth={true}
+                onClick={() => signIn("google")}
                 leftIcon={<FaGoogle />}
-                isFullWidth
-                bg="primary.green"
-                borderRadius="full"
-                boxShadow="md"
-                _hover={{ bg: "green.200" }}
-                _active={{ bg: "green.300" }}
-                _focus={{ boxShadow: "dark-lg" }}
-                onClick={() => signIn("google")}//TODO this needs to be changed
-            >
-                Sign up with Google
-            </Button>
-
+            />
             <VStack w="100%" spacing="1">
 
                 <Text fontSize={helperTextFontSize}>

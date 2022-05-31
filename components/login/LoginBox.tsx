@@ -17,6 +17,7 @@ import {
     Select,
     Center
 } from '@chakra-ui/react'
+import CurloButton from '../buttons/CurloButton'
 
 interface LoginFieldsProps {
     email: string;
@@ -55,34 +56,21 @@ export default function LoginFields(props: LoginFieldsProps) {
                     />
                 </Stack>
             </FormControl>
-            <Button
+            <CurloButton
+                buttonText="Login with Email"
+                color="primary.white"
+                isFullWidth={true}
+                onClick={() => signIn("email", { email })}
                 leftIcon={<HiOutlineMail />}
-                isFullWidth
-                bg="primary.white"
-                borderRadius="full"
-                boxShadow="md"
-                _hover={{ bg: "gray.200" }}
-                _active={{ bg: "gray.300" }}
-                _focus={{ boxShadow: "dark-lg" }}
-                onClick={() => signIn("email", { email })}//TODO this needs to be changed
-            >
-                Login with Email
-            </Button>
+            />
             <Divider orientation="horizontal" mt={2} width="100%" />
-            <Button
+            <CurloButton
+                buttonText="Login with Google"
+                color="primary.white"
+                isFullWidth={true}
+                onClick={() => signIn("google")}
                 leftIcon={<FaGoogle />}
-                isFullWidth
-                bg="primary.white"
-                borderRadius="full"
-                boxShadow="md"
-                _hover={{ bg: "gray.200" }}
-                _active={{ bg: "gray.300" }}
-                _focus={{ boxShadow: "dark-lg" }}
-                onClick={() => signIn("google")}//TODO this needs to be changed
-            >
-                Login with Google
-            </Button>
-
+            />
             <VStack w="100%" spacing="1">
 
                 <Text fontSize={helperTextFontSize}>

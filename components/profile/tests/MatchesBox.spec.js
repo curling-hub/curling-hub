@@ -2,11 +2,10 @@ import * as React from 'react'
 import { mount } from '@cypress/react'
 import { ChakraProvider, Box, Text } from '@chakra-ui/react'
 import { TeamMatch } from '../../../lib/models/teams'
-/* import { MatchesBox, MatchesTable, ProfileButton, SideBySideContainer } from '../../profile' */
 import MatchesBox from '../MatchesBox'
 import MatchesTable from '../MatchesTable'
-import ProfileButton from '../ProfileButton'
 import SideBySideContainer from '../SideBySideContainer'
+import CurloButton from '../../buttons/CurloButton'
 
 /** @type {TeamMatch} */
 const matches = [
@@ -59,7 +58,7 @@ it('Team Profile Matches Table', () => {
                     </Text>
                     <MatchesTable teamMatches={matches} teamId={matches.teamId1} />
                     <Box marginTop="63px">
-                        <ProfileButton buttonText='View Matches' color='primary.green' top="-20px" />
+                        <CurloButton buttonText='View Matches' color='primary.green' top="-20px" />
                     </Box>
                 </MatchesBox>
             </SideBySideContainer>

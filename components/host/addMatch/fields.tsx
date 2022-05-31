@@ -23,6 +23,7 @@ import {
     OptionBase,
 } from 'chakra-react-select'
 import type { HostInfo, TeamInfo } from '../../../lib/models'
+import CurloButton from '../../buttons/CurloButton'
 import moment from 'moment'
 import ResultRadio from '../../profile/addMatch/resultRadio'
 import schema from '../../profile/addMatch/schema'
@@ -270,17 +271,13 @@ const Fields = (props: FieldsProps): JSX.Element => {
                                 </FormControl>
                             )}
                         </Field>
-                        <Button
+                        <CurloButton
+                            buttonText="Add Match Result"
+                            color="primary.green"
+                            isFullWidth={true}
                             type="submit"
-                            isFullWidth
-                            borderRadius="full"
-                            bg="primary.green"
-                            disabled={isSubmitting}
-                            _hover={{ bg: "green.400" }}
-                            _active={{ bg: "green.600" }}
-                        >
-                            Add Match Result
-                        </Button>
+                            isSubmitting={isSubmitting}
+                        />
                     </VStack>
                 </Form>
             )}

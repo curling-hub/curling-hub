@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { REG_BUTTON_FONT_SIZE, CONST_BORDER_RADIUS } from "../themes/constants";
+import { CONST_BORDER_RADIUS } from "../themes/constants";
 import StandardLayout from "../components/layouts/StandardLayout";
 import { Box, Button, Text, Flex, Spacer, Link } from "@chakra-ui/react";
 import Footer from "../components/footer/footer";
@@ -13,6 +13,7 @@ import { getTeamIdByUserId } from "../lib/handlers/teams";
 import { getHostIdByUserId, getHostInfoByUserId } from "../lib/handlers/hosts";
 import AdminLayout from "../components/layouts/AdminLayout";
 import HostLayout from "../components/layouts/HostLayout";
+import CurloButton from "../components/buttons/CurloButton";
 import StatusBanner from "../components/host/status/statusBanner";
 import RequestModal from "../components/modals/RequestModal";
 import { useState } from "react";
@@ -91,28 +92,20 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
               </Text>
 
               <Box marginTop="308px">
-                <Link href="/signup">
-                  <Button
-                    background="primary.green"
-                    borderRadius="full"
-                    padding="25px 30px"
-                    fontSize={REG_BUTTON_FONT_SIZE}
-                    boxShadow="md"
+                <Link href="/signup" style={{ textDecoration: 'none' }}>
+                  <CurloButton
+                    buttonText="Sign Up"
+                    color="primary.green"
                     marginRight="10px"
-                  >
-                    Sign Up
-                  </Button>
+                    size="md"
+                  />
                 </Link>
-                <Link href="/about">
-                  <Button
-                    background="primary.green"
-                    borderRadius="full"
-                    padding="25px 30px"
-                    fontSize={REG_BUTTON_FONT_SIZE}
-                    boxShadow="md"
-                  >
-                    More Info
-                  </Button>
+                <Link href="/about" style={{ textDecoration: 'none' }}>
+                  <CurloButton
+                    buttonText="More Info"
+                    color="primary.green"
+                    size="md"
+                  />
                 </Link>
               </Box>
             </Box>{" "}
@@ -140,16 +133,13 @@ const LandingPage: NextPage<LandingPageProps> = (props: LandingPageProps) => {
                 the ratings below.
               </Text>
               <Box marginTop="308px">
-                <Link href="/ratings">
-                  <Button
-                    background="primary.green"
-                    borderRadius="full"
-                    boxShadow="md"
-                    padding="25px 108px"
-                    fontSize={REG_BUTTON_FONT_SIZE}
-                  >
-                    Ratings
-                  </Button>
+                <Link href="/ratings" style={{ textDecoration: 'none' }}>
+                  <CurloButton
+                    buttonText="Ratings"
+                    color="primary.green"
+                    isFullWidth={true}
+                    size="md"
+                  />
                 </Link>
               </Box>
             </Box>{" "}
