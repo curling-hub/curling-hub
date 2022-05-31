@@ -22,7 +22,45 @@ import { convertAndVerifyContextId, getSession, getSessionServerSideResult } fro
 import { teamPagesLoggedInRedirects } from '../../../lib/auth/redirect';
 import { AccountType } from '../../../lib/models/accountType';
 import CurloButton from '../../../components/buttons/CurloButton';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
+
+export const options = {
+    responsive: true,
+};
+
+const labels = ['2021-Q1', '2021-Q2', '2021-Q3', '2021-Q4', '2022-Q1'];
+
+export const data = {
+    labels,
+    datasets: [
+        {
+            data: [1500, 1490, 1550, 1580, 1620],
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+    ],
+};
 interface TeamProfileProps {
     teamInfo?: TeamWithMembersAndRatings
     teamMatches?: TeamMatch[]
@@ -100,6 +138,12 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                                 {teamInfo.teamGlickoInfo?.rating}
                                             </Text>
                                         )}
+                                        <Line
+                                            options={options}
+                                            data={data}
+                                            width={400}
+                                            height={400}
+                                        />
                                     </VStack>
                                 </LeftHandBox>
                             </VStack>
