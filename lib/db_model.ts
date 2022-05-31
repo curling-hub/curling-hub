@@ -559,7 +559,6 @@ export const RatingPeriodModel = sequelize.define<RatingPeriodInstance>('RatingP
     underscored: true,
 })
 
-
 export const GlickoVariableModel = sequelize.define<GlickoVariableInstance>('GlickoVariable', {
     id: {
         type: DataTypes.BIGINT,
@@ -677,7 +676,6 @@ export const RatingHistoryModel = sequelize.define('RatingHistory', {
     underscored: true,
 })
 
-
 TeamInfoModel.belongsToMany(RatingPeriodModel, {
     through: RatingHistoryModel,
     foreignKey: {
@@ -693,4 +691,17 @@ RatingPeriodModel.belongsToMany(TeamInfoModel, {
         field: 'rating_period_id',
     },
     as: 'teams',
+})
+
+RatingHistoryModel.belongsTo(RatingPeriodModel, {
+    foreignKey: {
+        name: 'ratingPeriodId',
+        field: 'rating_period_id',
+    },
+})
+RatingPeriodModel.hasOne(RatingHistoryModel, {
+    foreignKey: {
+        name: 'teamId',
+        field: 'team_id',
+    }
 })
