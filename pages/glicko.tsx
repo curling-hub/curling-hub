@@ -50,7 +50,35 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
         glicko,
         periods
     } = props
-    
+    const [nextQuarter, setNextQuarter] = useState('2022-01-01')
+    const [refreshKey, setRefreshKey] = useState(0)
+
+    async function calculatePeriod() {
+        await fetch('/api/rating/newperiod', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        })
+        alert('Period calculated')
+        setRefreshKey(refreshKey + 1)
+    }
+
+    useEffect(() => {
+        fetch('/api/rating/getnextperiod', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        }).then((res) => {
+            if (res.status == 200) {
+                res.json().then(
+                    (result) => setNextQuarter(getDate(result.data))
+                )
+            }
+        }).catch((e: any) => console.log(e))
+    }, [refreshKey])
+
     return (
         <>
             <Head>
@@ -105,13 +133,19 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
                                 >
                                     Calculate Period
                                 </Text>
-                                <CurloButton buttonText="Calculate" color="primary.green" width="64%" size="md" />
+                                <CurloButton 
+                                    buttonText="Calculate" 
+                                    color="primary.green" 
+                                    width="64%" 
+                                    size="md" 
+                                    onClick={async () => { await calculatePeriod() }}
+                                />
                                 <Text
                                     fontSize="xs"
                                     fontWeight="bold"
                                     mt="5px"
                                 >
-                                    Period starting on 2022-03-31
+                                    Period starting on {nextQuarter}
                                 </Text>
                                 <Text
                                     fontSize="1.5em"
@@ -246,8 +280,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 }
 
-function getDate(d: Date): String {
-    return moment(d).format('YYYY-MM-DD') as String
+function getDate(d: Date): string {
+    return moment(d).format('YYYY-MM-DD') as string
 }
 
 export default GlickoInformation
