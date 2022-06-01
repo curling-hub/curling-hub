@@ -59,8 +59,12 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
                 'Content-Type': 'application/json'
             },
             method: 'POST'
-        })
-        alert('Period calculated')
+        }).then(
+            (result) => {
+                console.log(result)
+            }
+        ).catch((e: any) => console.log(e))
+        
         setRefreshKey(refreshKey + 1)
     }
 

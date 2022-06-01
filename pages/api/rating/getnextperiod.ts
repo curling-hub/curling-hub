@@ -29,9 +29,9 @@ const postHandler: NextApiHandler = async (req, res) => {
         }
 
         // TODO: return message `Ok` and the created object
-        res.status(200).json({ data: startDate })
+        return res.status(200).json({ data: startDate })
     } catch (error: any) {
-        res.status(500).json({ error: 'Internal server error'})
+        return res.status(500).json({ error: 'Internal server error'})
     }
 }
 
