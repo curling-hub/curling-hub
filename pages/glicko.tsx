@@ -223,7 +223,7 @@ const GlickoInformation: NextPage<GlickoInformationProps> = (props: GlickoInform
                                         <Tbody>
                                             {React.Children.toArray(
                                                 periods && periods.map((p) =>
-                                                    <Tr>
+                                                    <Tr key={p.Name}>
                                                         <Td>{p.Name}</Td>
                                                         <Td>{p.Start}</Td>
                                                         <Td>{p.End}</Td>
