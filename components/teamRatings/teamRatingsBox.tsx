@@ -248,7 +248,7 @@ export default function TeamRatingsBox(props: teamRatingsBoxProps) {
                                             }
                                             </Td>
                                             <Td>{matchResultOpponentTeamName(teamId, match)}</Td>
-                                            <Td>{match.host.organization}</Td>
+                                            <Td>{match.host?.organization || 'N/A'}</Td>
                                             <Td>{match.sheetOfIce}</Td>
                                             <Td>{match.comments}</Td>
                                         </Tr>
