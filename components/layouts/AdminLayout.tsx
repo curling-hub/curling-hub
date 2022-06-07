@@ -25,6 +25,10 @@ function getNavItems(): NavItem[] {
             link: '/admin-requests',
         },
         {
+            label: "Glicko",
+            link: '/glicko',
+        },
+        {
             label: "Ratings",
             link: '/ratings',
         }

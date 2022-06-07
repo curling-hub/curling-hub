@@ -28,4 +28,5 @@ export interface RatingHistory {
     ratingDeviation: number
     volatility: number
     ratingPeriodId: number
+    RatingPeriod?: RatingPeriod
 }

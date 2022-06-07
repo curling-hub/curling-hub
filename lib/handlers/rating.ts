@@ -6,7 +6,7 @@ import * as DbModels from '../db_model'
 import { GlickoVariable, RatingPeriod, TeamGlickoInfo } from '../models/glicko'
 import { MatchResult, MatchResultDetails } from '../models/match'
 import { TeamInfoRatings } from '../models/team'
-
+import { RatingHistory } from '../models/glicko'
 /**
  * 
  * @param from Start date
@@ -71,6 +71,20 @@ export async function getAllTeamRatings(): Promise<TeamInfoRatings[]> {
     return t
 }
 
+export async function getRatingsByTeamId(id: number): Promise<RatingHistory[]> {
+    const teamInfoList = await DbModels.RatingHistoryModel.findAll({
+        where: {
+            teamId: id
+        },
+        include: [{
+            model: DbModels.RatingPeriodModel,
+            as: 'RatingPeriod'
+        }],
+        order: [[{model: DbModels.RatingPeriodModel, as: 'rp'}, 'endDate', 'ASC']]
+    })
+    const t: RatingHistory[] = teamInfoList.map((t): any => t.toJSON())
+    return t
+}
 
 /**
  * 

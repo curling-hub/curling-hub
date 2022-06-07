@@ -22,6 +22,51 @@ import { convertAndVerifyContextId, getSession, getSessionServerSideResult } fro
 import { teamPagesLoggedInRedirects } from '../../../lib/auth/redirect';
 import { AccountType } from '../../../lib/models/accountType';
 import CurloButton from '../../../components/buttons/CurloButton';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { getLatestRatingPeriod, getRatingsByTeamId } from '../../../lib/handlers/rating';
+import { date } from 'yup';
+
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
+
+export const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+          display: false,
+        },
+      }
+};
+
+interface matchData {
+    data: number[],
+    borderColor: string,
+    backgroundColor: string
+}
+
+interface graphData {
+    labels: string[],
+    datasets: matchData[]
+}
 
 interface TeamProfileProps {
     teamInfo?: TeamWithMembersAndRatings
@@ -30,6 +75,7 @@ interface TeamProfileProps {
     teamCategories?: Category[]
     teamMembers?: TeamMember[]
     teamId?: number
+    matchHistory?: graphData
 }
 
 const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
@@ -40,9 +86,10 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
         teamCategories = [],
         teamMembers = [],
         teamEmail,
-        teamId
+        teamId,
+        matchHistory
     } = props
-
+    
     return (
         <>
             <Head>
@@ -100,6 +147,21 @@ const TeamProfile: NextPage<TeamProfileProps> = (props: TeamProfileProps) => {
                                                 {teamInfo.teamGlickoInfo?.rating}
                                             </Text>
                                         )}
+                                        <Box>
+                                            {
+                                                matchHistory ?
+                                                <Line
+                                                    options={options}
+                                                    data={matchHistory}
+                                                />
+                                                :
+                                                <Text
+                                                    fontWeight='bold'
+                                                >
+                                                    No Rating History
+                                                </Text>
+                                            }
+                                        </Box>
                                     </VStack>
                                 </LeftHandBox>
                             </VStack>
@@ -147,19 +209,37 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!teamId) {
         return { notFound: true }
     }
-
+    
     try {
-        const [teamInfo, teamMatches, teamContactInfo, teamCategories, hasPermission, teamEmail] = await Promise.all([
+        const [teamInfo, teamMatches, teamContactInfo, teamCategories, hasPermission, teamEmail, ratData, thisPeriod] = await Promise.all([
             getTeamInfo(teamId),
             getTeamMatches(teamId),
             getTeamContactInfo(teamId),
             getTeamCategories(teamId),
             isTeamAdmin(userId, teamId),
             getTeamEmailById(teamId),
+            getRatingsByTeamId(teamId),
+            getLatestRatingPeriod()
         ])
         if (!teamInfo || !hasPermission) {
             return { notFound: true }
         }
+        
+        let ratingsHist = ratData.slice(0, 4).map((period) => period.rating)
+        ratingsHist.push(teamInfo.teamGlickoInfo.rating)
+
+        let labels = ratData.slice(0, 4).map((period) => period.RatingPeriod?.name)
+        labels.push(thisPeriod?.name)
+
+        const matchHistory = ratData.length > 0 ? {
+            labels: labels,
+            datasets: [{
+                data: ratingsHist,
+                borderColor: 'rgb(0,0,0)',
+                backgroundColor: 'rgb(0,0,0)'
+            }]
+        } : null
+        
         return {
             props: {
                 teamInfo,
@@ -169,6 +249,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 teamMembers: teamInfo?.members || [],
                 teamEmail,
                 teamId,
+                matchHistory
             }
         }
 
