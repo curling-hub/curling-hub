@@ -57,7 +57,6 @@ export async function getTeamMatches(teamId: number): Promise<TeamMatch[]> {
                 {
                     model: DbModels.HostInfoModel,
                     as: 'host',
-                    required: true,
                     attributes: {
                         exclude: ['updatedAt'],
                     },
